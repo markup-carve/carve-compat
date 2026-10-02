@@ -4,3 +4,4 @@
 #engine-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}.engine-card{padding:1.25rem;border:1px solid var(--line);border-radius:16px}.engine-card .ring{float:right}
 
 .interchange { color: #855a18; background: #fff2d6; border-color: #dcc49d; }
+footer .related{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;gap:6px 16px;padding:0;border:0;overflow:visible;white-space:normal;}
