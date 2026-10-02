@@ -125,7 +125,7 @@ schema snapshot and its provenance together when updating the contract.
 
 The pinned Djot writer cannot serialize hard breaks. A tested adapter workaround
 keeps those cases measurable and emits a diagnostic. [Djot upstream PR #158](https://github.com/jgm/djot.js/pull/158)
-proposes the native fix. Remove the workaround only after a pinned version
+merged the native fix on October 2, 2026. Remove the workaround only after a pinned version
 contains it and the regression tests confirm it.
 
 ## License
