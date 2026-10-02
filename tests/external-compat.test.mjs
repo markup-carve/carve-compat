@@ -170,13 +170,12 @@ test('rich exporters report unsupported fields on internal table and definition 
   validateAst(ast)
   for(const [tool,writer]of [['mdast',toMdast],['hast',toHast],['djot',toDjot]]){
     const ctx=context(tool);writer(ast,ctx)
-    assert.ok(ctx.diagnostics.some(d=>d.path.endsWith('/align') && d.fidelity==='dropped'),tool)
-    assert.ok(ctx.diagnostics.some(d=>d.path.endsWith('/colspan') && d.fidelity==='dropped'),tool)
+    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/align' && d.fidelity==='dropped'),tool)
+    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/colspan' && d.fidelity==='dropped'),tool)
   }
   const root={type:'document',srcByteLength:0,children:[{type:'definition_list',items:[{type:'definition_term',attrs:{id:'term'},children:[{type:'text',value:'Term'}]},{type:'definition_description',children:[{type:'paragraph',children:[{type:'text',value:'Definition'}]}]}]}]}
   validateAst(root)
-  const ctx=context('pandoc');toPandoc(root,[1,23],ctx)
-  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/items/0/attrs' && d.fidelity==='dropped'))
+  for(const tool of ['pandoc','djot']){const ctx=context(tool);if(tool==='pandoc')toPandoc(root,[1,23],ctx);else toDjot(root,ctx);assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/items/0/attrs' && d.fidelity==='dropped'),tool)}
 })
 
 test('authored HTML endnote attributes are never treated as generated navigation',()=>{
