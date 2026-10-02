@@ -63,20 +63,6 @@
       "retained": "x"
     },
     {
-      "id": "table-alignment-import",
-      "direction": "import",
-      "tools": [
-        "mdast"
-      ],
-      "source": "| Header Alpha | Header Beta |\n| :--- | ---: |\n| Cell Gamma | Cell Delta |\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/align"
-      },
-      "retained": "Header AlphaHeader BetaCell GammaCell Delta"
-    },
-    {
       "id": "aside-import",
       "direction": "import",
       "tools": [
@@ -378,20 +364,6 @@
       "retained": "Note."
     },
     {
-      "id": "html-spanned-table-import",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><tr><td colspan=\"2\">Wide cell</td></tr></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/rows/0/0/cells/0/properties/colSpan"
-      },
-      "retained": "Wide cell"
-    },
-    {
       "id": "pandoc-orphan-footnote-export",
       "direction": "export",
       "tools": [
@@ -418,90 +390,6 @@
         "path": "/blocks/0/c/4"
       },
       "retained": "Note."
-    },
-    {
-      "id": "pandoc-table-caption",
-      "direction": "import",
-      "tools": [
-        "pandoc"
-      ],
-      "source": "| A | B |\n|---|---|\n| x | y |\n\n: Caption.\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/blocks/0/c/1"
-      },
-      "retained": "x"
-    },
-    {
-      "id": "pandoc-table-alignment",
-      "direction": "import",
-      "tools": [
-        "pandoc"
-      ],
-      "source": "| A | B |\n|:---|---:|\n| x | y |\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/blocks/0/c/2/0"
-      },
-      "retained": "x"
-    },
-    {
-      "id": "html-table-caption",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><caption>Caption.</caption><tr><th>A</th></tr><tr><td>x</td></tr></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/children/0"
-      },
-      "retained": "x"
-    },
-    {
-      "id": "html-rowspan-table",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><tr><td rowspan=\"2\">Merged</td><td>first</td></tr><tr><td>second</td></tr></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/rows/0/0/cells/0/properties/rowSpan"
-      },
-      "retained": "Merged"
-    },
-    {
-      "id": "pandoc-table-widths",
-      "direction": "import",
-      "tools": [
-        "pandoc"
-      ],
-      "source": "  A       B\n  ------  ------\n  x       y\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/blocks/0/c/2/0"
-      },
-      "retained": "x"
-    },
-    {
-      "id": "pandoc-block-table-cell",
-      "direction": "import",
-      "tools": [
-        "pandoc"
-      ],
-      "source": "+-------+-------+\n| A     | B     |\n+=======+=======+\n| one   | x     |\n|       |       |\n| two   | y     |\n+-------+-------+\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "degraded",
-        "path": "/blocks/0/c/4/0/3/0/1/0/4"
-      },
-      "retained": "one two"
     },
     {
       "id": "djot-multiple-descriptions-export",
@@ -546,48 +434,6 @@
       "retained": "First note."
     },
     {
-      "id": "html-table-section-attributes",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><thead id=\"head\"><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/children/0/properties"
-      },
-      "retained": "x"
-    },
-    {
-      "id": "html-table-footer-partition",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody><tfoot><tr><td>total</td></tr></tfoot></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/children/2"
-      },
-      "retained": "total"
-    },
-    {
-      "id": "html-block-table-cell",
-      "direction": "import",
-      "tools": [
-        "hast"
-      ],
-      "source": "<table><tr><td><p>One</p><ul><li>item</li></ul></td></tr></table>",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "degraded",
-        "path": "/children/0/rows/0/0/cells/0/children"
-      },
-      "retained": "One item"
-    },
-    {
       "id": "pandoc-repeated-note-shifts-later-label",
       "direction": "export",
       "tools": [
@@ -614,6 +460,235 @@
         "path": "/blocks/0/c/0/1"
       },
       "retained": "second"
+    },
+    {
+      "id": "html-cell-width",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><tr><td style=\"width:30%\">x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0/rows/0/cells/0/properties/style"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-caption-attributes",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><caption id=\"caption\">Caption</caption><tr><td>x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0/properties"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-column-attributes",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><colgroup><col id=\"column\"></colgroup><tr><td>x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0/children/0/properties"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-unsupported-table-child",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><style>p{color:red}</style><tr><td>x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "pandoc-block-caption",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "{\"pandoc-api-version\":[1,23,1,2],\"meta\":{},\"blocks\":[{\"t\":\"Table\",\"c\":[[\"\",[],[]],[null,[{\"t\":\"Para\",\"c\":[{\"t\":\"Str\",\"c\":\"First\"}]},{\"t\":\"BulletList\",\"c\":[[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Second\"}]}]]}]],[[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidthDefault\"}]],[[\"\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"x\"}]}]]]]]],[[[\"\",[],[]],0,[],[]]],[[\"\",[],[]],[]]]}]}",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/blocks/0/c/1/1"
+      },
+      "retained": "First Second",
+      "formats": {
+        "pandoc": "pandoc-json"
+      }
+    },
+    {
+      "id": "gfm-column-width-export",
+      "direction": "export",
+      "tools": [
+        "mdast"
+      ],
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "columns": [
+              {
+                "width": 0.5
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/columns/0/width"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "gfm-column-valign-export",
+      "direction": "export",
+      "tools": [
+        "mdast"
+      ],
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "columns": [
+              {
+                "valign": "top"
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/columns/0/valign"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "djot-headerless-alignment-export",
+      "direction": "export",
+      "tools": [
+        "djot"
+      ],
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ],
+                    "align": "right"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/rows/0/cells/0/align"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-block-caption",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><caption><p>Cap</p><p>Second</p></caption><tr><td>x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/children/0/children"
+      },
+      "retained": "Cap Second"
+    },
+    {
+      "id": "html-colgroup-attributes",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><colgroup span=\"2\" class=\"k\" style=\"width:50%\"></colgroup><tr><td>x</td><td>y</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0/properties"
+      },
+      "retained": "x"
     }
   ]
 }

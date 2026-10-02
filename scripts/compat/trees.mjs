@@ -1,3 +1,4 @@
+import { expandTableSpans, htmlLayout } from './tables.mjs'
 import { unified } from 'unified'
 import rehypeParse from 'rehype-parse'
 import { find, html } from 'property-information'
@@ -32,13 +33,28 @@ export function semantics(value) {
 const parser = unified().use(rehypeParse, { fragment: true })
 export const parseHtml = html => parser.parse(html)
 
+export function htmlSemantics(ast, renderer, ctx) {
+  const projected=structuredClone(ast)
+  const walk=node=>{
+    if(node.type==='table' && node.columns){
+      for(const row of node.rows)for(const [i,cell]of row.cells.entries())for(const key of ['align','valign'])if(cell[key]===undefined && node.columns[i]?.[key])cell[key]=node.columns[i][key]
+      for(const column of node.columns){delete column.align;delete column.valign;if(column.width){const precision=renderer==='pandoc'?100:1e12;const rounded=Math.round(column.width*precision)/precision;if(rounded!==column.width)ctx.note('','html-width-precision','normalized',renderer==='pandoc'?'Compared column widths at the whole-percentage precision emitted by Pandoc HTML.':'Ignored decimal formatting noise in rendered HTML widths; AST widths remain exact.');column.width=rounded}}
+      if(!node.columns.some(c=>Object.keys(c).length))delete node.columns
+    }
+    for(const key of ['children','items','rows','cells','blocks'])node[key]?.forEach(walk)
+  }
+  walk(projected)
+  return semantics(projected)
+}
+
 export function authoredAttributes(ast) {
   const authoredIds = new Set(), authoredClasses = new Set(), authoredKeyValues = new Set()
   const walk = node => {
     if (node.attrs?.id) authoredIds.add(node.attrs.id)
     node.attrs?.classes?.forEach(c => authoredClasses.add(c))
     for(const [key,value]of Object.entries(node.attrs?.keyValues??{}))authoredKeyValues.add(`${key}=${value}`)
-    ;(node.children ?? node.items ?? node.rows ?? node.cells ?? []).forEach(walk)
+    ;for(const key of ['children','items','rows','cells','blocks','caption','shortCaption'])node[key]?.forEach(walk)
+    if(node.rowGroups){for(const attrs of [node.rowGroups.headAttrs,node.rowGroups.footAttrs,...node.rowGroups.bodies.map(b=>b.attrs)])if(attrs)walk({attrs})}
   }
   walk(ast)
   return { authoredIds, authoredClasses, authoredKeyValues }
@@ -56,13 +72,14 @@ export function context(tool) {
 }
 
 export function plain(node) {
+  if(node?.type==='table')return [...(node.caption??[]),...node.rows].map(plain).join('')
   if (typeof node === 'string') return node
-  return node.value ?? node.text ?? node.literal ?? node.content ?? node.alt ?? node.properties?.alt ?? (node.children ?? node.items ?? node.rows ?? node.cells ?? []).map(plain).join('')
+  return node.value ?? node.text ?? node.literal ?? node.content ?? node.alt ?? node.properties?.alt ?? (node.children ?? node.items ?? node.rows ?? node.cells ?? node.blocks ?? []).map(plain).join('')
 }
 
 export function fromHast(root, ctx = context('hast'), options = {}) {
   const generatedClasses = new Set(['docutils', 'arabic', 'reference', 'external', 'literal', 'simple', 'code', 'text', 'literal-block', 'highlight', 'sectionbody', 'paragraph', 'ulist', 'olist', 'listingblock', 'content', 'quoteblock', 'sect1', 'sect2', 'contains-task-list', 'task-list-item', 'task-list'])
-  const noteSections = new Map(), noteIds = new Map(), noteBodies = new Set()
+  const noteSections = new Map(), noteIds = new Map(), noteBodies = new Set(), spanOrigins=new WeakMap()
   const walk = (n, visit) => { visit(n); n.children?.forEach(c=>walk(c,visit)) }
   walk(root,n=>{
     if (n.type !== 'element' || !(n.properties?.role === 'doc-endnotes' || n.properties?.dataFootnotes !== undefined)) return
@@ -71,6 +88,33 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     noteSections.set(n,items)
     items.forEach((li,i)=>{ if(li.properties?.id)noteIds.set(li.properties.id,String(i+1));walk(li,c=>noteBodies.add(c)) })
   })
+  const readAttrs=(props,tag,path,generatedLang)=>{
+    const attrs = {}
+    for (const [key, value] of Object.entries(props)) {
+      if(options.generated && tag==='th' && key==='scope' && ['col','row'].includes(value) && !options.authoredKeyValues?.has(`scope=${value}`)){ctx.note(`${path}/properties/scope`,'generated-html-attribute','normalized','Omitted generated header scope.');continue}
+      if(options.generated && options.renderer==='pandoc' && key.startsWith('data') && key.length>4){const original=key[4].toLowerCase()+key.slice(5);if(options.authoredKeyValues?.has(`${original}=${value}`)){attrs.keyValues??={};attrs.keyValues[original]=String(value);ctx.note(`${path}/properties/${key}`,'generated-html-attribute','normalized','Restored an authored attribute renamed by Pandoc HTML output.');continue}}
+      if (options.renderer === 'pandoc' && tag === 'ol' && key === 'type' && String(value) === '1') { ctx.note(`${path}/properties/type`, 'generated-html-attribute', 'normalized', 'Omitted the Pandoc decimal-list type attribute.'); continue }
+      if (['td','th'].includes(tag) && ['align','vAlign','colSpan','rowSpan','style'].includes(key)) {
+        if(key==='style' && htmlLayout(props).residualStyle){attrs.keyValues??={};attrs.keyValues.style=htmlLayout(props).residualStyle}
+        else if(['align','vAlign'].includes(key) && !['left','right','center','top','middle','bottom'].includes(value)){attrs.keyValues??={};attrs.keyValues[key]=String(value)}
+        continue
+      }
+      if ((tag === 'a' && ['href', 'title'].includes(key)) || (tag === 'img' && ['src', 'alt', 'title'].includes(key)) || (tag === 'ol' && (key==='start' || (key==='type' && ['1','a','A','i','I'].includes(String(value)))))) continue
+      if (options.generated && key === 'className') {
+        const retained = value.filter(c => (!generatedClasses.has(c) && c !== generatedLang) || options.authoredClasses?.has(c))
+        if (retained.length !== value.length) ctx.note(`${path}/properties/${key}`, 'generated-html-attribute', 'normalized', 'Omitted classes added by the foreign renderer.')
+        if (retained.length) attrs.classes = retained
+      } else if (options.generated && ((key === 'id' && !options.authoredIds?.has(value) && (/^h[1-6]$/.test(tag) || tag === 'section')) || key === 'dataLang')) {
+        ctx.note(`${path}/properties/${key}`, 'generated-html-attribute', 'normalized', `Omitted ${key} added by the foreign renderer.`)
+      } else {
+        if (key === 'id') attrs.id = String(value)
+        else if (key === 'className') attrs.classes = value
+        else { attrs.keyValues ??= {}; attrs.keyValues[find(html, key).attribute] = String(value) }
+      }
+    }
+    return attrs
+  }
+  const sectionAttrs=(child,path)=>{const attrs=readAttrs(child.properties??{},child.tagName,path);return Object.keys(attrs).length?attrs:undefined}
   const map = (n, path, block = false, taskContext = false) => {
     if (n.type === 'text') return text(n.value)
     if (n.type === 'root') return document(blocks(n.children, path))
@@ -104,25 +148,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
       for (let i = 1; i < mapped.length; i++) if (mapped[i - 1].type === 'hard_break' && mapped[i].type === 'text') mapped[i].value = mapped[i].value.replace(/^\n/, '')
       return mapped
     }
-    const attrs = {}
-    for (const [key, value] of Object.entries(props)) {
-      if(options.generated && tag==='th' && key==='scope' && value==='col' && !options.authoredKeyValues?.has('scope=col')){ctx.note(`${path}/properties/scope`,'generated-html-attribute','normalized','Omitted generated column-header scope.');continue}
-      if(options.generated && options.renderer==='pandoc' && key.startsWith('data') && key.length>4){const original=key[4].toLowerCase()+key.slice(5);if(options.authoredKeyValues?.has(`${original}=${value}`)){attrs.keyValues??={};attrs.keyValues[original]=String(value);ctx.note(`${path}/properties/${key}`,'generated-html-attribute','normalized','Restored an authored attribute renamed by Pandoc HTML output.');continue}}
-      if (options.renderer === 'pandoc' && tag === 'ol' && key === 'type' && String(value) === '1') { ctx.note(`${path}/properties/type`, 'generated-html-attribute', 'normalized', 'Omitted the Pandoc decimal-list type attribute.'); continue }
-      if (['td','th'].includes(tag) && ['align','colSpan','rowSpan','style'].includes(key)) { if(value && value!==1)ctx.note(`${path}/properties/${key}`,'unsupported-field','dropped','Cell alignment, styles and spans are outside this HTML adapter subset.');continue }
-      if ((tag === 'a' && ['href', 'title'].includes(key)) || (tag === 'img' && ['src', 'alt', 'title'].includes(key)) || (tag === 'ol' && (key==='start' || (key==='type' && ['1','a','A','i','I'].includes(String(value)))))) continue
-      if (options.generated && key === 'className') {
-        const retained = value.filter(c => (!generatedClasses.has(c) && c !== generatedLang) || options.authoredClasses?.has(c))
-        if (retained.length !== value.length) ctx.note(`${path}/properties/${key}`, 'generated-html-attribute', 'normalized', 'Omitted classes added by the foreign renderer.')
-        if (retained.length) attrs.classes = retained
-      } else if (options.generated && ((key === 'id' && !options.authoredIds?.has(value) && (/^h[1-6]$/.test(tag) || tag === 'section')) || key === 'dataLang')) {
-        ctx.note(`${path}/properties/${key}`, 'generated-html-attribute', 'normalized', `Omitted ${key} added by the foreign renderer.`)
-      } else {
-        if (key === 'id') attrs.id = String(value)
-        else if (key === 'className') attrs.classes = value
-        else { attrs.keyValues ??= {}; attrs.keyValues[find(html, key).attribute] = String(value) }
-      }
-    }
+    const attrs=readAttrs(props,tag,path,generatedLang)
     let result
     if (/^h[1-6]$/.test(tag)) result = { type: 'heading', level: Number(tag[1]), children: children() }
     else if (tag === 'p') result = { type: 'paragraph', children: children() }
@@ -132,13 +158,62 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     else if (tag === 'dt') result = {type:'definition_term',children:children()}
     else if (tag === 'dd') { const hasBlocks=n.children.some(c=>['p','ul','ol','pre','blockquote','dl'].includes(c.tagName));result={type:'definition_description',children:hasBlocks?blocks(n.children,path):[{type:'paragraph',children:children()}]} }
     else if (tag === 'table') {
-      for(const [i,section]of n.children.entries())if(['thead','tbody','tfoot'].includes(section.tagName)){if(Object.keys(section.properties??{}).length)ctx.note(`${path}/children/${i}/properties`,'unsupported-field','dropped','Table-section attributes are outside the flattened HTML table subset.');if(section.tagName==='tfoot' && !options.generated)ctx.note(`${path}/children/${i}`,'unsupported-field','dropped','Flattened footer rows without retaining their explicit row-group partition.')}
-      const rows=n.children.flatMap((c,i)=>c.tagName==='tr'?[{n:c,path:`${path}/rows/${i}`}]:['thead','tbody','tfoot'].includes(c.tagName)?c.children.filter(r=>r.tagName==='tr').map((r,j)=>({n:r,path:`${path}/rows/${i}/${j}`})):[])
-      for(const [i,c]of n.children.entries())if(c.tagName && !['tr','thead','tbody','tfoot'].includes(c.tagName))ctx.note(`${path}/children/${i}`,'unsupported-field','dropped','Table captions and column groups are outside this HTML adapter subset.')
-      result={type:'table',rows:rows.map(r=>map(r.n,r.path,true))}
+      const rows = [], bodies = [], head = [], foot = [], columns = []
+      const expand=group=>{for(const [r,row]of group.entries())for(const cell of row.cells)if(cell.rowspan===0 || cell.rowspan>group.length-r){const count=group.length-r;ctx.note(`${spanOrigins.get(cell)}/properties/rowSpan`,'html-rowspan-clamped','normalized',cell.rowspan===0?'Expanded HTML rowspan zero to the end of its row group.':'Clamped HTML rowspan to the remaining rows of its group.');if(count>1)cell.rowspan=count;else delete cell.rowspan}return expandTableSpans(group)}
+      let headAttrs, footAttrs
+      const sectionRows = (section, sp) => section.children.filter(c => c.tagName === 'tr').map((r, i) => map(r, `${sp}/rows/${i}`, true))
+      let direct = []
+      const addBody = (body, attrs) => { if(!body.length && !attrs)return; const expanded=expand(body);rows.push(...expanded); let headRows=0;while(headRows<expanded.length && expanded[headRows].cells.length && expanded[headRows].cells.every(c=>c.header))headRows++; const tail=expanded.slice(headRows);const leading=row=>{let count=0;for(const cell of row.cells){if(!cell.header)break;count++}return count};const rowHeadColumns=tail.length?Math.min(...tail.map(leading)):0;bodies.push({headRows,bodyRows:body.length-headRows,...(rowHeadColumns?{rowHeadColumns}:{}),...(attrs?{attrs}:{})}) }
+      const flush = () => { addBody(direct); direct=[] }
+      for (const [i, child] of n.children.entries()) {
+        const cp = `${path}/children/${i}`
+        if(child.tagName==='caption'){
+          const content=coalesce(child.children.flatMap((c,j)=>map(c,`${cp}/children/${j}`)))
+          const blockTypes=new Set(['paragraph','list','heading','block_quote','code_block','table','definition_list','div','thematic_break'])
+          result??={type:'table'}
+          if(content.length===1 && content[0].type==='paragraph'){const paragraph=content[0];result.caption=paragraph.attrs?[{type:'span',attrs:paragraph.attrs,children:paragraph.children}]:paragraph.children;ctx.note(`${cp}/children`,'caption-paragraph-normalization','normalized','Mapped a single caption paragraph to the inline caption model while retaining its content and attributes.')}
+          else if(content.some(c=>blockTypes.has(c.type))){ctx.note(`${cp}/children`,'unsupported-field','degraded','Carve table captions hold inline content; the HTML caption block structure cannot be retained.');result.caption=[text(content.map(plain).join(' '))]}
+          else result.caption=content
+          if(Object.keys(child.properties??{}).length)ctx.note(`${cp}/properties`,'unsupported-field','dropped','Carve has no attribute slot on table captions.')
+        }
+        else if(child.tagName==='colgroup'){
+          const group=htmlLayout(child.properties??{}),{residualStyle:groupResidual,...inherited}=group
+          if(groupResidual || Object.keys(child.properties??{}).some(k=>!['span','style'].includes(k) && !(k==='align' && ['left','right','center'].includes(child.properties.align)) && !(k==='vAlign' && ['top','middle','bottom'].includes(child.properties.vAlign))))ctx.note(`${cp}/properties`,'unsupported-field','dropped','Column-group attributes outside alignment and percentage width have no Carve slot.')
+          const cols=child.children.filter(c=>c.tagName==='col')
+          if(!cols.length)columns.push(...Array.from({length:Number(child.properties?.span??1)},()=>({...inherited})))
+          for(const [j,col]of cols.entries()){
+            const layout=htmlLayout(col.properties??{}),{residualStyle,...column}=layout
+            columns.push(...Array.from({length:Number(col.properties?.span??1)},()=>({...inherited,...column})))
+            const extras=Object.keys(col.properties??{}).filter(k=>!['style','span'].includes(k) && !(k==='align' && ['left','right','center'].includes(col.properties.align)) && !(k==='vAlign' && ['top','middle','bottom'].includes(col.properties.vAlign)))
+            if(residualStyle || extras.length)ctx.note(`${cp}/children/${j}/properties`,'unsupported-field','dropped','Column attributes outside alignment and percentage width have no Carve column slot.')
+          }
+        }
+        else if(child.tagName==='thead'){flush();head.push(...sectionRows(child,cp));headAttrs=sectionAttrs(child,cp)}
+        else if(child.tagName==='tfoot'){flush();foot.push(...sectionRows(child,cp));footAttrs=sectionAttrs(child,cp)}
+        else if(child.tagName==='tbody'){flush();addBody(sectionRows(child,cp),sectionAttrs(child,cp))}
+        else if(child.tagName==='tr')direct.push(map(child,`${path}/rows/${i}`,true))
+        else if(child.tagName)ctx.note(cp,'unsupported-field','dropped','Unsupported child of an HTML table.')
+      }
+      flush()
+      result={...result,type:'table',rows:[...expand(head),...rows,...expand(foot)]}
+      if(columns.some(c=>Object.keys(c).length))result.columns=columns
+      if(options.generated && options.renderer==='pandoc' && attrs.keyValues?.style && !options.authoredKeyValues?.has(`style=${attrs.keyValues.style}`)){
+        const layout=htmlLayout({style:attrs.keyValues.style}), total=columns.reduce((sum,c)=>sum+(c.width??0),0)
+        if(layout.width && !layout.residualStyle && Math.abs(layout.width-total)<0.000001){delete attrs.keyValues.style;if(!Object.keys(attrs.keyValues).length)delete attrs.keyValues;ctx.note(`${path}/properties/style`,'generated-table-width','normalized','Omitted the total table width computed by Pandoc from its column widths.')}
+      }
+      const groups={headRows:head.length,bodies,footRows:foot.length,...(headAttrs?{headAttrs}:{}),...(footAttrs?{footAttrs}:{})}
+      if(groups.footRows || headAttrs || footAttrs || bodies.length!==1 || bodies.some(b=>(b.headRows && head.length>0) || b.attrs))result.rowGroups=groups
     }
     else if (tag === 'tr') result={type:'table_row',cells:n.children.filter(c=>['td','th'].includes(c.tagName)).map((c,i)=>map(c,`${path}/cells/${i}`))}
-    else if (tag === 'td' || tag === 'th') { const parts=children();let content=parts.length===1 && parts[0].type==='paragraph'?parts[0].children:parts;if(content.some(c=>['paragraph','list','block_quote','code_block','table','definition_list'].includes(c.type))){ctx.note(`${path}/children`,'unsupported-field','degraded','Block-containing table cells retain readable text in this inline-cell subset.');content=[text(parts.map(plain).join(' '))]}result={type:'table_cell',header:tag==='th',children:content} }
+    else if (tag === 'td' || tag === 'th') {
+      const parts=children(), layout=htmlLayout(props), {residualStyle,width,...cellLayout}=layout
+      const content=parts.filter(c=>c.type!=='text'||!/^[\s]*$/.test(c.value))
+      const hasBlocks=content.some(c=>['paragraph','list','block_quote','code_block','table','definition_list','heading','thematic_break','div'].includes(c.type))
+      const cellContent=hasBlocks?(content.length===1 && content[0].type==='paragraph'?{children:content[0].children}:{blocks:blocks(n.children,path)}):{children:parts}
+      result={type:'table_cell',header:tag==='th',...cellContent,...cellLayout,...(Number(props.colSpan)>1?{colspan:Number(props.colSpan)}:{}),...(props.rowSpan!==undefined && (Number(props.rowSpan)>1 || Number(props.rowSpan)===0)?{rowspan:Number(props.rowSpan)}:{})}
+      spanOrigins.set(result,path)
+      if(width)ctx.note(`${path}/properties/style`,'unsupported-field','dropped','A cell width cannot be represented as a column width without changing other cells.')
+    }
     else if (['em', 'strong', 'del', 's', 'u', 'mark', 'sup', 'sub'].includes(tag)) {
       result = { type: ({ em: 'emphasis', del: 'strike', s: 'strike', u: 'underline', mark: 'highlight', sup: 'superscript', sub: 'subscript' })[tag] ?? tag, children: children() }
     } else if (tag === 'a') result = { type: 'link', href: props.href ?? '', children: children(), ...(props.title ? { title: props.title } : {}) }
@@ -226,8 +301,8 @@ export function fromMdast(root, ctx = context('mdast')) {
     if (n.type === 'footnoteReference') return {type:'footnote_ref',label:n.identifier}
     if (n.type === 'footnoteDefinition') return {type:'footnote',label:n.identifier,children:children()}
     if (n.type === 'table') {
-      if(n.align?.some(Boolean))ctx.note(`${path}/align`,'unsupported-field','dropped','Column alignment is outside this mdast table subset.')
-      return {type:'table',rows:n.children.map((r,i)=>({type:'table_row',cells:r.children.map((cell,j)=>({type:'table_cell',header:i===0,children:coalesce(cell.children.map((c,k)=>map(c,`${path}/children/${i}/children/${j}/children/${k}`)))}))}))}
+
+      return {type:'table',...(n.align?.some(Boolean)?{columns:n.align.map(align=>align?{align}:{})}:{}),rows:n.children.map((r,i)=>({type:'table_row',cells:r.children.map((cell,j)=>({type:'table_cell',header:i===0,children:coalesce(cell.children.map((c,k)=>map(c,`${path}/children/${i}/children/${j}/children/${k}`)))}))}))}
     }
     if (n.type === 'delete') return { type: 'strike', children: children() }
     return ctx.unsupported(n, path, ['html', 'table', 'footnoteDefinition'].includes(n.type))
@@ -281,11 +356,11 @@ export function fromDjot(root, ctx = context('djot')) {
     else if (n.tag === 'definition_list_item') return children()
     else if (n.tag === 'term' || n.tag === 'definition') result={type:n.tag==='term'?'definition_term':'definition_description',children:children()}
     else if (n.tag === 'table') {
-      const caption=n.children.find(c=>c.tag==='caption');if(caption?.children.length)ctx.note(`${path}/caption`,'unsupported-field','dropped','Djot table captions are outside this subset.')
-      result={type:'table',rows:n.children.filter(c=>c.tag==='row').map((r,i)=>map(r,`${path}/rows/${i}`))}
+      const caption=n.children.find(c=>c.tag==='caption');if(caption?.attributes)ctx.note(`${path}/caption/attributes`,'unsupported-field','dropped','Carve has no attribute slot on table captions.')
+      result={type:'table',...(caption?.children.length?{caption:coalesce(caption.children.map((c,i)=>map(c,`${path}/caption/${i}`)))}:{}),rows:n.children.filter(c=>c.tag==='row').map((r,i)=>map(r,`${path}/rows/${i}`))}
     }
     else if(n.tag==='row')result={type:'table_row',cells:children()}
-    else if(n.tag==='cell'){if(n.align && n.align!=='default')ctx.note(`${path}/align`,'unsupported-field','dropped','Djot cell alignment is outside this subset.');result={type:'table_cell',header:n.head,children:children()}}
+    else if(n.tag==='cell')result={type:'table_cell',header:n.head,children:children(),...(n.align && n.align!=='default'?{align:n.align}:{})}
     else if(n.tag==='task_list_item')result={type:'list_item',checked:n.checkbox==='checked',children:children()}
     else if (n.tag === 'heading') result = { type: 'heading', level: n.level, children: children() }
     else if (n.tag === 'soft_break') result = text(' ')

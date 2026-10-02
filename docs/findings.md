@@ -34,10 +34,49 @@ therefore receive explicit diagnostics. The adapter keeps readable note content
 without deduplicating equal bodies. Named and unreferenced notes remain explicit
 losses too.
 
-Table caption, alignment, width, span, footer partition, section attributes and
-block-cell fallbacks have loss fixtures. Djot export reports multiple descriptions
-under one term because its source grammar groups those blocks into one body.
-These checks cover the declared combinations, not every possible rich document.
+## Rich tables and interchange
+
+HTML and Pandoc adapters retain table captions, column widths, cell spans,
+row and cell attributes, explicit row groups, section attributes and block
+cells. GFM retains column alignment. Djot retains captions and cell alignment.
+Combination fixtures include attributed spanning cells, formatted captions,
+multiple body groups, row headers, footers and blocks inside cells.
+
+An authored AST expectation distinguishes these interchange tests from ordinary
+Carve source fixtures. They check foreign parsing, schema validity, exact field
+mapping, JSON interchange, foreign interchange export and rendered HTML.
+Pandoc JSON is the export format for its richer table model; Pandoc Markdown
+does not preserve every JSON field. These rows explicitly list their scope.
+
+Carve source cannot spell block cells, section attributes or short captions.
+The reference engine's conversion report and reparsed source changes must match
+each fixture's declared expectations. The pinned JavaScript writer also loses
+some row-group information without reporting it. [Issue #2457](https://github.com/markup-carve/carve-js/issues/2457)
+tracks that engine gap. Column metadata can reparse as table attributes instead
+of the original AST fields. Both forms of change are visible in the evidence;
+AST interchange passing does not claim a lossless source round trip.
+Native engine rows verify JSON and HTML; they do not claim source round trips
+for these AST fixtures or independent conversion-diagnostic implementations.
+
+Pandoc has no vertical-alignment field. GFM and Djot still have narrower table
+models. Unsupported caption structure, column attributes and other fields
+continue to require explicit loss diagnostics. HTML width comparisons account
+for renderer decimal precision; the AST width assertions remain exact.
+
+## Combination coverage
+
+Nested notes run through mdast and Djot. Definitions containing task lists run
+through HTML and Djot. These cases complement repeated notes, nested tasks,
+inline table formatting and note references inside table cells.
+
+## Website freshness
+
+Report and manifest requests bypass the browser HTTP cache on page load.
+Script and stylesheet URLs include their content hashes so a new deployment
+also loads the current application code. A
+browser regression test caches an old report, changes the server's report,
+then opens the dashboard and requires the new counts without a hard refresh.
+An already open page still needs a reload to display a later deployment.
 
 ## Shared and independent checks
 

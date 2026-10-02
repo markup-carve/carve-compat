@@ -1,3 +1,4 @@
+import { alignment, pandocAlignment, expandTableSpans, tableGroups } from './tables.mjs'
 import { context, document, text, coalesce, plain } from './trees.mjs'
 const emptyAttr = () => ['', [], []]
 const readable = n => typeof n === 'string' ? n : Array.isArray(n) ? n.map(readable).join('') : n?.t === 'Str' ? n.c : n?.t === 'Space' || n?.t === 'SoftBreak' ? ' ' : readable(n?.c ?? '')
@@ -49,21 +50,24 @@ export function fromPandoc(root, ctx = context('pandoc')) {
       return { type:'footnote_ref', label }
     } else if (n.t === 'Table') {
       a = attrs(c[0])
-      if (c[1][0] || c[1][1].length) ctx.note(`${path}/c/1`, 'unsupported-field', 'dropped', 'Pandoc table captions are outside this adapter subset.')
-      c[2].forEach((col, i) => { if (col[0].t !== 'AlignDefault' || col[1].t !== 'ColWidthDefault') ctx.note(`${path}/c/2/${i}`, 'unsupported-field', 'dropped', 'Pandoc column alignment and width are outside this adapter subset.') })
-      const row = (r, rp, header) => {
-        if (attrs(r[0])) ctx.note(`${rp}/0`, 'unsupported-field', 'dropped', 'Pandoc table-row attributes are outside this subset.')
-        return { type:'table_row', cells:r[1].map((cell, i) => {
-          const cp = `${rp}/1/${i}`
-          if (attrs(cell[0]) || cell[1].t !== 'AlignDefault' || cell[2] !== 1 || cell[3] !== 1) ctx.note(cp, 'unsupported-field', 'dropped', 'Pandoc cell attributes, alignment and spans are outside this subset.')
-          const blocks = children(cell[4], `${cp.slice(path.length)}/4`)
-          if (blocks.length && (blocks.some(b => b.type !== 'paragraph') || blocks.length !== 1)) ctx.note(`${cp}/4`, 'unsupported-field', 'degraded', 'Retained readable text for a block-containing table cell.')
-          return { type:'table_cell', header, children:blocks.length === 0 ? [] : blocks.length === 1 && blocks[0].type === 'paragraph' ? blocks[0].children : [text(blocks.map(plain).join(' '))] }
-        }) }
+      const columns = c[2].map(col => ({ ...(alignment[col[0].t] ? { align: alignment[col[0].t] } : {}), ...(col[1].t === 'ColWidth' ? { width: col[1].c } : {}) }))
+      const row = (r, rp, header, rowHeads = 0) => ({ type: 'table_row', ...(attrs(r[0]) ? { attrs: attrs(r[0]) } : {}), cells: r[1].map((cell, i) => {
+        const cp = `${rp}/1/${i}`, content = children(cell[4], `${cp.slice(path.length)}/4`)
+        return { type: 'table_cell', header: header || i < rowHeads, ...(attrs(cell[0]) ? { attrs: attrs(cell[0]) } : {}), ...(alignment[cell[1].t] ? { align: alignment[cell[1].t] } : {}), ...(cell[2] > 1 ? { rowspan: cell[2] } : {}), ...(cell[3] > 1 ? { colspan: cell[3] } : {}), ...(content.length === 0 ? { children: [] } : content.length === 1 && content[0].type === 'paragraph' ? { children: content[0].children } : { blocks: content }) }
+      }) })
+      const head = c[3][1].map((r, i) => row(r, `${path}/c/3/1/${i}`, true))
+      const bodies = c[4].map((body, j) => [...body[2].map((r, i) => row(r, `${path}/c/4/${j}/2/${i}`, true)), ...body[3].map((r, i) => row(r, `${path}/c/4/${j}/3/${i}`, false, body[1]))])
+      const foot = c[5][1].map((r, i) => row(r, `${path}/c/5/1/${i}`, false))
+      out = { type: 'table', rows: [...expandTableSpans(head), ...bodies.flatMap((rows,j)=>expandTableSpans(rows).map((row,i)=>i<c[4][j][2].length?row:{...row,cells:row.cells.map((cell,k)=>({...cell,header:k<c[4][j][1]}))})), ...expandTableSpans(foot)] }
+      if (columns.some(col => Object.keys(col).length)) out.columns = columns
+      if (c[1][0]) out.shortCaption = children(c[1][0], '/c/1/0')
+      if (c[1][1].length) {
+        const caption = children(c[1][1], '/c/1/1')
+        if (caption.length === 1 && caption[0].type === 'paragraph') out.caption = caption[0].children
+        else { ctx.note(`${path}/c/1/1`, 'unsupported-field', 'degraded', 'Carve table captions hold inline content; retained readable text from a block caption.'); out.caption = [text(caption.map(plain).join(' '))] }
       }
-      out = { type:'table', rows:[...c[3][1].map((r, i) => row(r, `${path}/c/3/1/${i}`, true)), ...c[4].flatMap((body, j) => [...body[2].map((r, i) => row(r, `${path}/c/4/${j}/2/${i}`, true)), ...body[3].map((r, i) => row(r, `${path}/c/4/${j}/3/${i}`, false))]), ...c[5][1].map((r, i) => row(r, `${path}/c/5/1/${i}`, false))] }
-      for (const [bp, attr] of [[`${path}/c/3/0`, c[3][0]], ...c[4].map((b,i) => [`${path}/c/4/${i}/0`, b[0]]), [`${path}/c/5/0`, c[5][0]]]) if (attrs(attr)) ctx.note(bp, 'unsupported-field', 'dropped', 'Pandoc table-section attributes are outside this subset.')
-      c[4].forEach((b,i) => { if (b[1]) ctx.note(`${path}/c/4/${i}/1`, 'unsupported-field', 'dropped', 'Pandoc row-header column counts are outside this subset.') })
+      const groups = { headRows: head.length, bodies: c[4].map(body => ({ headRows: body[2].length, bodyRows: body[3].length, ...(body[1] ? { rowHeadColumns: body[1] } : {}), ...(attrs(body[0]) ? { attrs: attrs(body[0]) } : {}) })), footRows: foot.length, ...(attrs(c[3][0]) ? { headAttrs: attrs(c[3][0]) } : {}), ...(attrs(c[5][0]) ? { footAttrs: attrs(c[5][0]) } : {}) }
+      if (groups.footRows || groups.headAttrs || groups.footAttrs || groups.bodies.length !== 1 || groups.bodies.some(body => body.headRows || body.rowHeadColumns || body.attrs)) out.rowGroups = groups
     } else return ctx.unsupported({ type:n.t, value:readable(c) }, path, ['Div','RawBlock','Table'].includes(n.t))
     if (a) out.attrs = a
     return out
@@ -76,10 +80,10 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
   const referenced=new Set()
   const activeNotes=new Set(), emittedRefs=new Set()
   let emittedNoteCount=0
-  const visit=n=>{if(n.type==='footnote_ref' && !referenced.has(n.label)){referenced.add(n.label);notes.get(n.label)?.node.children.forEach(visit)}for(const key of ['children','items','rows','cells'])n[key]?.forEach(visit)}
+  const visit=n=>{if(n.type==='footnote_ref' && !referenced.has(n.label)){referenced.add(n.label);notes.get(n.label)?.node.children.forEach(visit)}for(const key of ['children','items','rows','cells','blocks','caption','shortCaption'])n[key]?.forEach(visit)}
   root.children.filter(n=>n.type!=='footnote').forEach(visit)
   const map = (n, path, tight = false) => {
-    const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','olType','pos','srcByteLength','bulletChar','delim']
+    const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','olType','pos','srcByteLength','bulletChar','delim','caption','shortCaption','columns','rowGroups']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
     if(n.type==='list' && !n.ordered && n.olType)ctx.note(`${path}/olType`,'unsupported-field','dropped','Numbering styles cannot be retained on an unordered foreign list.')
     if (n.attrs && !['heading','span','code','code_block','link','image','table'].includes(n.type)) ctx.note(`${path}/attrs`, 'unsupported-field', 'dropped', 'This Pandoc node has no attribute slot.')
@@ -109,9 +113,29 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     }
     if (n.type === 'footnote_ref') { if(activeNotes.has(n.label) || !referenced.has(n.label)){ctx.note(path,'unsupported-node','degraded','Retained a recursive or unreachable note reference as a literal marker.');return node('Str',`[^${n.label}]`)}const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if(emittedRefs.has(n.label))ctx.note(`${path}/label`,'unsupported-field','degraded','Pandoc emits a separate note body for each reference and cannot preserve a shared label.');emittedRefs.add(n.label); emittedNoteCount++; if(/^\d+$/.test(n.label) && n.label!==String(emittedNoteCount))ctx.note(`${path}/label`,'unsupported-field','degraded','Pandoc numbers notes in document order rather than preserving an out-of-order numeric source label.'); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); activeNotes.add(n.label);try{return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`)))}finally{activeNotes.delete(n.label)} }
     if (n.type === 'table') {
-      const row = (r,i) => {nestedFields(r,`${path}/rows/${i}`,['cells','attrs']);return [foreignAttr(r.attrs),r.cells.map((cell,j) => {nestedFields(cell,`${path}/rows/${i}/cells/${j}`,['children','header','attrs','align','colspan','rowspan','valign']); for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]}
-      const heads = n.rows.filter(r => r.cells.every(c => c.header)), body = n.rows.filter(r => !r.cells.every(c => c.header))
-      return node('Table', [a,[null,[]],Array.from({length:Math.max(...n.rows.map(r=>r.cells.length))},()=>[node('AlignDefault'),node('ColWidthDefault')]),[emptyAttr(),heads.map(row)],[[emptyAttr(),0,[],body.map(row)]],[emptyAttr(),[]]])
+      const row = (r, i, header = false, rowHeads = 0) => {
+        nestedFields(r, `${path}/rows/${i}`, ['cells', 'attrs'])
+        return [foreignAttr(r.attrs), r.cells.flatMap((cell, j) => {
+          if (cell.span) return []
+          const cp = `${path}/rows/${i}/cells/${j}`
+          if(cell.header!==(header || j<rowHeads))ctx.note(`${cp}/header`,'unsupported-field','dropped','Pandoc table headers must follow their head rows and leading row-header columns.')
+          nestedFields(cell, cp, ['children', 'blocks', 'header', 'attrs', 'align', 'colspan', 'rowspan', 'valign', 'span'])
+          if (cell.valign) ctx.note(`${cp}/valign`, 'unsupported-field', 'dropped', 'Pandoc cells have no vertical-alignment field.')
+          return [[foreignAttr(cell.attrs), pandocAlignment(cell.align), cell.rowspan ?? 1, cell.colspan ?? 1, cell.blocks ? cell.blocks.map((child, k) => map(child, `${cp}/blocks/${k}`)) : [node('Plain', cell.children.map((child, k) => map(child, `${cp}/children/${k}`)))]]]
+        })]
+      }
+      const groups = tableGroups(n), width = Math.max(0, ...n.rows.map(r => r.cells.length), n.columns?.length ?? 0)
+      const columns = Array.from({ length: width }, (_, i) => {
+        const column = n.columns?.[i] ?? {}
+        if (column.valign) ctx.note(`${path}/columns/${i}/valign`, 'unsupported-field', 'dropped', 'Pandoc columns have no vertical-alignment field.')
+        return [pandocAlignment(column.align), column.width ? node('ColWidth', column.width) : node('ColWidthDefault')]
+      })
+      let index = 0
+      const take = (count, header=false, rowHeads=0) => Array.from({ length: count }, () => { const i = index++; return row(n.rows[i], i, header, rowHeads) })
+      const head = [foreignAttr(groups.headAttrs), take(groups.headRows,true)]
+      const bodies = groups.bodies.map(body => [foreignAttr(body.attrs), body.rowHeadColumns ?? 0, take(body.headRows,true), take(body.bodyRows,false,body.rowHeadColumns??0)])
+      const foot = [foreignAttr(groups.footAttrs), take(groups.footRows)]
+      return node('Table', [a, [n.shortCaption ? n.shortCaption.map((child, i) => map(child, `${path}/shortCaption/${i}`)) : null, n.caption ? [node('Plain', n.caption.map((child, i) => map(child, `${path}/caption/${i}`)))] : []], columns, head, bodies, foot])
     }
     const fallback = ctx.unsupported(n,path)
     return node(['paragraph','span','text'].includes(n.type) ? 'Str' : 'Para', ['paragraph','span','text'].includes(n.type) ? plain(fallback) : [node('Str',plain(fallback))])

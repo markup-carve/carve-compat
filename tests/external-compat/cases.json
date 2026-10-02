@@ -671,6 +671,1608 @@
       "djot": ": First\n\n  One meaning.\n\n: Second\n\n  Another meaning.\n",
       "pandocMarkdown": "First\n\n: One meaning.\n\nSecond\n\n: Another meaning.\n",
       "html": "<dl><dt>First</dt><dd><p>One meaning.</p></dd><dt>Second</dt><dd><p>Another meaning.</p></dd></dl>"
+    },
+    {
+      "id": "html-spanned-table",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Wide cell"
+                      }
+                    ],
+                    "colspan": 2
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "span": "colspan",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><tr><td colspan=\"2\">Wide cell</td></tr></table>",
+      "sourceDiagnostics": [],
+      "sourceChanges": []
+    },
+    {
+      "id": "html-table-caption",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "caption": [
+              {
+                "type": "text",
+                "value": "Caption."
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><caption>Caption.</caption><tr><th>A</th></tr><tr><td>x</td></tr></table>",
+      "sourceDiagnostics": [],
+      "sourceChanges": []
+    },
+    {
+      "id": "html-rowspan-table",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Merged"
+                      }
+                    ],
+                    "rowspan": 2
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "first"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "span": "rowspan",
+                    "children": []
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "second"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><tr><td rowspan=\"2\">Merged</td><td>first</td></tr><tr><td>second</td></tr></table>",
+      "sourceDiagnostics": [],
+      "sourceChanges": []
+    },
+    {
+      "id": "html-table-section-attributes",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 1,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                }
+              ],
+              "footRows": 0,
+              "headAttrs": {
+                "id": "head"
+              }
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><thead id=\"head\"><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>",
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.headAttrs"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/rowGroups",
+          "before": {
+            "headRows": 1,
+            "bodies": [
+              {
+                "headRows": 0,
+                "bodyRows": 1
+              }
+            ],
+            "footRows": 0,
+            "headAttrs": {
+              "id": "head"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "html-table-footer-partition",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "total"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 1,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                }
+              ],
+              "footRows": 1
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody><tfoot><tr><td>total</td></tr></tfoot></table>",
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/rowGroups",
+          "before": {
+            "headRows": 1,
+            "bodies": [
+              {
+                "headRows": 0,
+                "bodyRows": 1
+              }
+            ],
+            "footRows": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "html-block-table-cell",
+      "tools": [
+        "hast"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "One"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "list",
+                        "ordered": false,
+                        "tight": true,
+                        "items": [
+                          {
+                            "type": "list_item",
+                            "children": [
+                              {
+                                "type": "paragraph",
+                                "children": [
+                                  {
+                                    "type": "text",
+                                    "value": "item"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "html": "<table><tr><td><p>One</p><ul><li>item</li></ul></td></tr></table>",
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "blocks"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/rows/0/cells/0/blocks",
+          "before": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "One"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "tight": true,
+              "items": [
+                {
+                  "type": "list_item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "value": "item"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/children/0/rows/0/cells/0/children",
+          "after": [
+            {
+              "type": "text",
+              "value": "One item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pandoc-table-caption",
+      "tools": [
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "caption": [
+              {
+                "type": "text",
+                "value": "Caption."
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "pandocMarkdown": "| A | B |\n|---|---|\n| x | y |\n\n: Caption.\n",
+      "sourceDiagnostics": [],
+      "sourceChanges": []
+    },
+    {
+      "id": "pandoc-table-alignment",
+      "tools": [
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "right"
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "pandocMarkdown": "| A | B |\n|:---|---:|\n| x | y |\n",
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "aligns": "left,right"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pandoc-table-widths",
+      "tools": [
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "columns": [
+              {
+                "width": 0.4
+              },
+              {
+                "width": 0.6
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "pandocMarkdown": "{\"pandoc-api-version\":[1,23,1,2],\"meta\":{},\"blocks\":[{\"t\":\"Table\",\"c\":[[\"\",[],[]],[null,[]],[[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidth\",\"c\":0.4}],[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidth\",\"c\":0.6}]],[[\"\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"A\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"B\"}]}]]]]]],[[[\"\",[],[]],0,[],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"x\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"y\"}]}]]]]]]],[[\"\",[],[]],[]]]}]}",
+      "sourceDiagnostics": [],
+      "formats": {
+        "pandoc": "pandoc-json"
+      },
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "widths": "40,60"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pandoc-block-table-cell",
+      "tools": [
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "one"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "two"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "x"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "y"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "columns": [
+              {
+                "width": 0.1111111111111111
+              },
+              {
+                "width": 0.1111111111111111
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "pandocMarkdown": "+-------+-------+\n| A     | B     |\n+=======+=======+\n| one   | x     |\n|       |       |\n| two   | y     |\n+-------+-------+\n",
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "blocks"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "blocks"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "widths": "11.11111111111111,11.11111111111111"
+            }
+          }
+        },
+        {
+          "path": "/children/0/rows/1/cells/0/blocks",
+          "before": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "one"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "two"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/children/0/rows/1/cells/0/children",
+          "after": [
+            {
+              "type": "text",
+              "value": "one two"
+            }
+          ]
+        },
+        {
+          "path": "/children/0/rows/1/cells/1/blocks",
+          "before": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "x"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "y"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/children/0/rows/1/cells/1/children",
+          "after": [
+            {
+              "type": "text",
+              "value": "x y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rich-table-combinations",
+      "tools": [
+        "hast",
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "attrs": {
+              "id": "data"
+            },
+            "caption": [
+              {
+                "type": "text",
+                "value": "A "
+              },
+              {
+                "type": "strong",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "rich"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "value": " table"
+              }
+            ],
+            "columns": [
+              {
+                "width": 0.4
+              },
+              {
+                "width": 0.6
+              }
+            ],
+            "rowGroups": {
+              "headRows": 1,
+              "headAttrs": {
+                "id": "head"
+              },
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 2,
+                  "attrs": {
+                    "classes": [
+                      "measurements"
+                    ],
+                    "keyValues": {
+                      "foo": "bar"
+                    }
+                  }
+                }
+              ],
+              "footRows": 1,
+              "footAttrs": {
+                "id": "foot"
+              }
+            },
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Merged"
+                      }
+                    ],
+                    "rowspan": 2,
+                    "attrs": {
+                      "id": "value",
+                      "classes": [
+                        "token"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "one"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "span": "rowspan",
+                    "children": []
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "Two paragraphs."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "emphasis",
+                            "children": [
+                              {
+                                "type": "text",
+                                "value": "Second"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "total"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "3"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "html": "<table id=\"data\"><caption>A <strong>rich</strong> table</caption><colgroup><col style=\"width:40%\"><col style=\"width:60%\"></colgroup><thead id=\"head\"><tr><th>A</th><th>B</th></tr></thead><tbody class=\"measurements\" foo=\"bar\"><tr><td id=\"value\" class=\"token\" rowspan=\"2\">Merged</td><td>one</td></tr><tr><td><p>Two paragraphs.</p><p><em>Second</em></p></td></tr></tbody><tfoot id=\"foot\"><tr><td>total</td><td>3</td></tr></tfoot></table>",
+      "pandocMarkdown": "{\"pandoc-api-version\":[1,23,1,2],\"meta\":{},\"blocks\":[{\"t\":\"Table\",\"c\":[[\"data\",[],[]],[null,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"A \"},{\"t\":\"Strong\",\"c\":[{\"t\":\"Str\",\"c\":\"rich\"}]},{\"t\":\"Str\",\"c\":\" table\"}]}]],[[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidth\",\"c\":0.4}],[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidth\",\"c\":0.6}]],[[\"head\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"A\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"B\"}]}]]]]]],[[[\"\",[\"measurements\"],[[\"foo\",\"bar\"]]],0,[],[[[\"\",[],[]],[[[\"value\",[\"token\"],[]],{\"t\":\"AlignDefault\"},2,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Merged\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"one\"}]}]]]],[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Para\",\"c\":[{\"t\":\"Str\",\"c\":\"Two paragraphs.\"}]},{\"t\":\"Para\",\"c\":[{\"t\":\"Emph\",\"c\":[{\"t\":\"Str\",\"c\":\"Second\"}]}]}]]]]]]],[[\"foot\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"total\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"3\"}]}]]]]]]]}]}",
+      "formats": {
+        "pandoc": "pandoc-json"
+      },
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.headAttrs"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.footAttrs"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.bodies[0].attrs"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "blocks"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs/keyValues",
+          "after": {
+            "widths": "40,60"
+          }
+        },
+        {
+          "path": "/children/0/rowGroups",
+          "before": {
+            "headRows": 1,
+            "headAttrs": {
+              "id": "head"
+            },
+            "bodies": [
+              {
+                "headRows": 0,
+                "bodyRows": 2,
+                "attrs": {
+                  "classes": [
+                    "measurements"
+                  ],
+                  "keyValues": {
+                    "foo": "bar"
+                  }
+                }
+              }
+            ],
+            "footRows": 1,
+            "footAttrs": {
+              "id": "foot"
+            }
+          }
+        },
+        {
+          "path": "/children/0/rows/2/cells/1/blocks",
+          "before": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Two paragraphs."
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "emphasis",
+                  "children": [
+                    {
+                      "type": "text",
+                      "value": "Second"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "path": "/children/0/rows/2/cells/1/children",
+          "after": [
+            {
+              "type": "text",
+              "value": "Two paragraphs. "
+            },
+            {
+              "type": "emphasis",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Second"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nested-notes",
+      "tools": [
+        "mdast",
+        "djot"
+      ],
+      "carve": "Text[^1].\n\n[^1]: Outer note[^2].\n\n[^2]: Inner note.\n",
+      "markdown": "Text[^1].\n\n[^1]: Outer note[^2].\n\n[^2]: Inner note.\n",
+      "djot": "Text[^1].\n\n[^1]: Outer note[^2].\n\n[^2]: Inner note.\n"
+    },
+    {
+      "id": "definition-with-task-content",
+      "tools": [
+        "hast",
+        "djot"
+      ],
+      "carve": ":: Tasks\n: List\n\n  - [x] Done\n  - [ ] Open\n",
+      "html": "<dl><dt>Tasks</dt><dd><p>List</p><ul><li><input type=\"checkbox\" checked disabled> Done</li><li><input type=\"checkbox\" disabled> Open</li></ul></dd></dl>",
+      "djot": ": Tasks\n\n  List\n\n  - [x] Done\n  - [ ] Open\n"
+    },
+    {
+      "id": "gfm-table-alignment",
+      "tools": [
+        "mdast"
+      ],
+      "markdown": "| Header Alpha | Header Beta |\n| :--- | ---: |\n| Cell Gamma | Cell Delta |\n",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "right"
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Header Alpha"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Header Beta"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Cell Gamma"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Cell Delta"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "aligns": "left,right"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "djot-caption-and-alignment",
+      "tools": [
+        "djot"
+      ],
+      "djot": "| A | B |\n|:--|--:|\n| x | y |\n\n^ A *caption*\n",
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "caption": [
+              {
+                "type": "text",
+                "value": "A "
+              },
+              {
+                "type": "strong",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "caption"
+                  }
+                ]
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ],
+                    "align": "left"
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ],
+                    "align": "right"
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "x"
+                      }
+                    ],
+                    "align": "left"
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "y"
+                      }
+                    ],
+                    "align": "right"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": []
+    },
+    {
+      "id": "pandoc-multiple-body-groups",
+      "tools": [
+        "pandoc"
+      ],
+      "ast": {
+        "type": "document",
+        "srcByteLength": 0,
+        "children": [
+          {
+            "type": "table",
+            "rowGroups": {
+              "headRows": 1,
+              "bodies": [
+                {
+                  "headRows": 1,
+                  "bodyRows": 1,
+                  "rowHeadColumns": 1
+                },
+                {
+                  "headRows": 1,
+                  "bodyRows": 1,
+                  "rowHeadColumns": 1
+                }
+              ],
+              "footRows": 1
+            },
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Name"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Value"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "First group"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Unit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Alpha"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Second group"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Unit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Beta"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Total"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "3"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "pandocMarkdown": "{\"pandoc-api-version\":[1,23,1,2],\"meta\":{},\"blocks\":[{\"t\":\"Table\",\"c\":[[\"\",[],[]],[null,[]],[[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidthDefault\"}],[{\"t\":\"AlignDefault\"},{\"t\":\"ColWidthDefault\"}]],[[\"\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Name\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Value\"}]}]]]]]],[[[\"\",[],[]],1,[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"First group\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Unit\"}]}]]]]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Alpha\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"1\"}]}]]]]]],[[\"\",[],[]],1,[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Second group\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Unit\"}]}]]]]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Beta\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"2\"}]}]]]]]]],[[\"\",[],[]],[[[\"\",[],[]],[[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"Total\"}]}]],[[\"\",[],[]],{\"t\":\"AlignDefault\"},1,1,[{\"t\":\"Plain\",\"c\":[{\"t\":\"Str\",\"c\":\"3\"}]}]]]]]]]}]}",
+      "formats": {
+        "pandoc": "pandoc-json"
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/rowGroups",
+          "before": {
+            "headRows": 1,
+            "bodies": [
+              {
+                "headRows": 1,
+                "bodyRows": 1,
+                "rowHeadColumns": 1
+              },
+              {
+                "headRows": 1,
+                "bodyRows": 1,
+                "rowHeadColumns": 1
+              }
+            ],
+            "footRows": 1
+          }
+        }
+      ]
     }
   ]
 }

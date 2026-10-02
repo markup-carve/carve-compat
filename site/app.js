@@ -1,9 +1,9 @@
 const $ = selector => document.querySelector(selector)
 const node = (tag, text, className) => { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (className) el.className = className; return el }
 const append = (parent, ...children) => { parent.append(...children); return parent }
-const fetchJson = async path => { const response = await fetch(path); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return response.json() }
+const fetchJson = async path => { const response = await fetch(path, {cache:'no-store'}); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return response.json() }
 let report, tools, activeButton
-const checkLabels = { 'independent-docbook':'Separate DocBook output', 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
+const checkLabels = { 'independent-docbook':'Separate DocBook output', 'foreign-ast-roundtrip':'Foreign AST interchange', 'source-conversion-changes':'Declared source conversion changes', 'source-conversion-diagnostics':'Reference source conversion diagnostics', 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
 function ring(passed, total) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 48 48'); svg.classList.add('ring'); svg.setAttribute('aria-hidden', 'true')
@@ -56,6 +56,10 @@ function showDetail(row, button, scroll = true) {
   $('#detail-checks').textContent = (row.checks ?? []).map(c => `✓ ${checkLabels[c] ?? c}`).join('  ·  ')
   const panes = $('#detail-panes'); panes.replaceChildren(); const e = row.evidence ?? {}
   if (e.source !== undefined) panes.append(pane(`Input source · ${e.sourceFormat}`, e.source, true))
+  if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Source changes are checked by the JavaScript reference against declared before/after values; they do not claim a lossless source round trip. Native engines verify the imported AST through their listed checks.`
+  if(e.sourceChanges)panes.append(pane('Reference source before/after changes',e.sourceChanges))
+  if(e.expectedAst)panes.append(pane('Authored AST expectation',e.expectedAst))
+  if(e.carveConversion)panes.append(pane('Reference Carve source conversion and diagnostics',e.carveConversion))
   if (e.carve !== undefined) panes.append(pane('Authored Carve expectation', e.carve, true))
   if (e.ast) panes.append(pane('Mapped Carve AST', e.ast, !e.carve))
   if(e.engineAst)panes.append(pane('Engine decoded AST',e.engineAst))
@@ -91,8 +95,8 @@ function renderMatrix() {
       const td = node('td'), row = group.find(r => r.tool === tool.id)
       if (!row) { const empty = node('span', '—', 'cell-empty'); empty.setAttribute('aria-label', 'Outside this filtered coverage'); td.append(empty) }
       else {
-        const type = row.status === 'failed' ? 'fail' : row.kind === 'loss' ? 'loss' : 'pass', button = node('button', type === 'fail' ? '×' : type === 'loss' ? 'L' : '✓', type)
-        button.type = 'button'; button.dataset.case = row.case; button.dataset.tool = row.tool; button.dataset.kind = row.kind; button.setAttribute('aria-pressed', 'false'); button.setAttribute('aria-label', `${tool.name}: ${row.case}, ${row.status}${row.kind === 'loss' ? ', expected loss' : ''}. View evidence`); button.addEventListener('click', () => showDetail(row, button)); td.append(button)
+        const type = row.status === 'failed' ? 'fail' : row.kind === 'loss' ? 'loss' : row.evidence?.scope ? 'interchange' : 'pass', button = node('button', type === 'fail' ? '×' : type === 'loss' ? 'L' : type === 'interchange' ? 'I' : '✓', type)
+        button.type = 'button'; button.dataset.case = row.case; button.dataset.tool = row.tool; button.dataset.kind = row.kind; button.setAttribute('aria-pressed', 'false'); button.setAttribute('aria-label', `${tool.name}: ${row.case}, ${row.status}${row.kind === 'loss' ? ', expected loss' : row.evidence?.scope ? ', AST interchange with separate source conversion checks' : ''}. View evidence`); button.addEventListener('click', () => showDetail(row, button)); td.append(button)
       }
       tr.append(td)
     }

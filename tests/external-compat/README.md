@@ -25,7 +25,7 @@ and MD4C packages and records the installed versions in its JSON report.
 ## What a passing case proves
 
 Each entry in `cases.json` contains foreign source and an authored Carve
-expectation. For every selected target, the runner:
+source or AST expectation. Ordinary source fixtures follow the checks below. For every selected target, the runner:
 
 1. Parses the foreign source and maps its tree to Carve's published AST schema.
 2. Compares the mapped semantic fields with the parsed Carve expectation.
@@ -149,9 +149,15 @@ note definitions retain their body as ordinary blocks and report the lost note
 structure. Equal note bodies remain separate; content equality does not prove
 that two notes shared a label.
 
-Table captions, alignment, widths, spans, footer partitions, section attributes
-and block-cell content have explicit loss fixtures. The Carve schema can
-represent these fields; the adapters currently flatten or omit them. Djot export
+HTML and Pandoc retain captions, widths, spans, row groups, section attributes
+and block cells through AST interchange. GFM retains column alignment; Djot
+retains captions and cell alignment. AST fixtures declare their source-conversion
+diagnostics and exact reparsed before/after changes, and compare against authored
+JSON expectations. Missing engine diagnostics are recorded separately. Pandoc exports these
+fixtures through its native JSON format, since Markdown cannot spell every field.
+Block cells, section attributes and short captions remain unspellable in Carve
+source. Their rows do not claim Carve source round trips or public importer
+coverage. Unsupported fields in narrower formats still require loss diagnostics. Djot export
 keeps multiple descriptions as readable blocks under one term and reports the
 lost description partition.
 
