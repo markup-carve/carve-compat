@@ -1,4 +1,4 @@
-import { tableGroups } from './tables.mjs'
+import { shiftTableWidth, tableGroups } from './tables.mjs'
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -228,7 +228,7 @@ export function toHast(root, ctx = context('hast')) {
       const groups=tableGroups(n), elements=[]
       const properties=attrs=>({... (attrs?.id?{id:attrs.id}:{}),...(attrs?.classes?{className:attrs.classes}:{}),...attrs?.keyValues})
       if(n.caption)elements.push(element('caption',n.caption.map((c,i)=>map(c,`${path}/caption/${i}`))))
-      if(n.columns)elements.push(element('colgroup',n.columns.map(c=>element('col',[],{style:[c.align?`text-align: ${c.align}`:'',c.valign?`vertical-align: ${c.valign}`:'',c.width?`width: ${c.width*100}%`:''].filter(Boolean).join('; ')}))))
+      if(n.columns)elements.push(element('colgroup',n.columns.map(c=>element('col',[],{style:[c.align?`text-align: ${c.align}`:'',c.valign?`vertical-align: ${c.valign}`:'',c.width?`width: ${shiftTableWidth(c.width, 2)}%`:''].filter(Boolean).join('; ')}))))
       let index=0
       const take=count=>Array.from({length:count},()=>{const i=index++;return map(n.rows[i],`${path}/rows/${i}`)})
       if(groups.headRows || groups.headAttrs)elements.push(element('thead',take(groups.headRows),properties(groups.headAttrs)))

@@ -56,7 +56,7 @@ function showDetail(row, button, scroll = true) {
   $('#detail-checks').textContent = (row.checks ?? []).map(c => `✓ ${checkLabels[c] ?? c}`).join('  ·  ')
   const panes = $('#detail-panes'); panes.replaceChildren(); const e = row.evidence ?? {}
   if (e.source !== undefined) panes.append(pane(`Input source · ${e.sourceFormat}`, e.source, true))
-  if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Source changes are checked by the JavaScript reference against declared before/after values; they do not claim a lossless source round trip. Native engines verify the imported AST through their listed checks.`
+  if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Each engine checks source changes against declared before/after values; this does not claim a lossless source round trip. Conversion-diagnostic checks use the JavaScript reference.`
   if(e.sourceChanges)panes.append(pane('Reference source before/after changes',e.sourceChanges))
   if(e.expectedAst)panes.append(pane('Authored AST expectation',e.expectedAst))
   if(e.carveConversion)panes.append(pane('Reference Carve source conversion and diagnostics',e.carveConversion))

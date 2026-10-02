@@ -52,23 +52,29 @@ Pandoc JSON is the export format for its richer table model; Pandoc Markdown
 does not preserve every JSON field. These rows explicitly list their scope.
 
 Carve source cannot spell block cells, section attributes or short captions.
-The reference engine's conversion report and reparsed source changes must match
-each fixture's declared expectations. The JavaScript writer preserves leading
-heads, one body without intermediate headers, and footers through generated
-source attributes. Columns remain columns after reparsing; their added source
-attributes are recorded as normalization. The [engine regressions](https://github.com/markup-carve/carve-js/blob/main/test/table-source-metadata.test.ts)
-check diagnostics for conflicting authored metadata. Decimal percentage
+The reference conversion report and each engine's reparsed source changes must
+match declared fixture expectations. JavaScript, PHP and Rust preserve multiple
+bodies, intermediate header rows, empty bodies and per-body row-header columns
+through positional source attributes. Columns remain columns after reparsing;
+their added source attributes are recorded as normalization. Decimal percentage
 conversion preserves fractional widths.
+
+The new combinations cover a caption, fractional widths, head and foot,
+multiple bodies, intermediate headers, row headers and spans; an empty body
+before intermediate headers; no bodies between head and foot; and adjacent
+plain bodies with exact widths. PHP retains a header flag on a cell covered by
+a colspan where JavaScript and Rust clear it. That exact source result has a
+PHP-specific expectation; the visible spanning cell and partition stay intact.
 
 [Issue #2457](https://github.com/markup-carve/carve-js/issues/2457) tracked the
 missing row-group diagnostic. [PR #2459](https://github.com/markup-carve/carve-js/pull/2459)
-fixed reporting, and [PR #2460](https://github.com/markup-carve/carve-js/pull/2460)
-adds source preservation and metadata conflict checks. Multiple bodies and
-body-level row headers remain explicit source-conversion boundaries. Section
-attributes and block cells are reported separately. AST interchange passing
-does not claim a lossless source round trip.
-Native engine rows verify JSON and HTML; they do not claim source round trips
-for these AST fixtures or independent conversion-diagnostic implementations.
+fixed reporting, [PR #2460](https://github.com/markup-carve/carve-js/pull/2460)
+added simple partition preservation, and [PR #2462](https://github.com/markup-carve/carve-js/pull/2462)
+added positional body metadata. Section attributes and block cells are reported
+separately. A passing interchange row does not claim a lossless source round
+trip: its declared before/after changes show the remaining losses. Native
+engines now check those changes too; conversion-diagnostic checks still use the
+JavaScript reference implementation.
 
 Pandoc has no vertical-alignment field. GFM and Djot still have narrower table
 models. Unsupported caption structure, column attributes and other fields

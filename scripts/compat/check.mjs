@@ -30,6 +30,10 @@ export function validateCorpus(data = corpus) {
     else assert.equal(typeof c.carve, 'string', `${c.id}: missing Carve expectation`)
     if(c.ast)assert.ok(Array.isArray(c.sourceChanges), `${c.id}: missing source change expectation`)
     if(c.ast)assert.ok(Array.isArray(c.sourceDiagnostics), `${c.id}: missing source conversion expectation`)
+    for (const [engine, changes] of Object.entries(c.sourceChangesByEngine ?? {})) {
+      assert.ok(c.ast && engineNames.includes(engine) && engine !== 'javascript', `${c.id}: invalid source change engine ${engine}`)
+      assert.ok(Array.isArray(changes), `${c.id}: invalid ${engine} source change expectation`)
+    }
     assert.ok((c.tools ?? toolNames).length > 0, `${c.id}: no tools selected`)
     for (const tool of c.tools ?? toolNames) {
       assert.ok(toolNames.includes(tool), `${c.id}: unknown tool ${tool}`)
@@ -153,7 +157,7 @@ export function isTableMetadataSpelling(before, after, change) {
   const partition = groups => groups && { headRows: groups.headRows, footRows: groups.footRows, bodies: groups.bodies.map(({headRows, bodyRows, rowHeadColumns}) => ({headRows, bodyRows, ...(rowHeadColumns === undefined ? {} : {rowHeadColumns})})) }
   return Object.keys(values).length > 0 && Object.keys(values).every(key => {
     if (['aligns', 'valigns', 'widths'].includes(key)) return oldTable.columns && isDeepStrictEqual(oldTable.columns, newTable.columns)
-    if (['header-rows', 'footer-rows'].includes(key)) return oldTable.rowGroups && isDeepStrictEqual(partition(oldTable.rowGroups), partition(newTable.rowGroups))
+    if (['header-rows', 'footer-rows', 'body-rows', 'body-header-rows', 'body-header-cols'].includes(key)) return oldTable.rowGroups && isDeepStrictEqual(partition(oldTable.rowGroups), partition(newTable.rowGroups))
     return false
   })
 }
@@ -258,6 +262,19 @@ export function checkEngineCase(engine, tool, fixture, baseline) {
     progress.checks.push('carve-source-roundtrip')
     assert.deepEqual(semantics(engineProjection(result.parsedAst,expected,progress.diagnostics)),semantics(expected),`${engine}/${tool}/${fixture.id}: authored Carve source parse`)
     progress.checks.push('ast-mapping')
+    }
+    if (baseline.kind === 'supported' && fixture.ast) {
+      validateAst(result.reparsedAst)
+      const changes = sourceChanges(semantics(baseline.evidence.ast), semantics(engineProjection(result.reparsedAst, baseline.evidence.ast, progress.diagnostics)))
+      assert.deepEqual(changes, fixture.sourceChangesByEngine?.[engine] ?? fixture.sourceChanges, `${engine}/${tool}/${fixture.id}: declared source conversion changes`)
+      progress.evidence.sourceChanges = changes
+      progress.diagnostics = progress.diagnostics.filter(d => !['source-conversion-change', 'missing-source-conversion-diagnostic'].includes(d.code))
+      const before = semantics(baseline.evidence.ast), after = semantics(result.reparsedAst)
+      for (const change of changes) {
+        const normalized = isTableMetadataSpelling(before, after, change)
+        progress.diagnostics.push({ tool: engine, path: change.path, code: 'source-conversion-change', fidelity: normalized ? 'normalized' : 'degraded', message: normalized ? 'Added source attributes that reconstruct the preserved table metadata.' : 'An asserted AST field changes when this engine’s canonical Carve source is reparsed. The declared before/after values are shown in the source conversion evidence.' })
+      }
+      progress.checks.push('carve-source-roundtrip')
     }
     const ctx = context(engine), authored = authoredAttributes(baseline.evidence.ast)
     const actualHtml = fromHast(parseHtml(result.html),ctx,{generated:true,...authored})
