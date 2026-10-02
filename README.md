@@ -4,9 +4,7 @@ Cross-format AST adapters, tests and measured reports for Carve. The website
 shows coverage, source examples, mapped trees, exported source, diagnostics and
 pinned revisions for each run.
 
-- [Website](https://markup-carve.github.io/carve-compat/)
-- [Latest report](https://markup-carve.github.io/carve-compat/report.json)
-- [Runs and downloadable artifacts](https://github.com/markup-carve/carve-compat/actions/workflows/compatibility.yml)
+- [**Website**](https://markup-carve.github.io/carve-compat/)
 - [Full methodology and adapter boundaries](tests/external-compat/README.md)
 
 The suite lives independently of the Carve specification repository. It measures
