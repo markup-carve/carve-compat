@@ -1,0 +1,10 @@
+[
+  {"id":"mdast","name":"mdast","format":"Markdown + GFM","tree":"unified syntax tree","url":"https://github.com/syntax-tree/mdast","description":"Markdown parsed by remark, including GFM strike. Checks the public Markdown importer too."},
+  {"id":"hast","name":"hast","format":"HTML","tree":"HTML syntax tree","url":"https://github.com/syntax-tree/hast","description":"HTML parsed by rehype. Covers authored attributes, destinations, code and block nesting."},
+  {"id":"commonmark","name":"commonmark.js","format":"CommonMark","tree":"CommonMark AST","url":"https://github.com/commonmark/commonmark.js","description":"The JavaScript CommonMark reader and renderer. Unsupported GFM strike is reported explicitly."},
+  {"id":"cmark","name":"cmark","format":"CommonMark","tree":"XML AST","url":"https://github.com/commonmark/cmark","description":"The native reference reader. XML text nodes preserve whitespace between adjacent inline elements."},
+  {"id":"djot","name":"djot.js","format":"Djot","tree":"Djot AST","url":"https://github.com/jgm/djot.js","description":"Djot parsing, rendering and writing. A tested workaround covers the pinned writer's hard-break crash."},
+  {"id":"docutils","name":"Docutils","format":"reStructuredText","tree":"Docutils doctree","url":"https://docutils.sourceforge.io/","description":"Native doctrees and HTML output. Loose-list layout and heading-level boundaries are recorded."},
+  {"id":"asciidoctor","name":"Asciidoctor.js","format":"AsciiDoc","tree":"Block AST + inline HTML","url":"https://github.com/asciidoctor/asciidoctor.js","description":"Block structure comes from Asciidoctor. Converted HTML supplies inline semantics, with a documented comparison limit."},
+  {"id":"md4c","name":"MD4C","format":"CommonMark","tree":"Native event stream","url":"https://github.com/mity/md4c","description":"A small C driver captures parser events and native HTML. Unbalanced event streams fail validation."}
+]

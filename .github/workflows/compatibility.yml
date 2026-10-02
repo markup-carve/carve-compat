@@ -1,0 +1,95 @@
+name: Compatibility and website
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: compatibility-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  measure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      site_ready: ${{ steps.ready.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Use HTTPS for Git dependencies
+        run: |
+          git config --global --add url."https://github.com/".insteadOf ssh://git@github.com/
+          git config --global --add url."https://github.com/".insteadOf git@github.com:
+      - run: npm ci
+      - name: Unit and JavaScript compatibility tests
+        run: npm test
+      - name: Provision native readers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmark libmd4c-dev libmd4c-html0-dev
+          python -m pip install -r scripts/compat/requirements.txt
+          mkdir -p .cache/compat reports
+          cc -std=c99 -Wall -Wextra -Werror \
+            "-DCARVE_MD4C_VERSION=\"$(dpkg-query -W -f='${Version}' libmd4c0)\"" \
+            scripts/compat/md4c-driver.c -lmd4c -lmd4c-html \
+            -o .cache/compat/md4c-driver
+      - name: Measure all eight targets
+        id: comparison
+        continue-on-error: true
+        env:
+          CARVE_COMPAT_PYTHON: python
+        run: npm run compat:check -- --report=reports/latest.json
+      - name: Build report website
+        id: site
+        run: |
+          npm run site:build
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Browser checks
+        run: npm run test:site
+      - name: Save full evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-evidence
+          path: |
+            reports/latest.json
+            test-results/
+          if-no-files-found: warn
+      - name: Package website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Mark packaged website ready
+        id: ready
+        run: echo 'ready=true' >> "$GITHUB_OUTPUT"
+      - name: Fail the check when a comparison fails
+        if: steps.comparison.outcome == 'failure'
+        run: exit 1
+  deploy:
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    needs: measure
+    if: always() && needs.measure.outputs.site_ready == 'true' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish measured report
+        id: deployment
+        uses: actions/deploy-pages@v4
