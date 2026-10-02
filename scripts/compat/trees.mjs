@@ -100,7 +100,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     const generatedLang = options.generated && options.renderer === 'pandoc' && tag === 'pre' ? props.className?.[0] : options.generated && tag === 'pre' && props.className?.includes('code') ? props.className.find(c => !['code', 'literal-block'].includes(c)) : undefined
     const children = () => {
       const mapped = coalesce(n.children.map((c, i) => map(c, `${path}/children/${i}`, false, taskContext || tag === 'li')))
-      if(noteBodies.has(n) && n.children.at(-1)?.tagName==='a' && mapped.at(-1)?.type==='text')mapped.at(-1).value=mapped.at(-1).value.replace(/ $/,'')
+      if(noteBodies.has(n) && n.children.at(-1)?.tagName==='a' && mapped.at(-1)?.type==='text')mapped.at(-1).value=mapped.at(-1).value.replace(/\s+$/,'')
       for (let i = 1; i < mapped.length; i++) if (mapped[i - 1].type === 'hard_break' && mapped[i].type === 'text') mapped[i].value = mapped[i].value.replace(/^\n/, '')
       return mapped
     }
@@ -110,7 +110,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
       if(options.generated && options.renderer==='pandoc' && key.startsWith('data') && key.length>4){const original=key[4].toLowerCase()+key.slice(5);if(options.authoredKeyValues?.has(`${original}=${value}`)){attrs.keyValues??={};attrs.keyValues[original]=String(value);ctx.note(`${path}/properties/${key}`,'generated-html-attribute','normalized','Restored an authored attribute renamed by Pandoc HTML output.');continue}}
       if (options.renderer === 'pandoc' && tag === 'ol' && key === 'type' && String(value) === '1') { ctx.note(`${path}/properties/type`, 'generated-html-attribute', 'normalized', 'Omitted the Pandoc decimal-list type attribute.'); continue }
       if (['td','th'].includes(tag) && ['align','colSpan','rowSpan','style'].includes(key)) { if(value && value!==1)ctx.note(`${path}/properties/${key}`,'unsupported-field','dropped','Cell alignment, styles and spans are outside this HTML adapter subset.');continue }
-      if ((tag === 'a' && ['href', 'title'].includes(key)) || (tag === 'img' && ['src', 'alt', 'title'].includes(key)) || (tag === 'ol' && key === 'start')) continue
+      if ((tag === 'a' && ['href', 'title'].includes(key)) || (tag === 'img' && ['src', 'alt', 'title'].includes(key)) || (tag === 'ol' && (key==='start' || (key==='type' && ['1','a','A','i','I'].includes(String(value)))))) continue
       if (options.generated && key === 'className') {
         const retained = value.filter(c => (!generatedClasses.has(c) && c !== generatedLang) || options.authoredClasses?.has(c))
         if (retained.length !== value.length) ctx.note(`${path}/properties/${key}`, 'generated-html-attribute', 'normalized', 'Omitted classes added by the foreign renderer.')
@@ -132,12 +132,13 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     else if (tag === 'dt') result = {type:'definition_term',children:children()}
     else if (tag === 'dd') { const hasBlocks=n.children.some(c=>['p','ul','ol','pre','blockquote','dl'].includes(c.tagName));result={type:'definition_description',children:hasBlocks?blocks(n.children,path):[{type:'paragraph',children:children()}]} }
     else if (tag === 'table') {
+      for(const [i,section]of n.children.entries())if(['thead','tbody','tfoot'].includes(section.tagName)){if(Object.keys(section.properties??{}).length)ctx.note(`${path}/children/${i}/properties`,'unsupported-field','dropped','Table-section attributes are outside the flattened HTML table subset.');if(section.tagName==='tfoot' && !options.generated)ctx.note(`${path}/children/${i}`,'unsupported-field','dropped','Flattened footer rows without retaining their explicit row-group partition.')}
       const rows=n.children.flatMap((c,i)=>c.tagName==='tr'?[{n:c,path:`${path}/rows/${i}`}]:['thead','tbody','tfoot'].includes(c.tagName)?c.children.filter(r=>r.tagName==='tr').map((r,j)=>({n:r,path:`${path}/rows/${i}/${j}`})):[])
       for(const [i,c]of n.children.entries())if(c.tagName && !['tr','thead','tbody','tfoot'].includes(c.tagName))ctx.note(`${path}/children/${i}`,'unsupported-field','dropped','Table captions and column groups are outside this HTML adapter subset.')
       result={type:'table',rows:rows.map(r=>map(r.n,r.path,true))}
     }
     else if (tag === 'tr') result={type:'table_row',cells:n.children.filter(c=>['td','th'].includes(c.tagName)).map((c,i)=>map(c,`${path}/cells/${i}`))}
-    else if (tag === 'td' || tag === 'th') { const parts=children();const content=parts.length===1 && parts[0].type==='paragraph'?parts[0].children:parts;result={type:'table_cell',header:tag==='th',children:content} }
+    else if (tag === 'td' || tag === 'th') { const parts=children();let content=parts.length===1 && parts[0].type==='paragraph'?parts[0].children:parts;if(content.some(c=>['paragraph','list','block_quote','code_block','table','definition_list'].includes(c.type))){ctx.note(`${path}/children`,'unsupported-field','degraded','Block-containing table cells retain readable text in this inline-cell subset.');content=[text(parts.map(plain).join(' '))]}result={type:'table_cell',header:tag==='th',children:content} }
     else if (['em', 'strong', 'del', 's', 'u', 'mark', 'sup', 'sub'].includes(tag)) {
       result = { type: ({ em: 'emphasis', del: 'strike', s: 'strike', u: 'underline', mark: 'highlight', sup: 'superscript', sub: 'subscript' })[tag] ?? tag, children: children() }
     } else if (tag === 'a') result = { type: 'link', href: props.href ?? '', children: children(), ...(props.title ? { title: props.title } : {}) }
@@ -162,7 +163,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
         if (child.tagName === 'li') items.push(map(child, `${path}/items/${items.length}`, true))
         else if (!(child.type === 'text' && /^\s*$/.test(child.value))) items.push({ type: 'list_item', children: [ctx.unsupported(child, `${path}/children/${i}`, true)] })
       }
-      result = { type: 'list', ordered: tag === 'ol', tight: !n.children.some(li => li.tagName === 'li' && li.children.some(p => p.tagName === 'p')), items, ...(tag === 'ol' && Number(props.start ?? 1) !== 1 ? { start: Number(props.start) } : {}) }
+      result = { type: 'list', ordered: tag === 'ol', ...(tag==='ol' && ['a','A','i','I'].includes(props.type)?{olType:props.type}:{}), tight: !n.children.some(li => li.tagName === 'li' && li.children.some(p => p.tagName === 'p')), items, ...(tag === 'ol' && Number(props.start ?? 1) !== 1 ? { start: Number(props.start) } : {}) }
     } else if (tag === 'li') {
       const hasBlocks = n.children.some(c => ['p', 'ul', 'ol', 'pre', 'blockquote'].includes(c.tagName))
       const inlineChildren = children()
@@ -172,7 +173,12 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
       }
       const findCheckbox=node=>node.children?.flatMap(c=>c.tagName==='input' && c.properties?.type==='checkbox'?[c]:c.tagName==='p'?findCheckbox(c):[])??[];let checkbox=findCheckbox(n)[0];
       checkbox??=n.children.find(c=>c.tagName==='input' && c.properties?.type==='checkbox') ?? n.children.find(c=>c.tagName==='p')?.children.find(c=>c.tagName==='input' && c.properties?.type==='checkbox')
-      const body=hasBlocks?blocks(n.children,path,true):[{type:'paragraph',children:inlineChildren}]
+      const body=[]
+      if(hasBlocks){
+        let pending=[]
+        const flush=()=>{const parts=coalesce(pending);pending=[];if(options.generated){if(parts[0]?.type==='text')parts[0].value=parts[0].value.replace(/^\s+/,'');if(parts.at(-1)?.type==='text')parts.at(-1).value=parts.at(-1).value.replace(/\s+$/,'')}if(parts.some(c=>c.type!=='text'||!/^[\s]*$/.test(c.value)))body.push({type:'paragraph',children:parts})}
+        for(const part of inlineChildren){if(['paragraph','list','code_block','block_quote','definition_list','table','thematic_break','heading','div'].includes(part.type)){flush();body.push(part)}else pending.push(part)}flush()
+      }else body.push({type:'paragraph',children:inlineChildren})
       if(checkbox && body[0]?.children?.[0]?.type==='text')body[0].children[0].value=body[0].children[0].value.replace(/^\n+/,'').replace(/^ /,'')
       result = { type: 'list_item', children:body,...(checkbox?{checked:!!checkbox.properties.checked}:{}) }
     } else if (options.generated && ['div', 'section', 'main'].includes(tag)) {
@@ -291,8 +297,8 @@ export function fromDjot(root, ctx = context('djot')) {
       if (destination === undefined) return ctx.unsupported(n, path)
       result = { type: n.tag, ...(n.tag === 'image' ? { src: destination, alt: children().map(plain).join('') } : { href: destination, children: children() }) }
     } else if (n.tag === 'bullet_list' || n.tag === 'ordered_list' || n.tag === 'task_list') {
-      if (n.tag === 'ordered_list' && n.style && !['1.', '1)', '(1)'].includes(n.style)) ctx.note(`${path}/style`, 'unsupported-field', 'dropped', 'Lettered and roman numbering styles are outside this adapter subset.')
-      result = { type: 'list', ordered: n.tag === 'ordered_list', tight: n.tight, items: children(), ...(n.tag === 'ordered_list' && (n.start ?? 1) !== 1 ? { start: n.start } : {}) }
+      const olType=n.tag==='ordered_list'?n.style?.match(/[aAiI]/)?.[0]:undefined
+      result = { type: 'list', ordered: n.tag === 'ordered_list', ...(olType?{olType}:{}), tight: n.tight, items: children(), ...(n.tag === 'ordered_list' && (n.start ?? 1) !== 1 ? { start: n.start } : {}) }
     }
     else return ctx.unsupported(n, path, ['div', 'table', 'raw_block', 'definition_list'].includes(n.tag))
     if (n.attributes) result.attrs = foreignAttrs(n.attributes)

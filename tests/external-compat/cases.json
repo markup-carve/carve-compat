@@ -551,6 +551,126 @@
       "html": "<p>A <span id=\"word\" class=\"token\" key=\"value\">word</span>.</p>",
       "djot": "A [word]{#word .token key=\"value\"}.\n",
       "pandocMarkdown": "A [word]{#word .token key=\"value\"}.\n"
+    },
+    {
+      "id": "lower-alpha-list",
+      "tools": [
+        "djot",
+        "pandoc"
+      ],
+      "carve": "a. one\na. two\n",
+      "djot": "a. one\na. two\n",
+      "pandocMarkdown": "a. one\na. two\n"
+    },
+    {
+      "id": "upper-alpha-list",
+      "tools": [
+        "djot",
+        "pandoc"
+      ],
+      "carve": "A. one\nA. two\n",
+      "djot": "A. one\nA. two\n",
+      "pandocMarkdown": "A.  one\nB.  two\n"
+    },
+    {
+      "id": "lower-roman-list",
+      "tools": [
+        "djot",
+        "pandoc"
+      ],
+      "carve": "i. one\ni. two\n",
+      "djot": "i. one\ni. two\n",
+      "pandocMarkdown": "i. one\ni. two\n"
+    },
+    {
+      "id": "upper-roman-list",
+      "tools": [
+        "djot",
+        "pandoc"
+      ],
+      "carve": "I. one\nI. two\n",
+      "djot": "I. one\nI. two\n",
+      "pandocMarkdown": "I.  one\nII.  two\n"
+    },
+    {
+      "id": "repeated-footnote",
+      "tools": [
+        "mdast",
+        "djot"
+      ],
+      "carve": "Text[^1] twice[^1].\n\n[^1]: Note.\n",
+      "markdown": "Text[^1] twice[^1].\n\n[^1]: Note.\n",
+      "djot": "Text[^1] twice[^1].\n\n[^1]: Note.\n"
+    },
+    {
+      "id": "two-distinct-notes",
+      "tools": [
+        "mdast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "First[^1], second[^2].\n\n[^1]: A *bold* note.\n\n[^2]: A /soft/ note.\n",
+      "markdown": "First[^1], second[^2].\n\n[^1]: A **bold** note.\n\n[^2]: A *soft* note.\n",
+      "djot": "First[^1], second[^2].\n\n[^1]: A *bold* note.\n\n[^2]: A _soft_ note.\n",
+      "pandocMarkdown": "First[^1], second[^2].\n\n[^1]: A **bold** note.\n\n[^2]: A *soft* note.\n"
+    },
+    {
+      "id": "table-inline-combinations",
+      "tools": [
+        "mdast",
+        "hast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "| Name | Detail |\n|---|---|\n| Café 😀 | [link](/path?q=1) |\n| `x < y` | /soft/ and *bold* |\n",
+      "markdown": "| Name | Detail |\n|---|---|\n| Café 😀 | [link](/path?q=1) |\n| `x < y` | *soft* and **bold** |\n",
+      "djot": "| Name | Detail |\n|---|---|\n| Café 😀 | [link](/path?q=1) |\n| `x < y` | _soft_ and *bold* |\n",
+      "pandocMarkdown": "| Name | Detail |\n|---|---|\n| Café 😀 | [link](/path?q=1) |\n| `x < y` | *soft* and **bold** |\n",
+      "html": "<table><tr><th>Name</th><th>Detail</th></tr><tr><td>Café 😀</td><td><a href=\"/path?q=1\">link</a></td></tr><tr><td><code>x &lt; y</code></td><td><em>soft</em> and <strong>bold</strong></td></tr></table>"
+    },
+    {
+      "id": "note-in-table-cell",
+      "tools": [
+        "mdast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "| Name | Note |\n|---|---|\n| Alpha | word[^1] |\n\n[^1]: Table note.\n",
+      "markdown": "| Name | Note |\n|---|---|\n| Alpha | word[^1] |\n\n[^1]: Table note.\n",
+      "djot": "| Name | Note |\n|---|---|\n| Alpha | word[^1] |\n\n[^1]: Table note.\n",
+      "pandocMarkdown": "| Name | Note |\n|---|---|\n| Alpha | word[^1] |\n\n[^1]: Table note.\n"
+    },
+    {
+      "id": "definition-inline-combinations",
+      "tools": [
+        "hast",
+        "pandoc"
+      ],
+      "carve": ":: *Term*\n: /First/ meaning.\n: Second `meaning`.\n",
+      "pandocMarkdown": "**Term**\n\n: *First* meaning.\n\n: Second `meaning`.\n",
+      "html": "<dl><dt><strong>Term</strong></dt><dd><p><em>First</em> meaning.</p></dd><dd><p>Second <code>meaning</code>.</p></dd></dl>"
+    },
+    {
+      "id": "nested-task-lists",
+      "tools": [
+        "mdast",
+        "djot"
+      ],
+      "carve": "- [x] parent\n  - [ ] child\n",
+      "markdown": "- [x] parent\n  - [ ] child\n",
+      "djot": "- [x] parent\n\n  - [ ] child\n"
+    },
+    {
+      "id": "two-definition-terms",
+      "tools": [
+        "hast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": ":: First\n: One meaning.\n\n:: Second\n: Another meaning.\n",
+      "djot": ": First\n\n  One meaning.\n\n: Second\n\n  Another meaning.\n",
+      "pandocMarkdown": "First\n\n: One meaning.\n\nSecond\n\n: Another meaning.\n",
+      "html": "<dl><dt>First</dt><dd><p>One meaning.</p></dd><dt>Second</dt><dd><p>Another meaning.</p></dd></dl>"
     }
   ]
 }

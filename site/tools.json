@@ -37,7 +37,7 @@
     "format": "Djot",
     "tree": "Djot AST",
     "url": "https://github.com/jgm/djot.js",
-    "description": "Djot parsing, rendering and writing. A tested workaround covers the pinned writer's hard-break crash."
+    "description": "Djot parsing, rendering and writing, including lettered lists and repeated notes. A tested workaround covers the pinned writer's hard-break crash."
   },
   {
     "id": "docutils",
@@ -69,6 +69,6 @@
     "format": "Pandoc Markdown",
     "tree": "Native JSON AST",
     "url": "https://pandoc.org/",
-    "description": "Pinned native reader and writer. Covers basic tables, numeric footnotes, definitions and inline attributes."
+    "description": "Pinned native reader and writer. Checks lettered lists, tables and notes, with explicit losses for note identity and richer table fields."
   }
 ]

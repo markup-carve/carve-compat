@@ -278,20 +278,6 @@
       "retained": "Preview"
     },
     {
-      "id": "djot-lettered-list",
-      "direction": "import",
-      "tools": [
-        "djot"
-      ],
-      "source": "a. first\nb. second\n",
-      "expected": {
-        "code": "unsupported-field",
-        "fidelity": "dropped",
-        "path": "/children/0/style"
-      },
-      "retained": "firstsecond"
-    },
-    {
       "id": "html-stray-list-content",
       "direction": "import",
       "tools": [
@@ -418,6 +404,216 @@
         "path": "/children/0"
       },
       "retained": "Orphan body."
+    },
+    {
+      "id": "pandoc-repeated-note-identity",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "Text[^1] twice[^1].\n\n[^1]: Note.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/blocks/0/c/4"
+      },
+      "retained": "Note."
+    },
+    {
+      "id": "pandoc-table-caption",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "| A | B |\n|---|---|\n| x | y |\n\n: Caption.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/blocks/0/c/1"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "pandoc-table-alignment",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "| A | B |\n|:---|---:|\n| x | y |\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/blocks/0/c/2/0"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-table-caption",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><caption>Caption.</caption><tr><th>A</th></tr><tr><td>x</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-rowspan-table",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><tr><td rowspan=\"2\">Merged</td><td>first</td></tr><tr><td>second</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/rows/0/0/cells/0/properties/rowSpan"
+      },
+      "retained": "Merged"
+    },
+    {
+      "id": "pandoc-table-widths",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "  A       B\n  ------  ------\n  x       y\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/blocks/0/c/2/0"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "pandoc-block-table-cell",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "+-------+-------+\n| A     | B     |\n+=======+=======+\n| one   | x     |\n|       |       |\n| two   | y     |\n+-------+-------+\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/blocks/0/c/4/0/3/0/1/0/4"
+      },
+      "retained": "one two"
+    },
+    {
+      "id": "djot-multiple-descriptions-export",
+      "direction": "export",
+      "tools": [
+        "djot"
+      ],
+      "carve": ":: Term\n: First meaning.\n: Second meaning.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/items/2"
+      },
+      "retained": "Second meaning."
+    },
+    {
+      "id": "pandoc-repeated-note-export",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "carve": "Text[^1] twice[^1].\n\n[^1]: Note.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/children/3/label"
+      },
+      "retained": "Note."
+    },
+    {
+      "id": "pandoc-out-of-order-notes-export",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "carve": "Second[^2], first[^1].\n\n[^1]: First note.\n\n[^2]: Second note.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/children/1/label"
+      },
+      "retained": "First note."
+    },
+    {
+      "id": "html-table-section-attributes",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><thead id=\"head\"><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/0/properties"
+      },
+      "retained": "x"
+    },
+    {
+      "id": "html-table-footer-partition",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>x</td></tr></tbody><tfoot><tr><td>total</td></tr></tfoot></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/children/2"
+      },
+      "retained": "total"
+    },
+    {
+      "id": "html-block-table-cell",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><tr><td><p>One</p><ul><li>item</li></ul></td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/rows/0/0/cells/0/children"
+      },
+      "retained": "One item"
+    },
+    {
+      "id": "pandoc-repeated-note-shifts-later-label",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/children/5/label"
+      },
+      "retained": "two",
+      "carve": "A[^1] B[^1] C[^2].\n\n[^1]: one\n\n[^2]: two\n"
+    },
+    {
+      "id": "pandoc-example-list",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "(@) first\n(@) second\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/blocks/0/c/0/1"
+      },
+      "retained": "second"
     }
   ]
 }

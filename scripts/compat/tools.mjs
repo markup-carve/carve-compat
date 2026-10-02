@@ -243,7 +243,8 @@ export function toHast(root, ctx = context('hast')) {
 
 export function toDjot(root, ctx = context('djot')) {
   const map = (n, path) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'checked', 'label', 'header', 'rows', 'cells'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'olType', 'checked', 'label', 'header', 'rows', 'cells'])
+    if(n.type==='list' && !n.ordered && n.olType)ctx.note(`${path}/olType`,'unsupported-field','dropped','Numbering styles cannot be retained on an unordered foreign list.')
     const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/${childSlot(n)}/${i}`))
     let out
     if (n.type === 'document') out = {tag:'doc',references:{},autoReferences:{},footnotes:Object.fromEntries(n.children.flatMap((c,i)=>c.type==='footnote'?[[c.label,map(c,`${path}/children/${i}`)]]:[])),children:n.children.flatMap((c,i)=>c.type==='footnote'?[]:[map(c,`${path}/children/${i}`)])}
@@ -253,7 +254,7 @@ export function toDjot(root, ctx = context('djot')) {
     else if (n.type === 'table') out={tag:'table',children:children()}
     else if(n.type==='table_row')out={tag:'row',head:n.cells.every(c=>c.header),children:children()}
     else if(n.type==='table_cell')out={tag:'cell',head:n.header,align:'default',children:children()}
-    else if (n.type === 'definition_list') { const entries=[];for(let i=0;i<n.items.length;i++){const item=n.items[i];exportFields(item,`${path}/items/${i}`,ctx);if(item.type==='definition_term')entries.push({tag:'definition_list_item',children:[{tag:'term',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))}]});else entries.at(-1).children.push({tag:'definition',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))})}out={tag:'definition_list',children:entries} }
+    else if (n.type === 'definition_list') { const entries=[];for(let i=0;i<n.items.length;i++){const item=n.items[i];exportFields(item,`${path}/items/${i}`,ctx);if(item.type==='definition_term')entries.push({tag:'definition_list_item',children:[{tag:'term',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))}]});else {const blocks=item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`));if(entries.at(-1).children.length>1){ctx.note(`${path}/items/${i}`,'unsupported-field','degraded','Djot source groups multiple descriptions under one term into a single body.');entries.at(-1).children[1].children.push(...blocks)}else entries.at(-1).children.push({tag:'definition',children:blocks})}}out={tag:'definition_list',children:entries} }
     else if (n.type === 'list_item' && n.checked !== undefined) out={tag:'task_list_item',checkbox:n.checked?'checked':'unchecked',children:children()}
     else if ((n.type === 'text' || n.type === 'escaped_text')) out = { tag: 'str', text: n.value }
     else if (['paragraph', 'emphasis', 'strong', 'block_quote', 'list_item'].includes(n.type)) out = { tag: ({ paragraph: 'para', emphasis: 'emph' })[n.type] ?? n.type, children: children() }
@@ -261,7 +262,7 @@ export function toDjot(root, ctx = context('djot')) {
     else if (n.type === 'code') out = { tag: 'verbatim', text: n.value }
     else if (n.type === 'code_block') out = { tag: 'code_block', text: n.content, ...(n.lang ? { lang: n.lang } : {}) }
     else if (n.type === 'link' || n.type === 'image') out = { tag: n.type, destination: n.href ?? n.src, children: n.type === 'image' ? [{ tag: 'str', text: n.alt }] : children() }
-    else if (n.type === 'list') out = { tag: n.items.some(i=>i.checked!==undefined) ? 'task_list' : n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? '1.' : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
+    else if (n.type === 'list') out = { tag: n.items.some(i=>i.checked!==undefined) ? 'task_list' : n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? `${n.olType??'1'}.` : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
     else if (n.type === 'hard_break' || n.type === 'thematic_break') out = { tag: n.type }
     else out = { tag: 'str', text: plain(ctx.unsupported(n, path)) }
     if(n.attrs && ['footnote','table_row','table_cell'].includes(n.type))ctx.note(`${path}/attrs`,'unsupported-field','dropped','Djot footnote, row and cell attributes are outside this export subset.')

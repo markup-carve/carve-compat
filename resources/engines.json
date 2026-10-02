@@ -1,7 +1,7 @@
 {
   "php": {
     "repository": "https://github.com/markup-carve/carve-php.git",
-    "revision": "aeeb4c3c40676c811ac3adff06aebd366e4a169c"
+    "revision": "e15b786c668b5e97207b7d45a5356c9743308ee9"
   },
   "rust": {
     "repository": "https://github.com/markup-carve/carve-rs.git",
