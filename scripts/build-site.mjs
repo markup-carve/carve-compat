@@ -1,0 +1,24 @@
+import { readFileSync, mkdirSync, cpSync, writeFileSync } from 'node:fs'
+import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
+const reportPath = process.argv[2] ?? 'reports/latest.json'
+const report = JSON.parse(readFileSync(reportPath))
+assert.equal(report.schemaVersion, 1)
+assert.ok(report.generatedAt && report.engine && report.schema, 'Generate a fresh provenance-bearing report before building the site')
+assert.equal(report.rows.length, report.passed + report.failed)
+assert.equal(report.rows.filter(r => r.status === 'passed').length, report.passed)
+assert.equal(report.rows.filter(r => r.status === 'failed').length, report.failed)
+assert.ok(report.rows.every(r => report.selected.includes(r.tool)))
+const hash = path => createHash('sha256').update(readFileSync(path)).digest('hex')
+assert.equal(report.schema.sha256, hash('resources/ast-schema.json'), 'Schema changed after this report was measured')
+for (const file of ['cases.json', 'losses.json']) assert.equal(report.fixtureHashes?.[file], hash(`tests/external-compat/${file}`), `${file} changed after this report was measured`)
+const tools = JSON.parse(readFileSync('site/tools.json'))
+assert.ok([...report.selected, ...report.notMeasured].every(t => tools.some(tool => tool.id === t)))
+mkdirSync('dist', { recursive: true })
+cpSync('site', 'dist', { recursive: true })
+writeFileSync('dist/report.json', JSON.stringify(report, null, 2) + '\n')
+writeFileSync('dist/manifest.json', JSON.stringify({ generatedAt: report.generatedAt, runUrl: process.env.GITHUB_RUN_ID ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null, tools }, null, 2) + '\n')
+cpSync('resources/ast-schema.json', 'dist/ast-schema.json')
+cpSync('tests/external-compat/cases.json', 'dist/cases.json')
+cpSync('tests/external-compat/losses.json', 'dist/losses.json')
+console.log(`Built site from ${report.rows.length} measured cases (${report.failed} failures).`)
