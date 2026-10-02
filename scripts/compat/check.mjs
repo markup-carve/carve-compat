@@ -140,6 +140,24 @@ export function sourceChanges(before, after, path='') {
   return [...new Set([...Object.keys(before),...Object.keys(after)])].flatMap(key=>sourceChanges(before[key],after[key],`${path}/${key.replace(/~/g,'~0').replace(/\//g,'~1')}`)).sort((a,b)=>a.path.localeCompare(b.path))
 }
 
+export function isTableMetadataSpelling(before, after, change) {
+  if (Object.hasOwn(change, 'before')) return false
+  const match = /^(.*)\/attrs(?:\/keyValues(?:\/([^/]+))?)?$/.exec(change.path)
+  if (!match) return false
+  const at = (root, path) => path.split('/').slice(1).reduce((node, key) => node?.[key.replace(/~1/g, '/').replace(/~0/g, '~')], root)
+  const oldTable = at(before, match[1]), newTable = at(after, match[1])
+  if (oldTable?.type !== 'table' || newTable?.type !== 'table') return false
+  const values = match[2] ? { [match[2]]: change.after }
+    : change.path.endsWith('/attrs') ? change.after.keyValues : change.after
+  if (!values || (change.path.endsWith('/attrs') && Object.keys(change.after).some(key => key !== 'keyValues'))) return false
+  const partition = groups => groups && { headRows: groups.headRows, footRows: groups.footRows, bodies: groups.bodies.map(({headRows, bodyRows, rowHeadColumns}) => ({headRows, bodyRows, ...(rowHeadColumns === undefined ? {} : {rowHeadColumns})})) }
+  return Object.keys(values).length > 0 && Object.keys(values).every(key => {
+    if (['aligns', 'valigns', 'widths'].includes(key)) return oldTable.columns && isDeepStrictEqual(oldTable.columns, newTable.columns)
+    if (['header-rows', 'footer-rows'].includes(key)) return oldTable.rowGroups && isDeepStrictEqual(partition(oldTable.rowGroups), partition(newTable.rowGroups))
+    return false
+  })
+}
+
 export async function checkInterchangeCase(tool, fixture) {
   const source=fixture[sourceFormats[tool]], format=fixture.formats?.[tool]
   const progress={checks:[],diagnostics:[],evidence:{sourceFormat:format??sourceFormats[tool],source,expectedAst:fixture.ast,scope:'AST interchange; reference Carve source conversion checked separately'}}
@@ -176,8 +194,12 @@ export async function checkInterchangeCase(tool, fixture) {
     const changes=sourceChanges(semantics(result.ast),semantics(reparsed))
     assert.deepEqual(changes,fixture.sourceChanges,`${tool}/${fixture.id}: declared source conversion changes`)
     progress.evidence.sourceChanges=changes
-    for(const change of changes)progress.diagnostics.push({tool:'javascript',path:change.path,code:'source-conversion-change',fidelity:'degraded',message:'An asserted AST field changes when the reference canonical Carve source is reparsed. The declared before/after values are shown in the source conversion evidence.'})
-    if(changes.length && !conversion.report.diagnostics.length)progress.diagnostics.push({tool:'javascript',path:'',code:'missing-source-conversion-diagnostic',fidelity:'degraded',message:'The pinned reference writer reports no conversion diagnostic for these declared source changes; tracked upstream as an engine reporting gap.'})
+    const before=semantics(result.ast), after=semantics(reparsed)
+    for(const change of changes){
+      const normalized=isTableMetadataSpelling(before,after,change)
+      progress.diagnostics.push({tool:'javascript',path:change.path,code:'source-conversion-change',fidelity:normalized?'normalized':'degraded',message:normalized?'Added source attributes that reconstruct the preserved table metadata.':'An asserted AST field changes when the reference canonical Carve source is reparsed. The declared before/after values are shown in the source conversion evidence.'})
+    }
+    if(changes.some(change=>!isTableMetadataSpelling(before,after,change)) && !conversion.report.diagnostics.length)progress.diagnostics.push({tool:'javascript',path:'',code:'missing-source-conversion-diagnostic',fidelity:'degraded',message:'The pinned reference writer reports no conversion diagnostic for these declared field changes; investigate the engine reporting gap.'})
     progress.checks.push('source-conversion-changes')
     const authored=authoredAttributes(result.ast), foreignCtx=context(tool), carveCtx=context('carve')
     const foreignHtml=fromHast(parseHtml(result.html),foreignCtx,{generated:tool!=='hast',renderer:tool,...authored})

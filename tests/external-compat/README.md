@@ -153,7 +153,9 @@ HTML and Pandoc retain captions, widths, spans, row groups, section attributes
 and block cells through AST interchange. GFM retains column alignment; Djot
 retains captions and cell alignment. AST fixtures declare their source-conversion
 diagnostics and exact reparsed before/after changes, and compare against authored
-JSON expectations. Missing engine diagnostics are recorded separately. Pandoc exports these
+JSON expectations. Generated source attributes that reconstruct unchanged table
+metadata are recorded as normalization; field losses remain degraded. Missing
+engine diagnostics are recorded separately. Pandoc exports these
 fixtures through its native JSON format, since Markdown cannot spell every field.
 Block cells, section attributes and short captions remain unspellable in Carve
 source. Their rows do not claim Carve source round trips or public importer
