@@ -80,15 +80,15 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     }
     if (n.type !== 'element') return ctx.unsupported(n, path, block)
     const tag = n.tagName, props = n.properties ?? {}
-    if(tag==='sup' && n.children.some(c=>c.tagName==='a' && (c.properties?.role==='doc-noteref' || c.properties?.dataFootnoteRef!==undefined || c.properties?.className?.includes('footnote-ref'))))return coalesce(n.children.flatMap((c,i)=>map(c,`${path}/children/${i}`)))
-    if (noteSections.has(n)) {
+    if(options.generated && tag==='sup' && n.children.some(c=>c.tagName==='a' && (c.properties?.role==='doc-noteref' || c.properties?.dataFootnoteRef!==undefined || c.properties?.className?.includes('footnote-ref'))))return coalesce(n.children.flatMap((c,i)=>map(c,`${path}/children/${i}`)))
+    if (options.generated && noteSections.has(n)) {
       ctx.note(path,'generated-footnote-navigation','normalized','Reconstructed footnote bodies and omitted generated endnote navigation.')
       return noteSections.get(n).map((li,i)=>({type:'footnote',label:String(i+1),children:blocks(li.children,`${path}/footnotes/${i}`)}))
     }
-    if (tag === 'a' && (props.role === 'doc-backlink' || props.dataFootnoteBackref !== undefined || (noteBodies.has(n) && props.className?.some(c=>['footnote-back','footnote-backref'].includes(c))))) {
+    if (options.generated && tag === 'a' && (props.role === 'doc-backlink' || props.dataFootnoteBackref !== undefined || (noteBodies.has(n) && props.className?.some(c=>['footnote-back','footnote-backref'].includes(c))))) {
       ctx.note(path,'generated-footnote-navigation','normalized','Omitted a generated footnote backlink.');return []
     }
-    if (tag === 'a' && (props.role === 'doc-noteref' || props.dataFootnoteRef !== undefined || props.className?.includes('footnote-ref'))) {
+    if (options.generated && tag === 'a' && (props.role === 'doc-noteref' || props.dataFootnoteRef !== undefined || props.className?.includes('footnote-ref'))) {
       const label=noteIds.get(String(props.href??'').replace(/^#/,''))
       if(label)return {type:'footnote_ref',label}
       ctx.note(path,'unsupported-field','dropped','The rendered footnote target could not be matched to an endnote body.')

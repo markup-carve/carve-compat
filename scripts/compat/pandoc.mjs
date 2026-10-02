@@ -53,8 +53,8 @@ export function fromPandoc(root, ctx = context('pandoc')) {
           const cp = `${rp}/1/${i}`
           if (attrs(cell[0]) || cell[1].t !== 'AlignDefault' || cell[2] !== 1 || cell[3] !== 1) ctx.note(cp, 'unsupported-field', 'dropped', 'Pandoc cell attributes, alignment and spans are outside this subset.')
           const blocks = children(cell[4], `${cp.slice(path.length)}/4`)
-          if (blocks.some(b => b.type !== 'paragraph') || blocks.length !== 1) ctx.note(`${cp}/4`, 'unsupported-field', 'degraded', 'Retained readable text for a block-containing table cell.')
-          return { type:'table_cell', header, children:blocks.length === 1 && blocks[0].type === 'paragraph' ? blocks[0].children : [text(blocks.map(plain).join(' '))] }
+          if (blocks.length && (blocks.some(b => b.type !== 'paragraph') || blocks.length !== 1)) ctx.note(`${cp}/4`, 'unsupported-field', 'degraded', 'Retained readable text for a block-containing table cell.')
+          return { type:'table_cell', header, children:blocks.length === 0 ? [] : blocks.length === 1 && blocks[0].type === 'paragraph' ? blocks[0].children : [text(blocks.map(plain).join(' '))] }
         }) }
       }
       out = { type:'table', rows:[...c[3][1].map((r, i) => row(r, `${path}/c/3/1/${i}`, true)), ...c[4].flatMap((body, j) => [...body[2].map((r, i) => row(r, `${path}/c/4/${j}/2/${i}`, true)), ...body[3].map((r, i) => row(r, `${path}/c/4/${j}/3/${i}`, false))]), ...c[5][1].map((r, i) => row(r, `${path}/c/5/1/${i}`, false))] }
@@ -73,6 +73,7 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','pos','srcByteLength','bulletChar','delim']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
     if (n.attrs && !['heading','span','code','code_block','link','image','table'].includes(n.type)) ctx.note(`${path}/attrs`, 'unsupported-field', 'dropped', 'This Pandoc node has no attribute slot.')
+    const nestedFields=(value,p,allowed)=>{for(const key of Object.keys(value))if(!['type','pos','srcByteLength',...allowed].includes(key))ctx.note(`${p}/${key}`,'unsupported-field','dropped',`${key} is outside the Pandoc nested-node export subset.`)}
     const children = () => (n.children ?? []).map((child,i) => map(child, `${path}/children/${i}`))
     const node = (t,c) => c === undefined ? {t} : {t,c}
     const a = foreignAttr(n.attrs)
@@ -89,16 +90,16 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     if (n.type === 'hard_break' || n.type === 'thematic_break') return node(n.type === 'hard_break' ? 'LineBreak' : 'HorizontalRule')
     if (n.type === 'block_quote') return node('BlockQuote',children())
     if (n.type === 'list') {
-      const items = n.items.map((item,i) => { if (item.checked !== undefined) ctx.note(`${path}/items/${i}/checked`, 'unsupported-field', 'dropped', 'Task flags are outside the Pandoc export subset.'); return item.children.map((child,j) => map(child, `${path}/items/${i}/children/${j}`, n.tight)) })
+      const items = n.items.map((item,i) => { nestedFields(item,`${path}/items/${i}`,['children','checked']); if (item.checked !== undefined) ctx.note(`${path}/items/${i}/checked`, 'unsupported-field', 'dropped', 'Task flags are outside the Pandoc export subset.'); return item.children.map((child,j) => map(child, `${path}/items/${i}/children/${j}`, n.tight)) })
       return node(n.ordered ? 'OrderedList' : 'BulletList', n.ordered ? [[n.start ?? 1,node('Decimal'),node('Period')],items] : items)
     }
     if (n.type === 'definition_list') {
-      const entries = []; for (const [i,item] of n.items.entries()) { if (item.type === 'definition_term') entries.push([item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`)),[]]); else if (entries.length) entries.at(-1)[1].push(item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`))); else throw new Error('A Pandoc definition needs a preceding term') }
+      const entries = []; for (const [i,item] of n.items.entries()) { nestedFields(item,`${path}/items/${i}`,['children']);if (item.type === 'definition_term') entries.push([item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`)),[]]); else if (entries.length) entries.at(-1)[1].push(item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`))); else throw new Error('A Pandoc definition needs a preceding term') }
       return node('DefinitionList', entries)
     }
     if (n.type === 'footnote_ref') { const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); return node('Note',note.children.map((child,i) => map(child, `/footnotes/${n.label}/${i}`))) }
     if (n.type === 'table') {
-      const row = (r,i) => [foreignAttr(r.attrs),r.cells.map((cell,j) => { for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]
+      const row = (r,i) => {nestedFields(r,`${path}/rows/${i}`,['cells','attrs']);return [foreignAttr(r.attrs),r.cells.map((cell,j) => {nestedFields(cell,`${path}/rows/${i}/cells/${j}`,['children','header','attrs','align','colspan','rowspan','valign']); for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]}
       const heads = n.rows.filter(r => r.cells.every(c => c.header)), body = n.rows.filter(r => !r.cells.every(c => c.header))
       return node('Table', [a,[null,[]],Array.from({length:Math.max(...n.rows.map(r=>r.cells.length))},()=>[node('AlignDefault'),node('ColWidthDefault')]),[emptyAttr(),heads.map(row)],[[emptyAttr(),0,[],body.map(row)]],[emptyAttr(),[]]])
     }

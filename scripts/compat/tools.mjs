@@ -188,12 +188,14 @@ function exportFields(n, path, ctx, allowed = []) {
 export function toMdast(root, ctx = context('mdast')) {
   const map = (n, path) => {
     exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', ...(ctx.tool==='mdast'?['checked', 'label', 'header', 'rows', 'cells']:[])])
-    const children = () => (n.children ?? n.items ?? []).map((c, i) => map(c, `${path}/children/${i}`))
+    const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/children/${i}`))
     if (n.type === 'strike' && ['commonmark', 'cmark', 'md4c'].includes(ctx.tool)) return { type: 'text', value: plain(ctx.unsupported(n, path)) }
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
     if (n.type === 'list_item' && ctx.tool === 'mdast') return {type:'listItem',children:children(),...(n.checked === undefined ? {} : {checked:n.checked})}
-    if (n.type === 'table' && ctx.tool === 'mdast') return {type:'table',align:n.rows[0].cells.map(()=>null),children:n.rows.map((r,i)=>({type:'tableRow',children:r.cells.map((c,j)=>({type:'tableCell',children:c.children.map((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`))}))}))}
+    if (n.type === 'table' && ctx.tool === 'mdast') return {type:'table',align:n.rows[0].cells.map(()=>null),children:children()}
+    if (n.type === 'table_row' && ctx.tool === 'mdast') return {type:'tableRow',children:children()}
+    if (n.type === 'table_cell' && ctx.tool === 'mdast') return {type:'tableCell',children:children()}
     if (n.type === 'footnote_ref' && ctx.tool === 'mdast') return {type:'footnoteReference',identifier:n.label}
     if (n.type === 'footnote' && ctx.tool === 'mdast') return {type:'footnoteDefinition',identifier:n.label,children:children()}
     if (['paragraph', 'strong', 'emphasis', 'block_quote', 'list_item', 'strike'].includes(n.type)) return { type: ({ block_quote: 'blockquote', list_item: 'listItem', strike: 'delete' })[n.type] ?? n.type, children: children() }
@@ -213,13 +215,15 @@ export function toHast(root, ctx = context('hast')) {
   const element = (tagName, children = [], properties = {}) => ({ type: 'element', tagName, children, properties })
   const map = (n, path, tight = false) => {
     exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', 'attrs', 'checked', 'header', 'rows', 'cells'])
-    const children = () => (n.children ?? n.items ?? []).flatMap((c, i) => map(c, `${path}/children/${i}`, n.type === 'list' ? n.tight : tight))
+    const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).flatMap((c, i) => map(c, `${path}/children/${i}`, n.type === 'list' ? n.tight : tight))
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
     let out
     if (n.type === 'paragraph' && tight) return children()
     const tags = { paragraph: 'p', emphasis: 'em', strong: 'strong', strike: 'del', block_quote: 'blockquote', list_item: 'li', span:'span', definition_list:'dl', definition_term:'dt', definition_description:'dd', hard_break: 'br', thematic_break: 'hr' }
-    if (n.type === 'table') out=element('table', n.rows.map((r,i)=>element('tr',r.cells.map((c,j)=>element(c.header?'th':'td',c.children.flatMap((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`)))))))
+    if (n.type === 'table') out=element('table',children())
+    else if(n.type==='table_row')out=element('tr',children())
+    else if(n.type==='table_cell')out=element(n.header?'th':'td',children())
     else if (tags[n.type]) out = element(tags[n.type], children())
     else if (n.type === 'heading') out = element(`h${n.level}`, children())
     else if (n.type === 'code') out = element('code', [{ type: 'text', value: n.value }])
@@ -238,12 +242,14 @@ export function toHast(root, ctx = context('hast')) {
 export function toDjot(root, ctx = context('djot')) {
   const map = (n, path) => {
     exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'checked', 'label', 'header', 'rows', 'cells'])
-    const children = () => (n.children ?? n.items ?? []).map((c, i) => map(c, `${path}/children/${i}`))
+    const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/children/${i}`))
     let out
     if (n.type === 'document') out = { tag:'doc', references:{}, autoReferences:{}, footnotes:Object.fromEntries(n.children.filter(c=>c.type==='footnote').map((c,i)=>[c.label,{tag:'footnote',label:c.label,children:c.children.map((v,j)=>map(v,`/footnotes/${c.label}/children/${j}`))}])),children:n.children.filter(c=>c.type!=='footnote').map((c,i)=>map(c,`/children/${i}`)) }
     else if (n.type === 'footnote_ref') out={tag:'footnote_reference',text:n.label}
     else if (n.type === 'span') out={tag:'span',children:children()}
-    else if (n.type === 'table') out={tag:'table',children:n.rows.map((r,i)=>({tag:'row',head:r.cells.every(c=>c.header),children:r.cells.map((c,j)=>({tag:'cell',head:c.header,align:'default',children:c.children.map((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`))}))}))}
+    else if (n.type === 'table') out={tag:'table',children:children()}
+    else if(n.type==='table_row')out={tag:'row',head:n.cells.every(c=>c.header),children:children()}
+    else if(n.type==='table_cell')out={tag:'cell',head:n.header,align:'default',children:children()}
     else if (n.type === 'definition_list') { const entries=[];for(let i=0;i<n.items.length;i++){const item=n.items[i];if(item.type==='definition_term')entries.push({tag:'definition_list_item',children:[{tag:'term',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))}]});else entries.at(-1).children.push({tag:'definition',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))})}out={tag:'definition_list',children:entries} }
     else if (n.type === 'list_item' && n.checked !== undefined) out={tag:'task_list_item',checkbox:n.checked?'checked':'unchecked',children:children()}
     else if ((n.type === 'text' || n.type === 'escaped_text')) out = { tag: 'str', text: n.value }
@@ -255,7 +261,8 @@ export function toDjot(root, ctx = context('djot')) {
     else if (n.type === 'list') out = { tag: n.items.some(i=>i.checked!==undefined) ? 'task_list' : n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? '1.' : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
     else if (n.type === 'hard_break' || n.type === 'thematic_break') out = { tag: n.type }
     else out = { tag: 'str', text: plain(ctx.unsupported(n, path)) }
-    if (n.attrs) out.attributes = { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { class: n.attrs.classes.join(' ') } : {}), ...n.attrs.keyValues }
+    if(n.attrs && ['table_row','table_cell'].includes(n.type))ctx.note(`${path}/attrs`,'unsupported-field','dropped','Djot row and cell attributes are outside this export subset.')
+    else if (n.attrs) out.attributes = { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { class: n.attrs.classes.join(' ') } : {}), ...n.attrs.keyValues }
     return out
   }
   return map(root, '')
@@ -270,7 +277,7 @@ function exportRichSource(tool, root, ctx) {
   const joinBlocks = (nodes, values) => values.map((value, i) => (i ? (nodes[i - 1].type === 'list' && nodes[i].type === 'list' ? (rst ? '\n\n..\n\n' : isDjot ? '\n\n' : '\n\n//\n\n') : '\n\n') : '') + value).join('')
   const map = (n, path, listKinds = []) => {
     exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'content', 'lang'])
-    const children = () => (n.children ?? n.items ?? []).map((c, i) => map(c, `${path}/children/${i}`, listKinds))
+    const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/children/${i}`, listKinds))
     if (n.type === 'document') return joinBlocks(n.children, children()) + '\n'
     if ((n.type === 'text' || n.type === 'escaped_text')) return escape(n.value)
     if (n.type === 'soft_break') return escape(' ')

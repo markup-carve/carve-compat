@@ -498,11 +498,11 @@
         "djot",
         "pandoc"
       ],
-      "carve": "| Name | Value |\n| --- | --- |\n| Alpha | *bold* |\n",
-      "markdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n",
-      "djot": "| Name | Value |\n|---|---|\n| Alpha | *bold* |\n",
-      "html": "<table><tr><th>Name</th><th>Value</th></tr><tr><td>Alpha</td><td><strong>bold</strong></td></tr></table>",
-      "pandocMarkdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n"
+      "carve": "| Name | Value |\n| --- | --- |\n| Alpha | *bold* |\n| Empty | |\n",
+      "markdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n| Empty | |\n",
+      "djot": "| Name | Value |\n|---|---|\n| Alpha | *bold* |\n| Empty | |\n",
+      "html": "<table><tr><th>Name</th><th>Value</th></tr><tr><td>Alpha</td><td><strong>bold</strong></td></tr><tr><td>Empty</td><td></td></tr></table>",
+      "pandocMarkdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n| Empty | |\n"
     },
     {
       "id": "task-list",

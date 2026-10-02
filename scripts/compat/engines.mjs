@@ -17,13 +17,14 @@ export function engineMetadata(engine) {
   } else {
     const root = process.env[engine === 'php' ? 'CARVE_PHP_ROOT' : 'CARVE_RUST_ROOT'] ?? fileURLToPath(new URL(`../../.cache/engines/${engine}`,import.meta.url))
     const revision = native('git',['rev-parse','HEAD'],'',root).trim()
+    if (native('git',['status','--porcelain','--untracked-files=no','--ignore-submodules=all'],'',root).trim()) throw new Error(`${engine} source has modified tracked files`)
     if (revision !== pins[engine].revision) throw new Error(`${engine} source revision differs from resources/engines.json`)
     if (engine === 'rust') {
       const binary = process.env.CARVE_RUST_BINARY ?? `${root}/bin/carve`, build = JSON.parse(readFileSync(`${root}/bin/build.json`))
       const sha = createHash('sha256').update(readFileSync(binary)).digest('hex')
       if (build.revision !== revision || build.binarySha256 !== sha) throw new Error('Rust binary does not match its pinned build manifest')
       meta = { name:'Carve Rust', revision, repository:pins.rust.repository, version:readFileSync(`${root}/Cargo.toml`,'utf8').match(/^version\s*=\s*"([^"]+)"/m)[1], binarySha256:sha, root, binary }
-    } else meta = { name:'Carve PHP', revision, repository:pins.php.repository, version:native(process.env.CARVE_PHP ?? 'php',['--version'],'').split('\n')[0], root }
+    } else meta = { name:'Carve PHP', revision, repository:pins.php.repository, version:`revision ${revision.slice(0,12)}`,runtime:native(process.env.CARVE_PHP ?? 'php',['--version'],'').split('\n')[0], root }
   }
   metadataCache.set(engine,meta); return meta
 }

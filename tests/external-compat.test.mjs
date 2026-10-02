@@ -6,8 +6,10 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseDjot, renderDjot } from '@djot/djot'
 import { corpus, lossCorpus, checkCase, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
-import { toolNames, nativeTools, readForeign } from '../scripts/compat/tools.mjs'
-import { semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
+import { toolNames, nativeTools, readForeign, toMdast, toHast, toDjot } from '../scripts/compat/tools.mjs'
+import { context, semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
+
+import {toPandoc,fromPandoc} from '../scripts/compat/pandoc.mjs'
 
 const javascriptTools = toolNames.filter(t => !nativeTools.includes(t))
 
@@ -160,4 +162,26 @@ test('a missing Carve engine produces failed comparisons instead of silent skips
     assert.ok(data.rows.filter(r=>r.engine==='php').every(r=>r.status==='failed'))
     assert.ok(data.rows.filter(r=>r.engine==='javascript').every(r=>r.status==='passed'))
   } finally {rmSync(dir,{recursive:true,force:true})}
+})
+
+
+test('rich exporters report unsupported fields on internal table and definition nodes',()=>{
+  const ast={type:'document',srcByteLength:0,children:[{type:'table',rows:[{type:'table_row',attrs:{id:'row'},cells:[{type:'table_cell',header:true,align:'right',colspan:2,attrs:{classes:['cell']},children:[{type:'text',value:'x'}]}]}]}]}
+  validateAst(ast)
+  for(const [tool,writer]of [['mdast',toMdast],['hast',toHast],['djot',toDjot]]){
+    const ctx=context(tool);writer(ast,ctx)
+    assert.ok(ctx.diagnostics.some(d=>d.path.endsWith('/align') && d.fidelity==='dropped'),tool)
+    assert.ok(ctx.diagnostics.some(d=>d.path.endsWith('/colspan') && d.fidelity==='dropped'),tool)
+  }
+  const root={type:'document',srcByteLength:0,children:[{type:'definition_list',items:[{type:'definition_term',attrs:{id:'term'},children:[{type:'text',value:'Term'}]},{type:'definition_description',children:[{type:'paragraph',children:[{type:'text',value:'Definition'}]}]}]}]}
+  validateAst(root)
+  const ctx=context('pandoc');toPandoc(root,[1,23],ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/items/0/attrs' && d.fidelity==='dropped'))
+})
+
+test('authored HTML endnote attributes are never treated as generated navigation',()=>{
+  const ctx=context('hast')
+  fromHast(parseHtml('<p><sup class="keep"><a id="r1" role="doc-noteref" href="#n1">1</a></sup></p><section role="doc-endnotes" id="notes"><ol><li id="n1">Note</li></ol></section>'),ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.fidelity==='degraded'))
+  assert.equal(ctx.diagnostics.some(d=>d.code==='generated-footnote-navigation'),false)
 })

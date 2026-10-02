@@ -119,11 +119,11 @@ export async function checkCase(tool, fixture) {
   assert.deepEqual(exported.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: supported export reported a loss`)
   const reread = await readForeign(tool, exported.source)
   progress.diagnostics.push(...reread.diagnostics)
-  if (reread.independentAst) checkIndependent(reread)
+  if (reread.independentAst) {progress.diagnostics.push(...reread.independentDiagnostics);checkIndependent(reread)}
   validateAst(reread.ast)
   assert.deepEqual(semantics(reread.ast), expected, `${tool}/${fixture.id}: foreign source round trip`)
   assert.deepEqual(reread.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: foreign source round trip lost structure`)
-  return { tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[])], version: result.version }
+  return { tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[]), ...(reread.independentDiagnostics??[])], version: result.version }
   } catch (error) { error.compatibilityEvidence = progress; throw error }
 }
 
