@@ -265,16 +265,25 @@ export function checkEngineCase(engine, tool, fixture, baseline) {
     }
     if (baseline.kind === 'supported' && fixture.ast) {
       validateAst(result.reparsedAst)
-      const changes = sourceChanges(semantics(baseline.evidence.ast), semantics(engineProjection(result.reparsedAst, baseline.evidence.ast, progress.diagnostics)))
-      assert.deepEqual(changes, fixture.sourceChangesByEngine?.[engine] ?? fixture.sourceChanges, `${engine}/${tool}/${fixture.id}: declared source conversion changes`)
+      const before = semantics(baseline.evidence.ast)
+      const after = semantics(engineProjection(result.reparsedAst, baseline.evidence.ast, progress.diagnostics))
+      const expectedChanges = fixture.sourceChangesByEngine?.[engine] ?? fixture.sourceChanges
+      const changes = sourceChanges(before, after)
+      assert.deepEqual(changes, expectedChanges, `${engine}/${tool}/${fixture.id}: declared source conversion changes`)
+      validateAst(result.parsedAst)
+      const foreignChanges = sourceChanges(before, semantics(engineProjection(result.parsedAst, baseline.evidence.ast, progress.diagnostics)))
+      assert.deepEqual(foreignChanges, expectedChanges, `${engine}/${tool}/${fixture.id}: reference source read`)
+      const referenceRead = toAstJson(parse(result.canonical))
+      validateAst(referenceRead)
+      assert.deepEqual(sourceChanges(before, semantics(referenceRead)), fixture.sourceChanges, `${engine}/${tool}/${fixture.id}: native source read by reference`)
+      progress.checks.push('reference-source-read', 'native-source-read')
       progress.evidence.sourceChanges = changes
       progress.diagnostics = progress.diagnostics.filter(d => !['source-conversion-change', 'missing-source-conversion-diagnostic'].includes(d.code))
-      const before = semantics(baseline.evidence.ast), after = semantics(result.reparsedAst)
       for (const change of changes) {
         const normalized = isTableMetadataSpelling(before, after, change)
         progress.diagnostics.push({ tool: engine, path: change.path, code: 'source-conversion-change', fidelity: normalized ? 'normalized' : 'degraded', message: normalized ? 'Added source attributes that reconstruct the preserved table metadata.' : 'An asserted AST field changes when this engine’s canonical Carve source is reparsed. The declared before/after values are shown in the source conversion evidence.' })
       }
-      progress.checks.push('carve-source-roundtrip')
+      progress.checks.push('source-conversion-changes')
     }
     const ctx = context(engine), authored = authoredAttributes(baseline.evidence.ast)
     const actualHtml = fromHast(parseHtml(result.html),ctx,{generated:true,...authored})

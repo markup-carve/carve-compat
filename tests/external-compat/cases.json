@@ -3290,7 +3290,18 @@
         ],
         "srcByteLength": 0
       },
-      "sourceDiagnostics": [],
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "header"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "header"
+        }
+      ],
       "sourceChanges": [
         {
           "path": "/children/0/attrs",
@@ -3617,6 +3628,126 @@
               "widths": "33.3,66.7",
               "body-rows": "1,1"
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": "middle-and-trailing-empty-table-bodies",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><tbody><tr><td>A</td><td>1</td></tr></tbody><tbody class=\"gap\"></tbody><tbody><tr><td>B</td><td>2</td></tr></tbody><tbody></tbody></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 0,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 0,
+                  "attrs": {
+                    "classes": [
+                      "gap"
+                    ]
+                  }
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 0
+                }
+              ],
+              "footRows": 0
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.bodies[1].attrs"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "body-rows": "1,0,1,0"
+            }
+          }
+        },
+        {
+          "path": "/children/0/rowGroups/bodies/1/attrs",
+          "before": {
+            "classes": [
+              "gap"
+            ]
           }
         }
       ]

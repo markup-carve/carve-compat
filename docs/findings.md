@@ -60,11 +60,14 @@ their added source attributes are recorded as normalization. Decimal percentage
 conversion preserves fractional widths.
 
 The new combinations cover a caption, fractional widths, head and foot,
-multiple bodies, intermediate headers, row headers and spans; an empty body
-before intermediate headers; no bodies between head and foot; and adjacent
-plain bodies with exact widths. PHP retains a header flag on a cell covered by
-a colspan where JavaScript and Rust clear it. That exact source result has a
-PHP-specific expectation; the visible spanning cell and partition stay intact.
+multiple bodies, intermediate headers, row headers and spans; a leading empty
+body; middle and trailing empty bodies, including section attributes as a
+source loss; no bodies between head and foot; and adjacent plain bodies with
+exact widths. PHP retains a header flag on a cell covered by a colspan where
+JavaScript and Rust clear it. All three clear the flag on a rowspan placeholder.
+PHP's expected source result is engine-specific; the visible spanning cell and
+partition stay intact. JavaScript reports the placeholder flag losses through
+[PR #2464](https://github.com/markup-carve/carve-js/pull/2464).
 
 [Issue #2457](https://github.com/markup-carve/carve-js/issues/2457) tracked the
 missing row-group diagnostic. [PR #2459](https://github.com/markup-carve/carve-js/pull/2459)
@@ -73,7 +76,8 @@ added simple partition preservation, and [PR #2462](https://github.com/markup-ca
 added positional body metadata. Section attributes and block cells are reported
 separately. A passing interchange row does not claim a lossless source round
 trip: its declared before/after changes show the remaining losses. Native
-engines now check those changes too; conversion-diagnostic checks still use the
+engines now check those changes, read the reference source, and have their
+source read by the reference too; conversion-diagnostic checks still use the
 JavaScript reference implementation.
 
 Pandoc has no vertical-alignment field. GFM and Djot still have narrower table

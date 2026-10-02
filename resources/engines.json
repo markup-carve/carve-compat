@@ -1,11 +1,11 @@
 {
   "php": {
     "repository": "https://github.com/markup-carve/carve-php.git",
-    "revision": "f64672451119a584d22d001cdb9b477635b6d2b3"
+    "revision": "6df1f475f869dba169d9c290dfbaa3028ac64cde"
   },
   "rust": {
     "repository": "https://github.com/markup-carve/carve-rs.git",
-    "revision": "cdec1431c999c28b19df49047cf2fcd4a9e70577"
+    "revision": "a558476e1dbd0e47cb0e12dea9a445cfbf33dc45"
   },
   "pandoc": {
     "version": "3.11",
