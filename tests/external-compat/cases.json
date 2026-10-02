@@ -8,7 +8,19 @@
       "djot": "## Café 😀\n\nGrüße & tea.\n",
       "rst": "Café 😀\n=======\n\nGrüße & tea.\n",
       "asciidoc": "== Café 😀\n\nGrüße & tea.\n",
-      "html": "<h2>Café 😀</h2><p>Grüße &amp; tea.</p>"
+      "html": "<h2>Café 😀</h2><p>Grüße &amp; tea.</p>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "## Café 😀\n\nGrüße & tea.\n"
     },
     {
       "id": "inline-structure",
@@ -17,7 +29,19 @@
       "djot": "A _word_ and *bold*, `x < y`, [link](https://example.org/a?q=1&b=2).\n",
       "rst": "A *word* and **bold**, ``x < y``, `link <https://example.org/a?q=1&b=2>`_.\n",
       "asciidoc": "A _word_ and *bold*, `x < y`, https://example.org/a?q=1&b=2[link].\n",
-      "html": "<p>A <em>word</em> and <strong>bold</strong>, <code>x &lt; y</code>, <a href=\"https://example.org/a?q=1&amp;b=2\">link</a>.</p>"
+      "html": "<p>A <em>word</em> and <strong>bold</strong>, <code>x &lt; y</code>, <a href=\"https://example.org/a?q=1&amp;b=2\">link</a>.</p>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "A *word* and **bold**, `x < y`, [link](https://example.org/a?q=1&b=2).\n"
     },
     {
       "id": "loose-bullet-list",
@@ -26,7 +50,19 @@
       "djot": "- one\n\n- *two*\n",
       "rst": "- one\n\n- **two**\n",
       "asciidoc": "* one\n\n* *two*\n",
-      "html": "<ul><li><p>one</p></li><li><p><strong>two</strong></p></li></ul>"
+      "html": "<ul><li><p>one</p></li><li><p><strong>two</strong></p></li></ul>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "- one\n\n- **two**\n"
     },
     {
       "id": "ordered-start",
@@ -35,7 +71,19 @@
       "djot": "3. three\n\n4. four\n",
       "rst": "3. three\n\n4. four\n",
       "asciidoc": "[start=3]\n. three\n\n. four\n",
-      "html": "<ol start=\"3\"><li><p>three</p></li><li><p>four</p></li></ol>"
+      "html": "<ol start=\"3\"><li><p>three</p></li><li><p>four</p></li></ol>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "3. three\n\n4. four\n"
     },
     {
       "id": "quote",
@@ -44,7 +92,19 @@
       "djot": "> A _quote_.\n",
       "rst": "    A *quote*.\n",
       "asciidoc": "[quote]\n____\nA _quote_.\n____\n",
-      "html": "<blockquote><p>A <em>quote</em>.</p></blockquote>"
+      "html": "<blockquote><p>A <em>quote</em>.</p></blockquote>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "> A *quote*.\n"
     },
     {
       "id": "code-block",
@@ -53,7 +113,19 @@
       "djot": "```text\na < b & c\n\nlast\n```\n",
       "rst": ".. code:: text\n\n    a < b & c\n\n    last\n",
       "asciidoc": "[source,text]\n----\na < b & c\n\nlast\n----\n",
-      "html": "<pre><code class=\"language-text\">a &lt; b &amp; c\n\nlast\n</code></pre>"
+      "html": "<pre><code class=\"language-text\">a &lt; b &amp; c\n\nlast\n</code></pre>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "```text\na < b & c\n\nlast\n```\n"
     },
     {
       "id": "thematic-break",
@@ -62,7 +134,19 @@
       "djot": "Before.\n\n---\n\nAfter.\n",
       "rst": "Before.\n\n----------\n\nAfter.\n",
       "asciidoc": "Before.\n\n'''\n\nAfter.\n",
-      "html": "<p>Before.</p><hr><p>After.</p>"
+      "html": "<p>Before.</p><hr><p>After.</p>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "Before.\n\n---\n\nAfter.\n"
     },
     {
       "id": "titled-image-and-link",
@@ -71,11 +155,13 @@
         "hast",
         "commonmark",
         "cmark",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "An ![alt](image.png \"caption\") and [link](https://example.org \"title\").\n",
       "markdown": "An ![alt](image.png \"caption\") and [link](https://example.org \"title\").\n",
-      "html": "<p>An <img src=\"image.png\" alt=\"alt\" title=\"caption\"> and <a href=\"https://example.org\" title=\"title\">link</a>.</p>"
+      "html": "<p>An <img src=\"image.png\" alt=\"alt\" title=\"caption\"> and <a href=\"https://example.org\" title=\"title\">link</a>.</p>",
+      "pandocMarkdown": "An ![alt](image.png \"caption\") and [link](https://example.org \"title\").\n"
     },
     {
       "id": "hard-break",
@@ -85,12 +171,14 @@
         "commonmark",
         "cmark",
         "md4c",
-        "djot"
+        "djot",
+        "pandoc"
       ],
       "carve": "one\\\ntwo\n",
       "markdown": "one\\\ntwo\n",
       "djot": "one\\\ntwo\n",
-      "html": "<p>one<br>two</p>"
+      "html": "<p>one<br>two</p>",
+      "pandocMarkdown": "one\\\ntwo\n"
     },
     {
       "id": "authored-attributes",
@@ -106,11 +194,13 @@
       "id": "gfm-strike",
       "tools": [
         "mdast",
-        "hast"
+        "hast",
+        "pandoc"
       ],
       "carve": "A ~deleted~ word.\n",
       "markdown": "A ~~deleted~~ word.\n",
-      "html": "<p>A <del>deleted</del> word.</p>"
+      "html": "<p>A <del>deleted</del> word.</p>",
+      "pandocMarkdown": "A ~~deleted~~ word.\n"
     },
     {
       "id": "tight-list",
@@ -120,12 +210,14 @@
         "commonmark",
         "cmark",
         "djot",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "- one\n- two\n",
       "markdown": "- one\n- two\n",
       "djot": "- one\n- two\n",
-      "html": "<ul><li>one</li><li>two</li></ul>"
+      "html": "<ul><li>one</li><li>two</li></ul>",
+      "pandocMarkdown": "- one\n- two\n"
     },
     {
       "id": "nested-list",
@@ -134,7 +226,19 @@
       "djot": "- outer\n\n  second paragraph\n\n  - inner\n\n  - sibling\n\n- next\n",
       "html": "<ul><li><p>outer</p><p>second paragraph</p><ul><li><p>inner</p></li><li><p>sibling</p></li></ul></li><li><p>next</p></li></ul>",
       "rst": "- outer\n\n  second paragraph\n\n  - inner\n\n  - sibling\n\n- next\n",
-      "asciidoc": "* outer\n+\nsecond paragraph\n+\n** inner\n\n** sibling\n\n* next\n"
+      "asciidoc": "* outer\n+\nsecond paragraph\n+\n** inner\n\n** sibling\n\n* next\n",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "- outer\n\n  second paragraph\n\n  - inner\n\n  - sibling\n\n- next\n"
     },
     {
       "id": "soft-wrap",
@@ -144,12 +248,14 @@
         "commonmark",
         "cmark",
         "djot",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "one\ntwo\n",
       "markdown": "one\ntwo\n",
       "djot": "one\ntwo\n",
-      "html": "<p>one\ntwo</p>"
+      "html": "<p>one\ntwo</p>",
+      "pandocMarkdown": "one\ntwo\n"
     },
     {
       "id": "reference-link",
@@ -157,10 +263,12 @@
         "mdast",
         "commonmark",
         "cmark",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "A [link](https://example.org \"title\").\n",
-      "markdown": "A [link][dest].\n\n[dest]: https://example.org \"title\"\n"
+      "markdown": "A [link][dest].\n\n[dest]: https://example.org \"title\"\n",
+      "pandocMarkdown": "A [link][dest].\n\n[dest]: https://example.org \"title\"\n"
     },
     {
       "id": "literal-markers",
@@ -182,7 +290,19 @@
       "djot": "_a_ _b_\n",
       "rst": "*a* *b*\n",
       "asciidoc": "_a_ _b_\n",
-      "html": "<p><em>a</em> <em>b</em></p>"
+      "html": "<p><em>a</em> <em>b</em></p>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "*a* *b*\n"
     },
     {
       "id": "document-title",
@@ -263,7 +383,19 @@
       "djot": "````text\n----\n```\n____\nlast\n````\n",
       "rst": ".. code:: text\n\n    ----\n    ```\n    ____\n    last\n",
       "asciidoc": "[source,text]\n-----\n----\n```\n____\nlast\n-----\n",
-      "html": "<pre><code class=\"language-text\">----\n```\n____\nlast\n</code></pre>"
+      "html": "<pre><code class=\"language-text\">----\n```\n____\nlast\n</code></pre>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "````text\n----\n```\n____\nlast\n````\n"
     },
     {
       "id": "inline-code-backticks",
@@ -274,13 +406,15 @@
         "cmark",
         "djot",
         "asciidoctor",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "Code: ```x `` y```.\n",
       "markdown": "Code: ```x `` y```.\n",
       "djot": "Code: ```x `` y```.\n",
       "asciidoc": "Code: ``pass:[x `` y]``.\n",
-      "html": "<p>Code: <code>x `` y</code>.</p>"
+      "html": "<p>Code: <code>x `` y</code>.</p>",
+      "pandocMarkdown": "Code: ```x `` y```.\n"
     },
     {
       "id": "hard-break-with-inline-code",
@@ -290,12 +424,14 @@
         "commonmark",
         "cmark",
         "djot",
-        "md4c"
+        "md4c",
+        "pandoc"
       ],
       "carve": "Code: ```x `` y```\\\nnext\n",
       "markdown": "Code: ```x `` y```\\\nnext\n",
       "djot": "Code: ```x `` y```\\\nnext\n",
-      "html": "<p>Code: <code>x `` y</code><br>next</p>"
+      "html": "<p>Code: <code>x `` y</code><br>next</p>",
+      "pandocMarkdown": "Code: ```x `` y```\\\nnext\n"
     },
     {
       "id": "code-before-quote",
@@ -340,7 +476,81 @@
       "djot": "``` js\nconst x = 1;\n```\n",
       "rst": ".. code:: js\n\n    const x = 1;\n",
       "asciidoc": "[source,js]\n----\nconst x = 1;\n----\n",
-      "html": "<pre><code class=\"language-js\">const x = 1;\n</code></pre>"
+      "html": "<pre><code class=\"language-js\">const x = 1;\n</code></pre>",
+      "tools": [
+        "mdast",
+        "hast",
+        "commonmark",
+        "cmark",
+        "djot",
+        "docutils",
+        "asciidoctor",
+        "md4c",
+        "pandoc"
+      ],
+      "pandocMarkdown": "``` js\nconst x = 1;\n```\n"
+    },
+    {
+      "id": "basic-table",
+      "tools": [
+        "mdast",
+        "hast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "| Name | Value |\n| --- | --- |\n| Alpha | *bold* |\n| Empty | |\n",
+      "markdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n| Empty | |\n",
+      "djot": "| Name | Value |\n|---|---|\n| Alpha | *bold* |\n| Empty | |\n",
+      "html": "<table><tr><th>Name</th><th>Value</th></tr><tr><td>Alpha</td><td><strong>bold</strong></td></tr><tr><td>Empty</td><td></td></tr></table>",
+      "pandocMarkdown": "| Name | Value |\n| --- | --- |\n| Alpha | **bold** |\n| Empty | |\n"
+    },
+    {
+      "id": "task-list",
+      "tools": [
+        "mdast",
+        "hast",
+        "djot"
+      ],
+      "carve": "- [x] done\n- [ ] pending\n",
+      "markdown": "- [x] done\n- [ ] pending\n",
+      "djot": "- [x] done\n- [ ] pending\n",
+      "html": "<ul><li><input type=\"checkbox\" checked disabled> done</li><li><input type=\"checkbox\" disabled> pending</li></ul>"
+    },
+    {
+      "id": "numeric-footnote",
+      "tools": [
+        "mdast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "Text[^1].\n\n[^1]: Note.\n",
+      "markdown": "Text[^1].\n\n[^1]: Note.\n",
+      "djot": "Text[^1].\n\n[^1]: Note.\n",
+      "pandocMarkdown": "Text[^1].\n\n[^1]: Note.\n"
+    },
+    {
+      "id": "definition-list",
+      "tools": [
+        "hast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": ":: Term\n: Definition.\n",
+      "html": "<dl><dt>Term</dt><dd><p>Definition.</p></dd></dl>",
+      "djot": ": Term\n\n  Definition.\n",
+      "pandocMarkdown": "Term\n\n: Definition.\n"
+    },
+    {
+      "id": "inline-attributes",
+      "tools": [
+        "hast",
+        "djot",
+        "pandoc"
+      ],
+      "carve": "A [word]{#word .token key=\"value\"}.\n",
+      "html": "<p>A <span id=\"word\" class=\"token\" key=\"value\">word</span>.</p>",
+      "djot": "A [word]{#word .token key=\"value\"}.\n",
+      "pandocMarkdown": "A [word]{#word .token key=\"value\"}.\n"
     }
   ]
 }

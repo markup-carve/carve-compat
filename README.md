@@ -10,9 +10,11 @@ pinned revisions for each run.
 - [Full methodology and adapter boundaries](tests/external-compat/README.md)
 
 The suite lives independently of the Carve specification repository. It measures
-the pinned JavaScript reference engine against eight external parser targets:
-mdast, hast, commonmark.js, cmark, djot.js, Docutils, Asciidoctor.js and MD4C.
-It does not yet compare the PHP or Rust Carve engines.
+nine external parser targets through pinned JavaScript, PHP and Rust Carve
+engines: mdast, hast, commonmark.js, cmark, djot.js, Docutils, Asciidoctor.js,
+MD4C and Pandoc. Foreign adapters and public importers run through JavaScript;
+PHP and Rust check the mapped AST, JSON interchange, Carve source and HTML.
+See [current findings](docs/findings.md) for reproduced engine differences.
 
 ## What the report means
 
@@ -27,8 +29,8 @@ cells are outside that target's declared fixture coverage.
 
 The report is a measurement of the listed cases and versions, not a percentage
 of all possible documents. Foreign source spans are not Carve spans. List
-layout and heading levels have documented boundaries. Asciidoctor's HTML check
-reuses converted inline content and is not a second independent inline parser.
+layout and heading levels have documented boundaries. Asciidoctor's inline tree also has to match a separate DocBook conversion.
+Both conversions share Asciidoctor's parser.
 
 ## Run locally
 
@@ -42,10 +44,11 @@ mkdir -p reports
 npm run compat:javascript -- --report=reports/javascript.json
 ```
 
-For all eight readers on Ubuntu:
+For all nine readers and three engines on Ubuntu, install Rust with Cargo,
+PHP 8.3 or newer, and the native dependencies below:
 
 ```sh
-sudo apt-get install cmark libmd4c-dev libmd4c-html0-dev
+sudo apt-get install php-cli php-xml cmark libmd4c-dev libmd4c-html0-dev
 python3 -m venv .cache/python
 .cache/python/bin/pip install -r scripts/compat/requirements.txt
 mkdir -p .cache/compat reports
@@ -53,11 +56,17 @@ cc -std=c99 -Wall -Wextra -Werror \
   "-DCARVE_MD4C_VERSION=\"$(dpkg-query -W -f='${Version}' libmd4c0)\"" \
   scripts/compat/md4c-driver.c -lmd4c -lmd4c-html \
   -o .cache/compat/md4c-driver
+npm run compat:provision
+CARVE_PANDOC=.cache/pandoc/bin/pandoc \
 CARVE_COMPAT_PYTHON=.cache/python/bin/python \
   npm run compat:check -- --report=reports/latest.json
 ```
 
-`CARVE_CMARK` and `CARVE_MD4C_DRIVER` select alternative native executables.
+`CARVE_CMARK`, `CARVE_MD4C_DRIVER` and `CARVE_PANDOC` select native executables.
+The provisioner downloads Pandoc 3.11 with a verified archive checksum and
+builds the pinned Rust engine with its lockfile. PHP runs through a small
+autoload driver. `--engines=javascript` selects the reference engine alone;
+native selections must include JavaScript to provide the mapped baseline.
 `--tools=mdast,djot` measures a narrower selection and records every unmeasured
 target. Missing readers fail the full sweep instead of becoming skips.
 
@@ -103,7 +112,9 @@ reports older than 48 hours.
 
 ## Revisions and upstream work
 
-The Carve engine is pinned in `package.json` and the lockfile. The AST schema is
+JavaScript is pinned in `package.json` and the lockfile. PHP, Rust and Pandoc
+are pinned in `resources/engines.json`; reports include its hash. Rust binaries
+also have a build manifest with the source revision and binary SHA-256. The AST schema is
 a vendored snapshot whose source revision and license are recorded in
 `resources/provenance.json`. Each report also includes its SHA-256 hash, the
 hashes of the raw fixture files, tool versions, suite revision and measurement time.

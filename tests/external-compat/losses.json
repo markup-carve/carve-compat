@@ -63,30 +63,16 @@
       "retained": "x"
     },
     {
-      "id": "task-state-import",
+      "id": "table-alignment-import",
       "direction": "import",
       "tools": [
         "mdast"
       ],
-      "source": "- [x] done\n",
+      "source": "| Header Alpha | Header Beta |\n| :--- | ---: |\n| Cell Gamma | Cell Delta |\n",
       "expected": {
         "code": "unsupported-field",
         "fidelity": "dropped",
-        "path": "/children/0/children/0/checked"
-      },
-      "retained": "done"
-    },
-    {
-      "id": "table-import",
-      "direction": "import",
-      "tools": [
-        "mdast"
-      ],
-      "source": "| Header Alpha | Header Beta |\n| - | - |\n| Cell Gamma | Cell Delta |\n",
-      "expected": {
-        "code": "unsupported-node",
-        "fidelity": "degraded",
-        "path": "/children/0"
+        "path": "/children/0/align"
       },
       "retained": "Header AlphaHeader BetaCell GammaCell Delta"
     },
@@ -376,6 +362,62 @@
         "path": "/children/0/children/1/value"
       },
       "retained": "x `` y"
+    },
+    {
+      "id": "pandoc-task-state",
+      "direction": "import",
+      "tools": [
+        "pandoc"
+      ],
+      "source": "- [x] done\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/blocks/0/c/0/0/c/0"
+      },
+      "retained": "done"
+    },
+    {
+      "id": "pandoc-named-footnote-export",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "carve": "Text[^named].\n\n[^named]: Note.\n",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "degraded",
+        "path": "/children/0/children/1/label"
+      },
+      "retained": "Note."
+    },
+    {
+      "id": "html-spanned-table-import",
+      "direction": "import",
+      "tools": [
+        "hast"
+      ],
+      "source": "<table><tr><td colspan=\"2\">Wide cell</td></tr></table>",
+      "expected": {
+        "code": "unsupported-field",
+        "fidelity": "dropped",
+        "path": "/children/0/rows/0/0/cells/0/properties/colSpan"
+      },
+      "retained": "Wide cell"
+    },
+    {
+      "id": "pandoc-orphan-footnote-export",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "carve": "[^unused]: Orphan body.\n",
+      "expected": {
+        "code": "unsupported-node",
+        "fidelity": "degraded",
+        "path": "/children/0"
+      },
+      "retained": "Orphan body."
     }
   ]
 }

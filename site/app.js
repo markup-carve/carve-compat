@@ -3,7 +3,7 @@ const node = (tag, text, className) => { const el = document.createElement(tag);
 const append = (parent, ...children) => { parent.append(...children); return parent }
 const fetchJson = async path => { const response = await fetch(path); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return response.json() }
 let report, tools, activeButton
-const checkLabels = { 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
+const checkLabels = { 'independent-docbook':'Separate DocBook output', 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
 function ring(passed, total) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 48 48'); svg.classList.add('ring'); svg.setAttribute('aria-hidden', 'true')
@@ -25,13 +25,15 @@ function fillOverview(manifest) {
   const engine = $('#engine-version'); engine.textContent = `Carve ${report.engine.version}`
   const pin = report.engine.dependency.split('#')[1]; if (/^[a-f0-9]{40}$/.test(pin)) engine.href = `https://github.com/markup-carve/carve-js/commit/${pin}`
   if (manifest.runUrl) $('#run-link').href = manifest.runUrl
-  const pairs = [['Suite revision', report.suiteRevision], ['Reference engine pin', report.engine.dependency], ['Schema revision', report.schema.revision], ['Schema SHA-256', report.schema.sha256], ['cases.json SHA-256', report.fixtureHashes['cases.json']], ['losses.json SHA-256', report.fixtureHashes['losses.json']], ['Comparison duration', `${(report.durationMs / 1000).toFixed(1)} seconds`], ['Unmeasured targets', report.notMeasured.join(', ') || 'None']]
+  for(const id of report.selectedEngines??['javascript']){const meta=report.engines?.[id]??report.engine;const rows=report.rows.filter(r=>(r.engine??'javascript')===id);const card=node('article',undefined,'engine-card');card.append(node('h3',meta.name??id),ring(rows.filter(r=>r.status==='passed').length,rows.length),node('p',`${rows.filter(r=>r.status==='passed').length} / ${rows.length} comparisons passed`),node('p',meta.version??meta.error??'Version unavailable','version'),...(meta.runtime?[node('p',meta.runtime,'version')]:[]) );$('#engine-cards').append(card);const option=node('option',meta.name??id);option.value=id;$('#engine-filter').append(option)}
+  const pairs = [['Suite revision', report.suiteRevision], ['Reference engine pin', report.engine.dependency], ['Schema revision', report.schema.revision], ['Engine config SHA-256',report.engineConfigSha256??'Unavailable'], ['Schema SHA-256', report.schema.sha256], ['cases.json SHA-256', report.fixtureHashes['cases.json']], ['losses.json SHA-256', report.fixtureHashes['losses.json']], ['Comparison duration', `${(report.durationMs / 1000).toFixed(1)} seconds`], ['Unmeasured targets', report.notMeasured.join(', ') || 'None']]
+  for(const [id,meta]of Object.entries(report.engines??{}))pairs.push([`${id} revision`,meta.revision??meta.error??'Unavailable'])
   for (const [key, value] of pairs) append($('#provenance'), node('dt', key), node('dd', value))
   for (const tool of tools) {
     const rows = report.rows.filter(r => r.tool === tool.id), passed = rows.filter(r => r.status === 'passed').length
     const card = node('article', undefined, 'tool-card'), top = node('div', undefined, 'tool-top'), h = node('h3'), link = node('a', tool.name)
-    link.href = tool.url; append(top, append(h, link), ring(passed, rows.length)); card.append(top, node('p', tool.format, 'format'), node('span', rows.length ? `${passed} / ${rows.length} fixtures passed` : 'Not measured', 'count'))
-    card.append(node('p', `${rows.filter(r => r.kind === 'supported').length} supported · ${rows.filter(r => r.kind === 'loss').length} loss cases`), node('p', tool.description))
+    link.href = tool.url; append(top, append(h, link), ring(passed, rows.length)); card.append(top, node('p', tool.format, 'format'), node('span', rows.length ? `${passed} / ${rows.length} engine comparisons passed` : 'Not measured', 'count'))
+    card.append(node('p', `${rows.filter(r => r.kind === 'supported').length} supported · ${rows.filter(r => r.kind === 'loss').length} loss comparisons`), node('p', tool.description))
     const versions = [...new Set(rows.map(r => r.version).filter(Boolean))]; card.append(node('p', versions.length ? versions.join(' · ') : 'Version unavailable', 'version'))
     const button = node('button', 'Inspect cases →'); button.type = 'button'; button.disabled = !rows.length; button.addEventListener('click', () => { closeDetail(); $('#tool-filter').value = tool.id; renderMatrix(); $('#explorer').scrollIntoView(); $('#tool-filter').focus() }); card.append(button); $('#tool-cards').append(card)
     const option = node('option', tool.name); option.value = tool.id; $('#tool-filter').append(option)
@@ -41,21 +43,25 @@ function closeDetail() {
   $('#detail').hidden = true
   if (activeButton?.isConnected) { activeButton.setAttribute('aria-pressed', 'false'); activeButton.focus({preventScroll:true}) }
   activeButton = null
-  const url = new URL(location.href); for (const key of ['case', 'tool', 'kind']) url.searchParams.delete(key); history.replaceState(null, '', url)
+  const url = new URL(location.href); for (const key of ['case', 'tool', 'kind', 'engine']) url.searchParams.delete(key); history.replaceState(null, '', url)
 }
 function pane(title, value, open = false) {
   const el = node('details'); el.open = open; append(el, node('summary', title), append(node('pre'), node('code', typeof value === 'string' ? value : JSON.stringify(value, null, 2)))); return el
 }
 function showDetail(row, button, scroll = true) {
   activeButton?.setAttribute('aria-pressed', 'false'); activeButton = button; button?.setAttribute('aria-pressed', 'true')
-  const tool = tools.find(t => t.id === row.tool); $('#detail-meta').textContent = `${tool.name} / ${row.kind === 'loss' ? 'EXPECTED LOSS' : 'SUPPORTED SUBSET'} / ${row.status.toUpperCase()}`
+  const tool = tools.find(t => t.id === row.tool); $('#detail-meta').textContent = `${row.engine??'javascript'} / ${tool.name} / ${row.kind === 'loss' ? 'EXPECTED LOSS' : 'SUPPORTED SUBSET'} / ${row.status.toUpperCase()}`
   const title = $('#detail-title'); title.textContent = row.case; title.tabIndex = -1
-  $('#detail-summary').textContent = row.error ?? (row.kind === 'loss' ? 'This case passed because the expected limitation was reported at its declared path and readable fallback content survived.' : 'This fixture preserved the declared semantic fields through every listed check. Normalization diagnostics remain visible below.')
+  $('#detail-summary').textContent = row.error ?? (row.kind === 'loss' ? (row.engine && row.engine!=='javascript'?'The JavaScript adapter verified this expected loss. This engine checked the resulting fallback AST through the checks listed below.':'This case passed because the expected limitation was reported at its declared path and readable fallback content survived.') : 'This fixture preserved the declared semantic fields through every listed check. Normalization diagnostics remain visible below.')
   $('#detail-checks').textContent = (row.checks ?? []).map(c => `✓ ${checkLabels[c] ?? c}`).join('  ·  ')
   const panes = $('#detail-panes'); panes.replaceChildren(); const e = row.evidence ?? {}
   if (e.source !== undefined) panes.append(pane(`Input source · ${e.sourceFormat}`, e.source, true))
   if (e.carve !== undefined) panes.append(pane('Authored Carve expectation', e.carve, true))
   if (e.ast) panes.append(pane('Mapped Carve AST', e.ast, !e.carve))
+  if(e.engineAst)panes.append(pane('Engine decoded AST',e.engineAst))
+  if(e.engineCarve!==undefined)panes.append(pane('Engine canonical Carve',e.engineCarve))
+  if(e.independentAst)panes.append(pane('Separate DocBook AST',e.independentAst))
+  if(e.independentSource!==undefined)panes.append(pane('Separate DocBook source',e.independentSource))
   if (e.exportedSource !== undefined) panes.append(pane('Exported foreign source', e.exportedSource))
   if (e.foreignHtml !== undefined) panes.append(pane('Foreign rendered HTML · source only', e.foreignHtml))
   if (e.expected) panes.append(pane('Required loss diagnostic', { ...e.expected, retainedContent: e.retained }, true))
@@ -67,13 +73,13 @@ function showDetail(row, button, scroll = true) {
   for (const d of unique.values()) { const item = node('li'); append(item, node('span', d.fidelity, `badge ${d.fidelity}`), node('code', d.code), node('code', `Path: ${d.path || '(root)'}${d.count > 1 ? ` · ${d.count} occurrences across checks` : ''}`), node('p', d.message)); list.append(item) }
   if (!unique.size) list.append(node('li', row.status === 'failed' ? 'No diagnostics were captured before this failure.' : 'No adapter diagnostics.'))
   diagnostics.append(list); panes.append(diagnostics); $('#detail').hidden = false
-  const url = new URL(location.href); url.searchParams.set('case', row.case); url.searchParams.set('tool', row.tool); url.searchParams.set('kind', row.kind); url.hash = 'explorer'; history.replaceState(null, '', url)
+  const url = new URL(location.href); url.searchParams.set('case', row.case); url.searchParams.set('tool', row.tool); url.searchParams.set('kind', row.kind); url.searchParams.set('engine',row.engine??'javascript'); url.hash = 'explorer'; history.replaceState(null, '', url)
   if (scroll) { $('#detail').scrollIntoView({ block:'start' }); title.focus({ preventScroll:true }) }
 }
 function renderMatrix() {
   $('#detail').hidden = true; activeButton = null
   const search = $('#search').value.toLowerCase().trim(), selectedTool = $('#tool-filter').value, kind = $('#kind-filter').value, status = $('#status-filter').value
-  const rows = report.rows.filter(r => (!search || `${r.case} ${r.error ?? ''} ${(r.diagnostics ?? []).map(d => `${d.code} ${d.message}`).join(' ')}`.toLowerCase().includes(search)) && (!selectedTool || r.tool === selectedTool) && (!kind || r.kind === kind) && (!status || r.status === status))
+  const rows = report.rows.filter(r => (r.engine??'javascript')===$('#engine-filter').value && (!search || `${r.case} ${r.error ?? ''} ${(r.diagnostics ?? []).map(d => `${d.code} ${d.message}`).join(' ')}`.toLowerCase().includes(search)) && (!selectedTool || r.tool === selectedTool) && (!kind || r.kind === kind) && (!status || r.status === status))
   const visibleTools = tools.filter(t => !selectedTool || t.id === selectedTool)
   const head = $('#matrix thead'); head.replaceChildren(); const tr = node('tr'); const first = node('th', 'Fixture'); first.scope = 'col'; tr.append(first)
   for (const tool of visibleTools) { const th = node('th', tool.name); th.scope = 'col'; tr.append(th) } head.append(tr)
@@ -100,11 +106,12 @@ try {
   if (!Array.isArray(manifest.tools) || !manifest.tools.length) throw new Error('Unsupported or incomplete manifest')
   report = data; tools = manifest.tools; fillOverview(manifest)
   const query = new URL(location.href).searchParams
-  for (const selector of ['#search', '#tool-filter', '#kind-filter', '#status-filter']) $(selector).addEventListener(selector === '#search' ? 'input' : 'change', () => { closeDetail(); renderMatrix() })
-  $('#reset').addEventListener('click', () => { closeDetail(); for (const selector of ['#search', '#tool-filter', '#kind-filter', '#status-filter']) $(selector).value = ''; renderMatrix() })
+  for (const selector of ['#search', '#tool-filter', '#kind-filter', '#status-filter', '#engine-filter']) $(selector).addEventListener(selector === '#search' ? 'input' : 'change', () => { closeDetail(); renderMatrix() })
+  $('#reset').addEventListener('click', () => { closeDetail(); for (const selector of ['#search', '#tool-filter', '#kind-filter', '#status-filter']) $(selector).value = ''; $('#engine-filter').value='javascript'; renderMatrix() })
   $('#close-detail').addEventListener('click', closeDetail); document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#detail').hidden) closeDetail() })
+  if(query.get('engine') && [...$('#engine-filter').options].some(o=>o.value===query.get('engine')))$('#engine-filter').value=query.get('engine')
   renderMatrix()
-  const initial = report.rows.find(r => r.case === query.get('case') && r.tool === query.get('tool') && r.kind === query.get('kind'))
+  const initial = report.rows.find(r => r.case === query.get('case') && r.tool === query.get('tool') && r.kind === query.get('kind') && (r.engine??'javascript')===$('#engine-filter').value)
   if (initial) showDetail(initial, [...$('#matrix tbody').querySelectorAll('button')].find(b => b.dataset.case === initial.case && b.dataset.tool === initial.tool && b.dataset.kind === initial.kind))
 } catch (error) {
   $('#run-status').textContent = 'Report unavailable'; $('#load-error').hidden = false; $('#load-error').textContent = `The measured report could not be loaded: ${error.message}. Use the GitHub run artifacts to inspect the evidence.`

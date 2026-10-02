@@ -5,9 +5,11 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseDjot, renderDjot } from '@djot/djot'
-import { corpus, lossCorpus, checkCase, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
-import { toolNames, nativeTools, readForeign } from '../scripts/compat/tools.mjs'
-import { semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
+import { corpus, lossCorpus, checkCase, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
+import { toolNames, nativeTools, readForeign, toMdast, toHast, toDjot } from '../scripts/compat/tools.mjs'
+import { context, semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
+
+import {toPandoc,fromPandoc} from '../scripts/compat/pandoc.mjs'
 
 const javascriptTools = toolNames.filter(t => !nativeTools.includes(t))
 
@@ -42,7 +44,7 @@ for (const tool of javascriptTools) {
     test(`${tool}/${fixture.id}: schema, AST, rendering, and both source round trips`, async () => {
       const result = await checkCase(tool, fixture)
       assert.equal(result.status, 'passed')
-      assert.equal(result.checks.length, tool === 'asciidoctor' ? 6 : 7)
+      assert.equal(result.checks.length, 7)
       assert.ok(result.version)
     })
   }
@@ -105,7 +107,7 @@ test('a missing native parser fails the CLI and remains a named failure in its r
   const dir = mkdtempSync(join(tmpdir(), 'carve-external-failure-'))
   try {
     const report = join(dir, 'report.json')
-    const result = spawnSync(process.execPath, ['scripts/external-compat.mjs', '--tools=cmark', `--report=${report}`], {
+    const result = spawnSync(process.execPath, ['scripts/external-compat.mjs', '--tools=cmark', '--engines=javascript', `--report=${report}`], {
       cwd: new URL('..', import.meta.url), encoding: 'utf8', env: { ...process.env, CARVE_CMARK: join(dir, 'absent-cmark') },
     })
     assert.equal(result.status, 1, result.stderr)
@@ -133,4 +135,82 @@ test('failed assertions keep partial AST evidence and loss diagnostics', async (
     assert.ok(error.compatibilityEvidence.version)
     return true
   })
+})
+
+
+test('the separate DocBook check catches an inline mismatch with unchanged visible text', async () => {
+  const result = await readForeign('asciidoctor','A *bold* word.\n')
+  checkIndependent(result)
+  const changed=structuredClone(result)
+  changed.independentAst.children[0].children.find(n=>n.type==='strong').type='emphasis'
+  assert.throws(()=>checkIndependent(changed),/Independent DocBook structure differs/)
+})
+
+test('a missing Carve engine produces failed comparisons instead of silent skips', async () => {
+  const result=await runCompatibility(['commonmark'],['javascript'])
+  assert.deepEqual(result.selectedEngines,['javascript'])
+  assert.deepEqual(result.notMeasuredEngines,['php','rust'])
+  await assert.rejects(runCompatibility(['commonmark'],['php']),/JavaScript reference/)
+  await assert.rejects(runCompatibility(['commonmark'],['javascript','unknown']),/Unknown engine/)
+  const dir=mkdtempSync(join(tmpdir(),'carve-engine-missing-'))
+  try {
+    const report=join(dir,'report.json')
+    const child=spawnSync(process.execPath,['scripts/external-compat.mjs','--tools=commonmark','--engines=javascript,php',`--report=${report}`],{encoding:'utf8',env:{...process.env,CARVE_PHP_ROOT:join(dir,'missing')}})
+    assert.equal(child.status,1)
+    const data=JSON.parse(readFileSync(report))
+    assert.ok(data.engines.php.error)
+    assert.ok(data.rows.filter(r=>r.engine==='php').every(r=>r.status==='failed'))
+    assert.ok(data.rows.filter(r=>r.engine==='javascript').every(r=>r.status==='passed'))
+  } finally {rmSync(dir,{recursive:true,force:true})}
+})
+
+
+test('rich exporters report unsupported fields on internal table and definition nodes',()=>{
+  const ast={type:'document',srcByteLength:0,children:[{type:'table',rows:[{type:'table_row',attrs:{id:'row'},cells:[{type:'table_cell',header:true,align:'right',colspan:2,attrs:{classes:['cell']},children:[{type:'text',value:'x'}]}]}]}]}
+  validateAst(ast)
+  for(const [tool,writer]of [['mdast',toMdast],['hast',toHast],['djot',toDjot]]){
+    const ctx=context(tool);writer(ast,ctx)
+    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/align' && d.fidelity==='dropped'),tool)
+    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/colspan' && d.fidelity==='dropped'),tool)
+  }
+  const root={type:'document',srcByteLength:0,children:[{type:'definition_list',items:[{type:'definition_term',attrs:{id:'term'},children:[{type:'text',value:'Term'}]},{type:'definition_description',children:[{type:'paragraph',children:[{type:'text',value:'Definition'}]}]}]}]}
+  validateAst(root)
+  for(const tool of ['pandoc','djot']){const ctx=context(tool);if(tool==='pandoc')toPandoc(root,[1,23],ctx);else toDjot(root,ctx);assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/items/0/attrs' && d.fidelity==='dropped'),tool)}
+})
+
+test('authored HTML endnote attributes are never treated as generated navigation',()=>{
+  const ctx=context('hast')
+  fromHast(parseHtml('<p><sup class="keep"><a id="r1" role="doc-noteref" href="#n1">1</a></sup></p><section role="doc-endnotes" id="notes"><ol><li id="n1">Note</li></ol></section>'),ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.fidelity==='degraded'))
+  assert.equal(ctx.diagnostics.some(d=>d.code==='generated-footnote-navigation'),false)
+})
+
+
+test('export diagnostics retain document indices when footnotes precede body blocks',()=>{
+  const root={type:'document',srcByteLength:0,children:[{type:'footnote',label:'1',children:[{type:'paragraph',children:[{type:'underline',children:[{type:'text',value:'note'}]}]}]},{type:'paragraph',children:[{type:'underline',children:[{type:'text',value:'body'}]}]}]}
+  validateAst(root)
+  const ctx=context('djot');toDjot(root,ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/children/0/children/0' && d.code==='unsupported-node'))
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/1/children/0' && d.code==='unsupported-node'))
+})
+
+
+test('Pandoc reports attributes on referenced note definitions at their original AST path',()=>{
+  const root={type:'document',srcByteLength:0,children:[{type:'footnote',label:'1',attrs:{id:'note'},children:[{type:'paragraph',children:[{type:'text',value:'Body'}]}]},{type:'paragraph',children:[{type:'footnote_ref',label:'1'}]}]}
+  validateAst(root)
+  const ctx=context('pandoc');toPandoc(root,[1,23],ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/attrs' && d.fidelity==='dropped'))
+})
+
+
+test('Pandoc retains orphan note cycles and diagnoses reachable recursive references',()=>{
+  const note={type:'footnote',label:'a',children:[{type:'paragraph',children:[{type:'text',value:'See '},{type:'footnote_ref',label:'a'}]}]}
+  for(const reachable of [false,true]){
+    const root={type:'document',srcByteLength:0,children:[note,...(reachable?[{type:'paragraph',children:[{type:'footnote_ref',label:'a'}]}]:[])]}
+    validateAst(root)
+    const ctx=context('pandoc'),out=toPandoc(root,[1,23],ctx)
+    assert.ok(out.blocks.length)
+    assert.ok(JSON.stringify(out).includes('See '))
+    assert.ok(ctx.diagnostics.some(d=>d.code==='unsupported-node' && d.fidelity==='degraded'))
+  }
 })

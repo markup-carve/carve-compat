@@ -11,7 +11,7 @@ test('dashboard renders measured totals, versions, evidence and filters', async 
   await page.goto('/')
   await expect(page.locator('#stat-tools')).toHaveText(String(report.selected.length))
   await expect(page.locator('#stat-failed')).toHaveText(String(report.failed))
-  await expect(page.locator('.tool-card')).toHaveCount(8)
+  await expect(page.locator('.tool-card')).toHaveCount(9)
   await expect(page.locator('#engine-version')).toContainText(report.engine.version)
   await page.selectOption('#tool-filter', 'mdast')
   await page.fill('#search', 'inline-structure')
@@ -59,7 +59,7 @@ test('the published report renders without assuming comparisons passed', async (
   await page.goto('/'); await expect(page.locator('#stat-tools')).toHaveText(String(measured.selected.length))
   await expect(page.locator('#stat-failed')).toHaveText(String(measured.failed))
   await expect(page.locator('#load-error')).toBeHidden()
-  await expect(page.locator('#case-count')).toContainText(`${measured.rows.length} measured target/case pairs`)
+  await expect(page.locator('#case-count')).toContainText(`${measured.rows.filter(r=>(r.engine??'javascript')==='javascript').length} measured target/case pairs`)
 })
 test('failed losses retain required evidence without a mapped AST', async ({ page }) => {
   const changed = structuredClone(report), row = changed.rows[1]
@@ -90,4 +90,23 @@ test('target handoff clears permalinks and unmeasured targets stay explicit', as
 test('an invalid manifest is explicit', async ({ page }) => {
   await page.route('**/manifest.json', route => route.fulfill({ json: { tools: null } }))
   await page.goto('/'); await expect(page.locator('#load-error')).toBeVisible()
+})
+
+test('engine selection and permalinks preserve separate engine evidence', async ({ page }) => {
+  const changed=structuredClone(report)
+  changed.selectedEngines=['javascript','php']
+  changed.engines={javascript:{name:'Carve JavaScript',version:'fixture'},php:{name:'Carve PHP',version:'fixture'}}
+  const row={...structuredClone(changed.rows[0]),engine:'php',status:'failed',error:'Authored ID lost',evidence:{...changed.rows[0].evidence,engineAst:{type:'document',children:[]},engineCarve:'[word]{.token}',independentAst:{type:'document',children:[]},independentSource:'<article/>'}}
+  changed.rows.push(row);changed.failed++
+  await page.route('**/report.json',route=>route.fulfill({json:changed}))
+  await page.goto('/');await page.selectOption('#engine-filter','php')
+  await expect(page.locator('#matrix tbody button')).toHaveCount(1)
+  await page.locator('#matrix tbody button').click()
+  await expect(page.locator('#detail-meta')).toContainText('php')
+  await expect(page.locator('#detail-panes')).toContainText('Engine canonical Carve')
+  await expect(page.locator('#detail-panes')).toContainText('Separate DocBook source')
+  const url=page.url();await page.goto(url)
+  await expect(page.locator('#engine-filter')).toHaveValue('php')
+  await expect(page.locator('#detail-summary')).toHaveText('Authored ID lost')
+  await page.click('#reset');await expect(page.locator('#engine-filter')).toHaveValue('javascript')
 })
