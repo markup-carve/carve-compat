@@ -137,13 +137,23 @@ retain checked and unchecked states in mdast, hast and Djot. Numeric footnotes
 run through mdast, Djot and Pandoc. Definition lists and inline attributes run
 through hast, Djot and Pandoc. Each fixture declares its selected targets.
 
-Pandoc's JSON AST discards source note labels, so numeric notes use document
-order. Named labels receive an export diagnostic. Unreferenced note definitions
-retain their body as ordinary blocks and report the lost note structure. Repeated references and
-out-of-order numeric labels are outside the current positive subset. Table
-alignment, widths and spans have explicit loss cases or adapter diagnostics;
-the Carve schema can represent these fields. Lettered and Roman numbering also
-fit Carve's `olType`, but the current Djot and Pandoc adapters report that loss.
+Lettered and Roman lists preserve Carve's `olType` through Djot and Pandoc.
+Repeated notes pass through mdast and Djot. Tables combine inline formatting,
+Unicode, links, code and numeric note references. Nested task lists and multiple
+definition terms have positive fixtures too.
+
+Pandoc's JSON AST discards source note labels and shared-reference identity.
+Numeric notes use document order. Repeated references, equal note bodies,
+out-of-order numeric labels and named labels receive diagnostics. Unreferenced
+note definitions retain their body as ordinary blocks and report the lost note
+structure. Equal note bodies remain separate; content equality does not prove
+that two notes shared a label.
+
+Table captions, alignment, widths, spans, footer partitions, section attributes
+and block-cell content have explicit loss fixtures. The Carve schema can
+represent these fields; the adapters currently flatten or omit them. Djot export
+keeps multiple descriptions as readable blocks under one term and reports the
+lost description partition.
 
 JavaScript verifies foreign imports, exports and public importers. PHP and
 Rust consume the same mapped AST and check schema validity, JSON interchange,

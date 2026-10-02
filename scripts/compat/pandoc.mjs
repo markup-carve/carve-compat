@@ -11,7 +11,7 @@ function attrs(attr) {
 const foreignAttr = a => [a?.id ?? '', a?.classes ?? [], Object.entries(a?.keyValues ?? {})]
 export function fromPandoc(root, ctx = context('pandoc')) {
   if (!Array.isArray(root.blocks) || !Array.isArray(root['pandoc-api-version'])) throw new Error('Invalid Pandoc JSON document')
-  const notes = []
+  const notes = [], noteBodies = new Set()
   const map = (n, path) => {
     const c = n.c, children = (nodes, suffix = '/c') => coalesce(nodes.flatMap((child, i) => map(child, `${path}${suffix}/${i}`)))
     let out, a
@@ -29,8 +29,9 @@ export function fromPandoc(root, ctx = context('pandoc')) {
     else if (n.t === 'BlockQuote') out = { type:'block_quote', children:children(c) }
     else if (n.t === 'BulletList' || n.t === 'OrderedList') {
       const ordered = n.t === 'OrderedList', items = ordered ? c[1] : c, base = ordered ? '/c/1' : '/c'
-      if (ordered && !['Decimal', 'DefaultStyle'].includes(c[0][1].t)) ctx.note(`${path}/c/0/1`, 'unsupported-field', 'dropped', 'Pandoc lettered and roman numbering styles are outside this subset.')
-      out = { type:'list', ordered, tight:items.every(item => item[0]?.t === 'Plain'), items:items.map((item, i) => {
+      const olType=ordered?({LowerAlpha:'a',UpperAlpha:'A',LowerRoman:'i',UpperRoman:'I'})[c[0][1].t]:undefined
+      if(ordered && !olType && !['Decimal','DefaultStyle'].includes(c[0][1].t))ctx.note(`${path}/c/0/1`,'unsupported-field','dropped','This Pandoc ordered-list numbering style is outside the adapter subset.')
+      out = { type:'list', ordered, ...(olType?{olType}:{}), tight:items.every(item => item[0]?.t === 'Plain'), items:items.map((item, i) => {
         const mapped = children(item, `${base}/${i}`)
         if (/^[☐☒] /.test(plain(mapped[0] ?? {}))) {
           ctx.note(`${path}${base}/${i}/0/c/0`, 'unsupported-field', 'dropped', 'Pandoc stores task state as a checkbox glyph; this adapter retains the item text without the flag.')
@@ -40,6 +41,9 @@ export function fromPandoc(root, ctx = context('pandoc')) {
       }), ...(ordered && c[0][0] !== 1 ? { start:c[0][0] } : {}) }
     } else if (n.t === 'DefinitionList') out = { type:'definition_list', items:c.flatMap(([term, definitions], i) => [{ type:'definition_term', children:children(term, `/c/${i}/0`) }, ...definitions.map((blocks, j) => ({ type:'definition_description', children:children(blocks, `/c/${i}/1/${j}`) }))]) }
     else if (n.t === 'Note') {
+      const signature=JSON.stringify(c)
+      if(noteBodies.has(signature))ctx.note(path,'unsupported-field','degraded','Pandoc repeats note bodies without preserving whether their source references shared a label.')
+      noteBodies.add(signature)
       const label = String(notes.length + 1), note = { type:'footnote', label, children:[] }; notes.push(note); note.children = children(c)
       ctx.note(path, 'footnote-label-normalization', 'normalized', 'Pandoc publishes note bodies without source labels; assigned numeric document-order labels.')
       return { type:'footnote_ref', label }
@@ -70,12 +74,14 @@ export function fromPandoc(root, ctx = context('pandoc')) {
 export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
   const notes = new Map((root.children ?? []).flatMap((n,index)=>n.type==='footnote'?[[n.label,{node:n,index}]]:[]))
   const referenced=new Set()
-  const activeNotes=new Set()
+  const activeNotes=new Set(), emittedRefs=new Set()
+  let emittedNoteCount=0
   const visit=n=>{if(n.type==='footnote_ref' && !referenced.has(n.label)){referenced.add(n.label);notes.get(n.label)?.node.children.forEach(visit)}for(const key of ['children','items','rows','cells'])n[key]?.forEach(visit)}
   root.children.filter(n=>n.type!=='footnote').forEach(visit)
   const map = (n, path, tight = false) => {
-    const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','pos','srcByteLength','bulletChar','delim']
+    const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','olType','pos','srcByteLength','bulletChar','delim']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
+    if(n.type==='list' && !n.ordered && n.olType)ctx.note(`${path}/olType`,'unsupported-field','dropped','Numbering styles cannot be retained on an unordered foreign list.')
     if (n.attrs && !['heading','span','code','code_block','link','image','table'].includes(n.type)) ctx.note(`${path}/attrs`, 'unsupported-field', 'dropped', 'This Pandoc node has no attribute slot.')
     const nestedFields=(value,p,allowed)=>{for(const key of Object.keys(value))if(!['type','pos','srcByteLength',...allowed].includes(key))ctx.note(`${p}/${key}`,'unsupported-field','dropped',`${key} is outside the Pandoc nested-node export subset.`)}
     const children = () => (n.children ?? []).map((child,i) => map(child, `${path}/children/${i}`))
@@ -95,13 +101,13 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     if (n.type === 'block_quote') return node('BlockQuote',children())
     if (n.type === 'list') {
       const items = n.items.map((item,i) => { nestedFields(item,`${path}/items/${i}`,['children','checked']); if (item.checked !== undefined) ctx.note(`${path}/items/${i}/checked`, 'unsupported-field', 'dropped', 'Task flags are outside the Pandoc export subset.'); return item.children.map((child,j) => map(child, `${path}/items/${i}/children/${j}`, n.tight)) })
-      return node(n.ordered ? 'OrderedList' : 'BulletList', n.ordered ? [[n.start ?? 1,node('Decimal'),node('Period')],items] : items)
+      return node(n.ordered ? 'OrderedList' : 'BulletList', n.ordered ? [[n.start ?? 1,node(({a:'LowerAlpha',A:'UpperAlpha',i:'LowerRoman',I:'UpperRoman'})[n.olType]??'Decimal'),node('Period')],items] : items)
     }
     if (n.type === 'definition_list') {
       const entries = []; for (const [i,item] of n.items.entries()) { nestedFields(item,`${path}/items/${i}`,['children']);if (item.type === 'definition_term') entries.push([item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`)),[]]); else if (entries.length) entries.at(-1)[1].push(item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`))); else throw new Error('A Pandoc definition needs a preceding term') }
       return node('DefinitionList', entries)
     }
-    if (n.type === 'footnote_ref') { if(activeNotes.has(n.label) || !referenced.has(n.label)){ctx.note(path,'unsupported-node','degraded','Retained a recursive or unreachable note reference as a literal marker.');return node('Str',`[^${n.label}]`)}const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); activeNotes.add(n.label);try{return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`)))}finally{activeNotes.delete(n.label)} }
+    if (n.type === 'footnote_ref') { if(activeNotes.has(n.label) || !referenced.has(n.label)){ctx.note(path,'unsupported-node','degraded','Retained a recursive or unreachable note reference as a literal marker.');return node('Str',`[^${n.label}]`)}const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if(emittedRefs.has(n.label))ctx.note(`${path}/label`,'unsupported-field','degraded','Pandoc emits a separate note body for each reference and cannot preserve a shared label.');emittedRefs.add(n.label); emittedNoteCount++; if(/^\d+$/.test(n.label) && n.label!==String(emittedNoteCount))ctx.note(`${path}/label`,'unsupported-field','degraded','Pandoc numbers notes in document order rather than preserving an out-of-order numeric source label.'); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); activeNotes.add(n.label);try{return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`)))}finally{activeNotes.delete(n.label)} }
     if (n.type === 'table') {
       const row = (r,i) => {nestedFields(r,`${path}/rows/${i}`,['cells','attrs']);return [foreignAttr(r.attrs),r.cells.map((cell,j) => {nestedFields(cell,`${path}/rows/${i}/cells/${j}`,['children','header','attrs','align','colspan','rowspan','valign']); for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]}
       const heads = n.rows.filter(r => r.cells.every(c => c.header)), body = n.rows.filter(r => !r.cells.every(c => c.header))

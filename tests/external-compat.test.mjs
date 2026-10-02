@@ -214,3 +214,53 @@ test('Pandoc retains orphan note cycles and diagnoses reachable recursive refere
     assert.ok(ctx.diagnostics.some(d=>d.code==='unsupported-node' && d.fidelity==='degraded'))
   }
 })
+
+test('equal Pandoc note bodies remain distinct while reporting ambiguous identity', () => {
+  const body = [{ t: 'Para', c: [{ t: 'Str', c: 'Same' }] }]
+  const ctx = context('pandoc')
+  const ast = fromPandoc({ 'pandoc-api-version': [1, 23], blocks: [{ t: 'Para', c: [{ t: 'Note', c: body }, { t: 'Space' }, { t: 'Note', c: structuredClone(body) }] }] }, ctx)
+  validateAst(ast)
+  assert.deepEqual(ast.children.filter(n => n.type === 'footnote').map(n => n.label), ['1', '2'])
+  assert.deepEqual(ast.children[0].children.filter(n => n.type === 'footnote_ref').map(n => n.label), ['1', '2'])
+  assert.ok(ctx.diagnostics.some(d => d.path === '/blocks/0/c/2' && d.fidelity === 'degraded'))
+})
+
+test('a nested checkbox does not turn its parent into a task item', () => {
+  const ctx = context('hast')
+  const ast = fromHast(parseHtml('<ul><li>Parent <em>text</em> <strong>bold</strong><ul><li><input type="checkbox" checked> Child</li></ul></li></ul>'), ctx)
+  validateAst(ast)
+  const parent = ast.children[0].items[0]
+  assert.equal(parent.checked, undefined)
+  assert.equal(parent.children[0].children[1].type, 'emphasis')
+  assert.equal(parent.children[0].children[2].value, ' ')
+  assert.equal(parent.children[0].children[3].type, 'strong')
+  assert.equal(parent.children[1].items[0].checked, true)
+  assert.equal(ctx.diagnostics.some(d => ['dropped', 'degraded'].includes(d.fidelity)), false)
+})
+
+
+test('HTML bullet-list type attributes stay authored attributes without olType', () => {
+  const ast = fromHast(parseHtml('<ul type="i"><li>x</li></ul>'))
+  validateAst(ast)
+  assert.equal(ast.children[0].ordered, false)
+  assert.equal(ast.children[0].olType, undefined)
+  assert.deepEqual(ast.children[0].attrs.keyValues, { type: 'i' })
+})
+
+test('rendered table-section attributes are not silently dismissed as generated', () => {
+  const ctx = context('hast')
+  fromHast(parseHtml('<table><thead id="authored"><tr><th>x</th></tr></thead></table>'), ctx, { generated: true, authoredIds: new Set(['authored']) })
+  assert.ok(ctx.diagnostics.some(d => d.path === '/children/0/children/0/properties' && d.fidelity === 'dropped'))
+})
+
+
+test('schema-valid unordered lists with a numbering style receive an export loss', () => {
+  const root = { type: 'document', srcByteLength: 0, children: [{ type: 'list', ordered: false, olType: 'i', tight: true, items: [{ type: 'list_item', children: [{ type: 'paragraph', children: [{ type: 'text', value: 'x' }] }] }] }] }
+  validateAst(root)
+  for (const tool of ['djot', 'pandoc']) {
+    const ctx = context(tool)
+    if (tool === 'djot') toDjot(root, ctx)
+    else toPandoc(root, [1, 23], ctx)
+    assert.ok(ctx.diagnostics.some(d => d.path === '/children/0/olType' && d.fidelity === 'dropped'), tool)
+  }
+})

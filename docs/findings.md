@@ -6,18 +6,16 @@ whole languages or establish compatibility with arbitrary documents.
 
 ## PHP authored IDs
 
-At revision `aeeb4c3c40676c811ac3adff06aebd366e4a169c`, PHP preserves authored
-IDs in JSON but drops them in its canonical Carve writer. A paragraph carrying
-`{#authored .note}` reparses with the class and no ID. An inline span carrying
-`{#word .token key="value"}` keeps its class and key/value but loses its ID.
-These are two writer reproductions appearing in five target/case comparisons.
-They remain visible failures rather than accepted losses.
+The expanded sweep found five failed comparisons caused by the PHP canonical
+writer dropping authored paragraph and span IDs. JSON retained the IDs, and the
+schema already represented them. This was an engine bug.
 
-The schema supports these IDs. This is an engine round-trip issue, not a need
-for an additional AST field. Use the website's PHP filter and open
-`authored-attributes` or `inline-attributes` to inspect the input AST, canonical
-source and failed comparison. The engine pin stays unchanged so the report
-continues to reproduce the behavior.
+[Issue #2831](https://github.com/markup-carve/carve-php/issues/2831) tracked the
+reproduction. [PR #2833](https://github.com/markup-carve/carve-php/pull/2833)
+fixed IDs supplied without an attribute-order entry and preserved classes when
+that optional order was incomplete. The compat PHP pin now includes the merged
+fix at `e15b786c668b5e97207b7d45a5356c9743308ee9`. The five comparisons pass.
+Generated heading IDs retain their existing export behavior.
 
 ## Representation versus coverage
 
@@ -26,10 +24,20 @@ checked task items, definitions, attributes and lettered/Roman list styles.
 Several adapters support only a subset of those fields. Their loss diagnostics
 are adapter boundaries; they do not establish AST design defects.
 
-New positive fixtures cover basic tables, numeric notes, tasks, definitions and
-inline attributes. Named and unreferenced Pandoc notes and HTML table spans have explicit loss
-fixtures. Repeated note references, complex table sections and combinations
-outside those fixtures still need coverage before making broader claims.
+Positive fixtures now cover lettered and Roman lists, repeated notes in mdast
+and Djot, distinct numeric notes, nested task lists, multiple definition terms,
+and tables combining Unicode, formatting, links, code and note references.
+
+Pandoc stores note bodies inline without source labels or shared-reference
+identity. Repeated references, equal note bodies and out-of-order numeric labels
+therefore receive explicit diagnostics. The adapter keeps readable note content
+without deduplicating equal bodies. Named and unreferenced notes remain explicit
+losses too.
+
+Table caption, alignment, width, span, footer partition, section attributes and
+block-cell fallbacks have loss fixtures. Djot export reports multiple descriptions
+under one term because its source grammar groups those blocks into one body.
+These checks cover the declared combinations, not every possible rich document.
 
 ## Shared and independent checks
 
