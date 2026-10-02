@@ -138,7 +138,8 @@ run through mdast, Djot and Pandoc. Definition lists and inline attributes run
 through hast, Djot and Pandoc. Each fixture declares its selected targets.
 
 Pandoc's JSON AST discards source note labels, so numeric notes use document
-order. Named labels receive an export diagnostic. Repeated references and
+order. Named labels receive an export diagnostic. Unreferenced note definitions
+retain their body as ordinary blocks and report the lost note structure. Repeated references and
 out-of-order numeric labels are outside the current positive subset. Table
 alignment, widths and spans have explicit loss cases or adapter diagnostics;
 the Carve schema can represent these fields. Lettered and Roman numbering also

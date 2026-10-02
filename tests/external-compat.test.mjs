@@ -193,3 +193,11 @@ test('export diagnostics retain document indices when footnotes precede body blo
   assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/children/0/children/0' && d.code==='unsupported-node'))
   assert.ok(ctx.diagnostics.some(d=>d.path==='/children/1/children/0' && d.code==='unsupported-node'))
 })
+
+
+test('Pandoc reports attributes on referenced note definitions at their original AST path',()=>{
+  const root={type:'document',srcByteLength:0,children:[{type:'footnote',label:'1',attrs:{id:'note'},children:[{type:'paragraph',children:[{type:'text',value:'Body'}]}]},{type:'paragraph',children:[{type:'footnote_ref',label:'1'}]}]}
+  validateAst(root)
+  const ctx=context('pandoc');toPandoc(root,[1,23],ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/attrs' && d.fidelity==='dropped'))
+})

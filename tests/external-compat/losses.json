@@ -404,6 +404,20 @@
         "path": "/children/0/rows/0/0/cells/0/properties/colSpan"
       },
       "retained": "Wide cell"
+    },
+    {
+      "id": "pandoc-orphan-footnote-export",
+      "direction": "export",
+      "tools": [
+        "pandoc"
+      ],
+      "carve": "[^unused]: Orphan body.\n",
+      "expected": {
+        "code": "unsupported-node",
+        "fidelity": "degraded",
+        "path": "/children/0"
+      },
+      "retained": "Orphan body."
     }
   ]
 }

@@ -69,6 +69,9 @@ export function fromPandoc(root, ctx = context('pandoc')) {
 }
 export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
   const notes = new Map((root.children ?? []).flatMap((n,index)=>n.type==='footnote'?[[n.label,{node:n,index}]]:[]))
+  const referenced=new Set()
+  const visit=n=>{if(n.type==='footnote_ref')referenced.add(n.label);for(const key of ['children','items','rows','cells'])n[key]?.forEach(visit)}
+  visit(root)
   const map = (n, path, tight = false) => {
     const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','pos','srcByteLength','bulletChar','delim']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
@@ -77,7 +80,7 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     const children = () => (n.children ?? []).map((child,i) => map(child, `${path}/children/${i}`))
     const node = (t,c) => c === undefined ? {t} : {t,c}
     const a = foreignAttr(n.attrs)
-    if (n.type === 'document') return { 'pandoc-api-version':apiVersion, meta:{}, blocks:(n.children ?? []).flatMap((child,i)=>child.type==='footnote'?[]:[map(child,`${path}/children/${i}`)]) }
+    if (n.type === 'document') return { 'pandoc-api-version':apiVersion, meta:{}, blocks:(n.children ?? []).flatMap((child,i)=>{const p=`${path}/children/${i}`;if(child.type!=='footnote')return [map(child,p)];nestedFields(child,p,['label','children']);if(referenced.has(child.label))return [];ctx.note(p,'unsupported-node','degraded','Pandoc cannot retain an unreferenced footnote definition; retained its body as ordinary blocks.');return child.children.map((value,j)=>map(value,`${p}/children/${j}`))}) }
     if (n.type === 'text' || n.type === 'escaped_text') return node('Str', n.value)
     const inline = { emphasis:'Emph', strong:'Strong', strike:'Strikeout', underline:'Underline', superscript:'Superscript', subscript:'Subscript' }
     if (inline[n.type]) return node(inline[n.type], children())

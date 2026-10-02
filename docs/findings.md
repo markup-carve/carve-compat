@@ -27,7 +27,7 @@ Several adapters support only a subset of those fields. Their loss diagnostics
 are adapter boundaries; they do not establish AST design defects.
 
 New positive fixtures cover basic tables, numeric notes, tasks, definitions and
-inline attributes. Named Pandoc notes and HTML table spans have explicit loss
+inline attributes. Named and unreferenced Pandoc notes and HTML table spans have explicit loss
 fixtures. Repeated note references, complex table sections and combinations
 outside those fixtures still need coverage before making broader claims.
 
