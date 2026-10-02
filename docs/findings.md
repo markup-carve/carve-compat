@@ -80,6 +80,11 @@ engines now check those changes, read the reference source, and have their
 source read by the reference too; conversion-diagnostic checks still use the
 JavaScript reference implementation.
 
+The public HTML importer still drops a leading empty table body without a loss
+diagnostic, tracked in [carve-js #2466](https://github.com/markup-carve/carve-js/issues/2466).
+The HAST AST adapter preserves it; these interchange rows do not test that
+public importer.
+
 Pandoc has no vertical-alignment field. GFM and Djot still have narrower table
 models. Unsupported caption structure, column attributes and other fields
 continue to require explicit loss diagnostics. HTML width comparisons account
