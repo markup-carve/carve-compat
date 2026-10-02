@@ -201,3 +201,16 @@ test('Pandoc reports attributes on referenced note definitions at their original
   const ctx=context('pandoc');toPandoc(root,[1,23],ctx)
   assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/attrs' && d.fidelity==='dropped'))
 })
+
+
+test('Pandoc retains orphan note cycles and diagnoses reachable recursive references',()=>{
+  const note={type:'footnote',label:'a',children:[{type:'paragraph',children:[{type:'text',value:'See '},{type:'footnote_ref',label:'a'}]}]}
+  for(const reachable of [false,true]){
+    const root={type:'document',srcByteLength:0,children:[note,...(reachable?[{type:'paragraph',children:[{type:'footnote_ref',label:'a'}]}]:[])]}
+    validateAst(root)
+    const ctx=context('pandoc'),out=toPandoc(root,[1,23],ctx)
+    assert.ok(out.blocks.length)
+    assert.ok(JSON.stringify(out).includes('See '))
+    assert.ok(ctx.diagnostics.some(d=>d.code==='unsupported-node' && d.fidelity==='degraded'))
+  }
+})

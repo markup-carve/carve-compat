@@ -70,8 +70,9 @@ export function fromPandoc(root, ctx = context('pandoc')) {
 export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
   const notes = new Map((root.children ?? []).flatMap((n,index)=>n.type==='footnote'?[[n.label,{node:n,index}]]:[]))
   const referenced=new Set()
-  const visit=n=>{if(n.type==='footnote_ref')referenced.add(n.label);for(const key of ['children','items','rows','cells'])n[key]?.forEach(visit)}
-  visit(root)
+  const activeNotes=new Set()
+  const visit=n=>{if(n.type==='footnote_ref' && !referenced.has(n.label)){referenced.add(n.label);notes.get(n.label)?.node.children.forEach(visit)}for(const key of ['children','items','rows','cells'])n[key]?.forEach(visit)}
+  root.children.filter(n=>n.type!=='footnote').forEach(visit)
   const map = (n, path, tight = false) => {
     const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','pos','srcByteLength','bulletChar','delim']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
@@ -100,7 +101,7 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
       const entries = []; for (const [i,item] of n.items.entries()) { nestedFields(item,`${path}/items/${i}`,['children']);if (item.type === 'definition_term') entries.push([item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`)),[]]); else if (entries.length) entries.at(-1)[1].push(item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`))); else throw new Error('A Pandoc definition needs a preceding term') }
       return node('DefinitionList', entries)
     }
-    if (n.type === 'footnote_ref') { const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`))) }
+    if (n.type === 'footnote_ref') { if(activeNotes.has(n.label) || !referenced.has(n.label)){ctx.note(path,'unsupported-node','degraded','Retained a recursive or unreachable note reference as a literal marker.');return node('Str',`[^${n.label}]`)}const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); activeNotes.add(n.label);try{return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`)))}finally{activeNotes.delete(n.label)} }
     if (n.type === 'table') {
       const row = (r,i) => {nestedFields(r,`${path}/rows/${i}`,['cells','attrs']);return [foreignAttr(r.attrs),r.cells.map((cell,j) => {nestedFields(cell,`${path}/rows/${i}/cells/${j}`,['children','header','attrs','align','colspan','rowspan','valign']); for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]}
       const heads = n.rows.filter(r => r.cells.every(c => c.header)), body = n.rows.filter(r => !r.cells.every(c => c.header))
