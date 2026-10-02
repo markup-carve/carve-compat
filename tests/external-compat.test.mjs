@@ -184,3 +184,12 @@ test('authored HTML endnote attributes are never treated as generated navigation
   assert.ok(ctx.diagnostics.some(d=>d.fidelity==='degraded'))
   assert.equal(ctx.diagnostics.some(d=>d.code==='generated-footnote-navigation'),false)
 })
+
+
+test('export diagnostics retain document indices when footnotes precede body blocks',()=>{
+  const root={type:'document',srcByteLength:0,children:[{type:'footnote',label:'1',children:[{type:'paragraph',children:[{type:'underline',children:[{type:'text',value:'note'}]}]}]},{type:'paragraph',children:[{type:'underline',children:[{type:'text',value:'body'}]}]}]}
+  validateAst(root)
+  const ctx=context('djot');toDjot(root,ctx)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/children/0/children/0' && d.code==='unsupported-node'))
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/1/children/0' && d.code==='unsupported-node'))
+})

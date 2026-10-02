@@ -246,7 +246,8 @@ export function toDjot(root, ctx = context('djot')) {
     exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'checked', 'label', 'header', 'rows', 'cells'])
     const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/${childSlot(n)}/${i}`))
     let out
-    if (n.type === 'document') out = { tag:'doc', references:{}, autoReferences:{}, footnotes:Object.fromEntries(n.children.filter(c=>c.type==='footnote').map((c,i)=>[c.label,{tag:'footnote',label:c.label,children:c.children.map((v,j)=>map(v,`/footnotes/${c.label}/children/${j}`))}])),children:n.children.filter(c=>c.type!=='footnote').map((c,i)=>map(c,`/children/${i}`)) }
+    if (n.type === 'document') out = {tag:'doc',references:{},autoReferences:{},footnotes:Object.fromEntries(n.children.flatMap((c,i)=>c.type==='footnote'?[[c.label,map(c,`${path}/children/${i}`)]]:[])),children:n.children.flatMap((c,i)=>c.type==='footnote'?[]:[map(c,`${path}/children/${i}`)])}
+    else if(n.type==='footnote')out={tag:'footnote',label:n.label,children:children()}
     else if (n.type === 'footnote_ref') out={tag:'footnote_reference',text:n.label}
     else if (n.type === 'span') out={tag:'span',children:children()}
     else if (n.type === 'table') out={tag:'table',children:children()}
@@ -263,7 +264,7 @@ export function toDjot(root, ctx = context('djot')) {
     else if (n.type === 'list') out = { tag: n.items.some(i=>i.checked!==undefined) ? 'task_list' : n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? '1.' : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
     else if (n.type === 'hard_break' || n.type === 'thematic_break') out = { tag: n.type }
     else out = { tag: 'str', text: plain(ctx.unsupported(n, path)) }
-    if(n.attrs && ['table_row','table_cell'].includes(n.type))ctx.note(`${path}/attrs`,'unsupported-field','dropped','Djot row and cell attributes are outside this export subset.')
+    if(n.attrs && ['footnote','table_row','table_cell'].includes(n.type))ctx.note(`${path}/attrs`,'unsupported-field','dropped','Djot footnote, row and cell attributes are outside this export subset.')
     else if (n.attrs) out.attributes = { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { class: n.attrs.classes.join(' ') } : {}), ...n.attrs.keyValues }
     return out
   }
@@ -318,7 +319,7 @@ function exportRichSource(tool, root, ctx) {
       const marker = (n.ordered ? '.' : '*').repeat(listKinds.filter(kind => kind === n.ordered).length + 1) + ' '
       const items = n.items.map((item, i) => {
         exportFields(item, `${path}/${childSlot(n)}/${i}`, ctx)
-        const parts = item.children.map((block, j) => map(block, `${path}/children/${i}/children/${j}`, [...listKinds, n.ordered]))
+        const parts = item.children.map((block, j) => map(block, `${path}/${childSlot(n)}/${i}/children/${j}`, [...listKinds, n.ordered]))
         return marker + parts.join('\n+\n')
       })
       return (n.ordered && (n.start ?? 1) !== 1 ? `[start=${n.start}]\n` : '') + items.join('\n\n')

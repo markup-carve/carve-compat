@@ -68,7 +68,7 @@ export function fromPandoc(root, ctx = context('pandoc')) {
   return document([...root.blocks.flatMap((n,i) => map(n, `/blocks/${i}`)), ...notes])
 }
 export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
-  const notes = new Map((root.children ?? []).filter(n => n.type === 'footnote').map(n => [n.label, n]))
+  const notes = new Map((root.children ?? []).flatMap((n,index)=>n.type==='footnote'?[[n.label,{node:n,index}]]:[]))
   const map = (n, path, tight = false) => {
     const supported = ['type','children','items','rows','cells','value','level','ordered','tight','start','href','src','alt','title','content','lang','attrs','label','header','pos','srcByteLength','bulletChar','delim']
     for (const key of Object.keys(n)) if (!supported.includes(key)) ctx.note(`${path}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc export subset.`)
@@ -77,7 +77,7 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
     const children = () => (n.children ?? []).map((child,i) => map(child, `${path}/children/${i}`))
     const node = (t,c) => c === undefined ? {t} : {t,c}
     const a = foreignAttr(n.attrs)
-    if (n.type === 'document') return { 'pandoc-api-version':apiVersion, meta:{}, blocks:(n.children ?? []).filter(child => child.type !== 'footnote').map((child,i) => map(child, `${path}/children/${i}`)) }
+    if (n.type === 'document') return { 'pandoc-api-version':apiVersion, meta:{}, blocks:(n.children ?? []).flatMap((child,i)=>child.type==='footnote'?[]:[map(child,`${path}/children/${i}`)]) }
     if (n.type === 'text' || n.type === 'escaped_text') return node('Str', n.value)
     const inline = { emphasis:'Emph', strong:'Strong', strike:'Strikeout', underline:'Underline', superscript:'Superscript', subscript:'Subscript' }
     if (inline[n.type]) return node(inline[n.type], children())
@@ -97,7 +97,7 @@ export function toPandoc(root, apiVersion, ctx = context('pandoc')) {
       const entries = []; for (const [i,item] of n.items.entries()) { nestedFields(item,`${path}/items/${i}`,['children']);if (item.type === 'definition_term') entries.push([item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`)),[]]); else if (entries.length) entries.at(-1)[1].push(item.children.map((c,j) => map(c, `${path}/items/${i}/children/${j}`))); else throw new Error('A Pandoc definition needs a preceding term') }
       return node('DefinitionList', entries)
     }
-    if (n.type === 'footnote_ref') { const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); return node('Note',note.children.map((child,i) => map(child, `/footnotes/${n.label}/${i}`))) }
+    if (n.type === 'footnote_ref') { const note = notes.get(n.label); if (!note) throw new Error(`Unresolved footnote: ${n.label}`); if (!/^\d+$/.test(n.label)) ctx.note(`${path}/label`, 'unsupported-field', 'degraded', 'Pandoc replaces named note labels with numeric document-order labels.'); return node('Note',note.node.children.map((child,i) => map(child, `/children/${note.index}/children/${i}`))) }
     if (n.type === 'table') {
       const row = (r,i) => {nestedFields(r,`${path}/rows/${i}`,['cells','attrs']);return [foreignAttr(r.attrs),r.cells.map((cell,j) => {nestedFields(cell,`${path}/rows/${i}/cells/${j}`,['children','header','attrs','align','colspan','rowspan','valign']); for (const key of ['align','colspan','rowspan','valign']) if (cell[key]) ctx.note(`${path}/rows/${i}/cells/${j}/${key}`, 'unsupported-field', 'dropped', `${key} is outside the Pandoc table export subset.`); return [foreignAttr(cell.attrs),node('AlignDefault'),1,1,[node('Plain',cell.children.map((child,k) => map(child, `${path}/rows/${i}/cells/${j}/children/${k}`)))]] })]}
       const heads = n.rows.filter(r => r.cells.every(c => c.header)), body = n.rows.filter(r => !r.cells.every(c => c.header))
