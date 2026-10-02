@@ -14,7 +14,7 @@ concurrency:
 jobs:
   measure:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     outputs:
       site_ready: ${{ steps.ready.outputs.ready }}
     steps:
@@ -36,18 +36,21 @@ jobs:
       - name: Provision native readers
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmark libmd4c-dev libmd4c-html0-dev
+          sudo apt-get install -y php-cli php-xml cmark libmd4c-dev libmd4c-html0-dev
           python -m pip install -r scripts/compat/requirements.txt
           mkdir -p .cache/compat reports
           cc -std=c99 -Wall -Wextra -Werror \
             "-DCARVE_MD4C_VERSION=\"$(dpkg-query -W -f='${Version}' libmd4c0)\"" \
             scripts/compat/md4c-driver.c -lmd4c -lmd4c-html \
             -o .cache/compat/md4c-driver
-      - name: Measure all eight targets
+      - name: Provision pinned Carve engines and Pandoc
+        run: npm run compat:provision
+      - name: Measure nine targets across three Carve engines
         id: comparison
         continue-on-error: true
         env:
           CARVE_COMPAT_PYTHON: python
+          CARVE_PANDOC: .cache/pandoc/bin/pandoc
         run: npm run compat:check -- --report=reports/latest.json
       - name: Build report website
         id: site

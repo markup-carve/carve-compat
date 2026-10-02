@@ -1,8 +1,7 @@
 # External AST compatibility
 
 This corpus checks Carve against independent document parsers and renderers.
-It complements the [converter corpus](../corpus-convert/README.md) and the
-cross-engine `ast:check` gate. The adapters live in `scripts/compat/`; they are
+It lives outside the Carve specification and engine repositories. The adapters live in `scripts/compat/`; they are
 test infrastructure, not new public Carve import APIs.
 
 ## Readers and formats
@@ -17,6 +16,7 @@ test infrastructure, not new public Carve import APIs.
 | `docutils` | Docutils doctree | reStructuredText |
 | `asciidoctor` | Asciidoctor.js block model and converted inline HTML | AsciiDoc |
 | `md4c` | MD4C block, span and text events | CommonMark |
+| `pandoc` | Pandoc JSON AST | Pandoc Markdown |
 
 The JavaScript packages are locked by `package-lock.json`. Docutils is pinned
 in `scripts/compat/requirements.txt`. The native job uses Ubuntu 24.04's cmark
@@ -73,9 +73,10 @@ its paragraph-wrapped lists. Its block model supplies the structure; converted
 inline HTML supplies inline semantics. Neither adapter claims source-span
 compatibility.
 
-Asciidoctor's inline HTML comparison reuses its converted inline content, so
-it is a block-structure check rather than a second inline parser. The authored
-Carve expectation and source round trip still check the mapped inline tree.
+Asciidoctor also converts each supported input and exported source to DocBook.
+A separate XML mapper must agree with the primary HTML-derived inline tree.
+This catches output-path and adapter mismatches, while both conversions share
+Asciidoctor's parser. Loss fixtures do not require a lossless DocBook mapping.
 reStructuredText heading levels follow the first appearance of each adornment
 style; the exporter reports isolated or skipped levels it cannot preserve.
 Docutils syntax highlighting is disabled, so language-tagged code requires no
@@ -120,10 +121,37 @@ CARVE_MD4C_DRIVER=/tmp/carve-md4c-driver \
 
 `CARVE_CMARK` can select a cmark executable. `--tools=mdast,djot` selects a
 smaller sweep; the report names every unmeasured target. The default command
-requires all eight targets. It never skips a missing reader.
+requires all nine targets and all three engines. It never skips a missing reader.
 
 The `Compatibility and website` workflow provisions every reader on pull
 requests, pushes to `main`, daily runs and manual dispatches. It uploads the
 JSON report even when comparisons fail. Main-branch runs build and publish the
 measured website after browser checks. See the root README for deployment and
 report-freshness behavior.
+
+
+## Rich nodes and engine coverage
+
+Basic tables retain rows, cells, header flags and inline content. Task lists
+retain checked and unchecked states in mdast, hast and Djot. Numeric footnotes
+run through mdast, Djot and Pandoc. Definition lists and inline attributes run
+through hast, Djot and Pandoc. Each fixture declares its selected targets.
+
+Pandoc's JSON AST discards source note labels, so numeric notes use document
+order. Named labels receive an export diagnostic. Repeated references and
+out-of-order numeric labels are outside the current positive subset. Table
+alignment, widths and spans have explicit loss cases or adapter diagnostics;
+the Carve schema can represent these fields. Lettered and Roman numbering also
+fit Carve's `olType`, but the current Djot and Pandoc adapters report that loss.
+
+JavaScript verifies foreign imports, exports and public importers. PHP and
+Rust consume the same mapped AST and check schema validity, JSON interchange,
+Carve source round trips, authored-source parsing and rendered HTML. They do
+not independently implement the foreign adapters. Loss fallbacks check native
+JSON and HTML; source round trips are reserved for authored supported cases,
+since synthesized fallback text need not preserve its source spelling.
+
+Generated heading IDs and computed footnote numbers absent from the baseline
+are normalized with visible diagnostics. Authored IDs, classes and other fields
+remain assertions. A missing engine produces failed rows and metadata errors.
+The website selects one engine at a time; totals include all measured engines.

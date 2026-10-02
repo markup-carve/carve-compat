@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseDjot, renderDjot } from '@djot/djot'
-import { corpus, lossCorpus, checkCase, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
+import { corpus, lossCorpus, checkCase, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
 import { toolNames, nativeTools, readForeign } from '../scripts/compat/tools.mjs'
 import { semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
 
@@ -42,7 +42,7 @@ for (const tool of javascriptTools) {
     test(`${tool}/${fixture.id}: schema, AST, rendering, and both source round trips`, async () => {
       const result = await checkCase(tool, fixture)
       assert.equal(result.status, 'passed')
-      assert.equal(result.checks.length, tool === 'asciidoctor' ? 6 : 7)
+      assert.equal(result.checks.length, 7)
       assert.ok(result.version)
     })
   }
@@ -105,7 +105,7 @@ test('a missing native parser fails the CLI and remains a named failure in its r
   const dir = mkdtempSync(join(tmpdir(), 'carve-external-failure-'))
   try {
     const report = join(dir, 'report.json')
-    const result = spawnSync(process.execPath, ['scripts/external-compat.mjs', '--tools=cmark', `--report=${report}`], {
+    const result = spawnSync(process.execPath, ['scripts/external-compat.mjs', '--tools=cmark', '--engines=javascript', `--report=${report}`], {
       cwd: new URL('..', import.meta.url), encoding: 'utf8', env: { ...process.env, CARVE_CMARK: join(dir, 'absent-cmark') },
     })
     assert.equal(result.status, 1, result.stderr)
@@ -133,4 +133,31 @@ test('failed assertions keep partial AST evidence and loss diagnostics', async (
     assert.ok(error.compatibilityEvidence.version)
     return true
   })
+})
+
+
+test('the separate DocBook check catches an inline mismatch with unchanged visible text', async () => {
+  const result = await readForeign('asciidoctor','A *bold* word.\n')
+  checkIndependent(result)
+  const changed=structuredClone(result)
+  changed.independentAst.children[0].children.find(n=>n.type==='strong').type='emphasis'
+  assert.throws(()=>checkIndependent(changed),/Independent DocBook structure differs/)
+})
+
+test('a missing Carve engine produces failed comparisons instead of silent skips', async () => {
+  const result=await runCompatibility(['commonmark'],['javascript'])
+  assert.deepEqual(result.selectedEngines,['javascript'])
+  assert.deepEqual(result.notMeasuredEngines,['php','rust'])
+  await assert.rejects(runCompatibility(['commonmark'],['php']),/JavaScript reference/)
+  await assert.rejects(runCompatibility(['commonmark'],['javascript','unknown']),/Unknown engine/)
+  const dir=mkdtempSync(join(tmpdir(),'carve-engine-missing-'))
+  try {
+    const report=join(dir,'report.json')
+    const child=spawnSync(process.execPath,['scripts/external-compat.mjs','--tools=commonmark','--engines=javascript,php',`--report=${report}`],{encoding:'utf8',env:{...process.env,CARVE_PHP_ROOT:join(dir,'missing')}})
+    assert.equal(child.status,1)
+    const data=JSON.parse(readFileSync(report))
+    assert.ok(data.engines.php.error)
+    assert.ok(data.rows.filter(r=>r.engine==='php').every(r=>r.status==='failed'))
+    assert.ok(data.rows.filter(r=>r.engine==='javascript').every(r=>r.status==='passed'))
+  } finally {rmSync(dir,{recursive:true,force:true})}
 })

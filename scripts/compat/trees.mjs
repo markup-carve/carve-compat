@@ -33,14 +33,15 @@ const parser = unified().use(rehypeParse, { fragment: true })
 export const parseHtml = html => parser.parse(html)
 
 export function authoredAttributes(ast) {
-  const authoredIds = new Set(), authoredClasses = new Set()
+  const authoredIds = new Set(), authoredClasses = new Set(), authoredKeyValues = new Set()
   const walk = node => {
     if (node.attrs?.id) authoredIds.add(node.attrs.id)
     node.attrs?.classes?.forEach(c => authoredClasses.add(c))
-    ;(node.children ?? node.items ?? []).forEach(walk)
+    for(const [key,value]of Object.entries(node.attrs?.keyValues??{}))authoredKeyValues.add(`${key}=${value}`)
+    ;(node.children ?? node.items ?? node.rows ?? node.cells ?? []).forEach(walk)
   }
   walk(ast)
-  return { authoredIds, authoredClasses }
+  return { authoredIds, authoredClasses, authoredKeyValues }
 }
 
 export function context(tool) {
@@ -56,12 +57,21 @@ export function context(tool) {
 
 export function plain(node) {
   if (typeof node === 'string') return node
-  return node.value ?? node.text ?? node.literal ?? node.content ?? node.alt ?? node.properties?.alt ?? (node.children ?? node.items ?? []).map(plain).join('')
+  return node.value ?? node.text ?? node.literal ?? node.content ?? node.alt ?? node.properties?.alt ?? (node.children ?? node.items ?? node.rows ?? node.cells ?? []).map(plain).join('')
 }
 
 export function fromHast(root, ctx = context('hast'), options = {}) {
-  const generatedClasses = new Set(['docutils', 'arabic', 'reference', 'external', 'literal', 'simple', 'code', 'text', 'literal-block', 'highlight', 'sectionbody', 'paragraph', 'ulist', 'olist', 'listingblock', 'content', 'quoteblock', 'sect1', 'sect2'])
-  const map = (n, path, block = false) => {
+  const generatedClasses = new Set(['docutils', 'arabic', 'reference', 'external', 'literal', 'simple', 'code', 'text', 'literal-block', 'highlight', 'sectionbody', 'paragraph', 'ulist', 'olist', 'listingblock', 'content', 'quoteblock', 'sect1', 'sect2', 'contains-task-list', 'task-list-item', 'task-list'])
+  const noteSections = new Map(), noteIds = new Map(), noteBodies = new Set()
+  const walk = (n, visit) => { visit(n); n.children?.forEach(c=>walk(c,visit)) }
+  walk(root,n=>{
+    if (n.type !== 'element' || !(n.properties?.role === 'doc-endnotes' || n.properties?.dataFootnotes !== undefined)) return
+    let ol; walk(n,c=>{ if (!ol && c.tagName === 'ol') ol=c })
+    const items = ol?.children?.filter(c=>c.tagName==='li')??[]
+    noteSections.set(n,items)
+    items.forEach((li,i)=>{ if(li.properties?.id)noteIds.set(li.properties.id,String(i+1));walk(li,c=>noteBodies.add(c)) })
+  })
+  const map = (n, path, block = false, taskContext = false) => {
     if (n.type === 'text') return text(n.value)
     if (n.type === 'root') return document(blocks(n.children, path))
     if (options.generated && n.type === 'comment' && /^\s*$/.test(n.value)) {
@@ -70,14 +80,36 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     }
     if (n.type !== 'element') return ctx.unsupported(n, path, block)
     const tag = n.tagName, props = n.properties ?? {}
-    const generatedLang = options.generated && tag === 'pre' && props.className?.includes('code') ? props.className.find(c => !['code', 'literal-block'].includes(c)) : undefined
+    if(tag==='sup' && n.children.some(c=>c.tagName==='a' && (c.properties?.role==='doc-noteref' || c.properties?.dataFootnoteRef!==undefined || c.properties?.className?.includes('footnote-ref'))))return coalesce(n.children.flatMap((c,i)=>map(c,`${path}/children/${i}`)))
+    if (noteSections.has(n)) {
+      ctx.note(path,'generated-footnote-navigation','normalized','Reconstructed footnote bodies and omitted generated endnote navigation.')
+      return noteSections.get(n).map((li,i)=>({type:'footnote',label:String(i+1),children:blocks(li.children,`${path}/footnotes/${i}`)}))
+    }
+    if (tag === 'a' && (props.role === 'doc-backlink' || props.dataFootnoteBackref !== undefined || (noteBodies.has(n) && props.className?.some(c=>['footnote-back','footnote-backref'].includes(c))))) {
+      ctx.note(path,'generated-footnote-navigation','normalized','Omitted a generated footnote backlink.');return []
+    }
+    if (tag === 'a' && (props.role === 'doc-noteref' || props.dataFootnoteRef !== undefined || props.className?.includes('footnote-ref'))) {
+      const label=noteIds.get(String(props.href??'').replace(/^#/,''))
+      if(label)return {type:'footnote_ref',label}
+      ctx.note(path,'unsupported-field','dropped','The rendered footnote target could not be matched to an endnote body.')
+    }
+    if (tag === 'input' && props.type === 'checkbox' && taskContext) {
+      for(const key of Object.keys(props))if(!['type','checked','disabled','ariaLabel'].includes(key))ctx.note(`${path}/properties/${key}`,'unsupported-field','dropped','Authored checkbox-control attributes are outside this subset.')
+      ctx.note(path,'task-checkbox','normalized','Moved checkbox state to its list item.');return []
+    }
+    const generatedLang = options.generated && options.renderer === 'pandoc' && tag === 'pre' ? props.className?.[0] : options.generated && tag === 'pre' && props.className?.includes('code') ? props.className.find(c => !['code', 'literal-block'].includes(c)) : undefined
     const children = () => {
-      const mapped = coalesce(n.children.map((c, i) => map(c, `${path}/children/${i}`)))
+      const mapped = coalesce(n.children.map((c, i) => map(c, `${path}/children/${i}`, false, taskContext || tag === 'li')))
+      if(noteBodies.has(n) && n.children.at(-1)?.tagName==='a' && mapped.at(-1)?.type==='text')mapped.at(-1).value=mapped.at(-1).value.replace(/ $/,'')
       for (let i = 1; i < mapped.length; i++) if (mapped[i - 1].type === 'hard_break' && mapped[i].type === 'text') mapped[i].value = mapped[i].value.replace(/^\n/, '')
       return mapped
     }
     const attrs = {}
     for (const [key, value] of Object.entries(props)) {
+      if(options.generated && tag==='th' && key==='scope' && value==='col' && !options.authoredKeyValues?.has('scope=col')){ctx.note(`${path}/properties/scope`,'generated-html-attribute','normalized','Omitted generated column-header scope.');continue}
+      if(options.generated && options.renderer==='pandoc' && key.startsWith('data') && key.length>4){const original=key[4].toLowerCase()+key.slice(5);if(options.authoredKeyValues?.has(`${original}=${value}`)){attrs.keyValues??={};attrs.keyValues[original]=String(value);ctx.note(`${path}/properties/${key}`,'generated-html-attribute','normalized','Restored an authored attribute renamed by Pandoc HTML output.');continue}}
+      if (options.renderer === 'pandoc' && tag === 'ol' && key === 'type' && String(value) === '1') { ctx.note(`${path}/properties/type`, 'generated-html-attribute', 'normalized', 'Omitted the Pandoc decimal-list type attribute.'); continue }
+      if (['td','th'].includes(tag) && ['align','colSpan','rowSpan','style'].includes(key)) { if(value && value!==1)ctx.note(`${path}/properties/${key}`,'unsupported-field','dropped','Cell alignment, styles and spans are outside this HTML adapter subset.');continue }
       if ((tag === 'a' && ['href', 'title'].includes(key)) || (tag === 'img' && ['src', 'alt', 'title'].includes(key)) || (tag === 'ol' && key === 'start')) continue
       if (options.generated && key === 'className') {
         const retained = value.filter(c => (!generatedClasses.has(c) && c !== generatedLang) || options.authoredClasses?.has(c))
@@ -94,6 +126,18 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     let result
     if (/^h[1-6]$/.test(tag)) result = { type: 'heading', level: Number(tag[1]), children: children() }
     else if (tag === 'p') result = { type: 'paragraph', children: children() }
+    else if (options.generated && tag === 'span' && props.className?.includes('literal')) result = {type:'code',value:plain(n)}
+    else if (tag === 'span') result = {type:'span',children:children()}
+    else if (tag === 'dl') result = {type:'definition_list',items:blocks(n.children,path)}
+    else if (tag === 'dt') result = {type:'definition_term',children:children()}
+    else if (tag === 'dd') { const hasBlocks=n.children.some(c=>['p','ul','ol','pre','blockquote','dl'].includes(c.tagName));result={type:'definition_description',children:hasBlocks?blocks(n.children,path):[{type:'paragraph',children:children()}]} }
+    else if (tag === 'table') {
+      const rows=n.children.flatMap((c,i)=>c.tagName==='tr'?[{n:c,path:`${path}/rows/${i}`}]:['thead','tbody','tfoot'].includes(c.tagName)?c.children.filter(r=>r.tagName==='tr').map((r,j)=>({n:r,path:`${path}/rows/${i}/${j}`})):[])
+      for(const [i,c]of n.children.entries())if(c.tagName && !['tr','thead','tbody','tfoot'].includes(c.tagName))ctx.note(`${path}/children/${i}`,'unsupported-field','dropped','Table captions and column groups are outside this HTML adapter subset.')
+      result={type:'table',rows:rows.map(r=>map(r.n,r.path,true))}
+    }
+    else if (tag === 'tr') result={type:'table_row',cells:n.children.filter(c=>['td','th'].includes(c.tagName)).map((c,i)=>map(c,`${path}/cells/${i}`))}
+    else if (tag === 'td' || tag === 'th') { const parts=children();const content=parts.length===1 && parts[0].type==='paragraph'?parts[0].children:parts;result={type:'table_cell',header:tag==='th',children:content} }
     else if (['em', 'strong', 'del', 's', 'u', 'mark', 'sup', 'sub'].includes(tag)) {
       result = { type: ({ em: 'emphasis', del: 'strike', s: 'strike', u: 'underline', mark: 'highlight', sup: 'superscript', sub: 'subscript' })[tag] ?? tag, children: children() }
     } else if (tag === 'a') result = { type: 'link', href: props.href ?? '', children: children(), ...(props.title ? { title: props.title } : {}) }
@@ -126,7 +170,11 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
         if (inlineChildren[0]?.type === 'text') inlineChildren[0].value = inlineChildren[0].value.replace(/^\n/, '')
         if (inlineChildren.at(-1)?.type === 'text') inlineChildren.at(-1).value = inlineChildren.at(-1).value.replace(/\n$/, '')
       }
-      result = { type: 'list_item', children: hasBlocks ? blocks(n.children, path) : [{ type: 'paragraph', children: inlineChildren }] }
+      const findCheckbox=node=>node.children?.flatMap(c=>c.tagName==='input' && c.properties?.type==='checkbox'?[c]:c.tagName==='p'?findCheckbox(c):[])??[];let checkbox=findCheckbox(n)[0];
+      checkbox??=n.children.find(c=>c.tagName==='input' && c.properties?.type==='checkbox') ?? n.children.find(c=>c.tagName==='p')?.children.find(c=>c.tagName==='input' && c.properties?.type==='checkbox')
+      const body=hasBlocks?blocks(n.children,path,true):[{type:'paragraph',children:inlineChildren}]
+      if(checkbox && body[0]?.children?.[0]?.type==='text')body[0].children[0].value=body[0].children[0].value.replace(/^\n+/,'').replace(/^ /,'')
+      result = { type: 'list_item', children:body,...(checkbox?{checked:!!checkbox.properties.checked}:{}) }
     } else if (options.generated && ['div', 'section', 'main'].includes(tag)) {
       ctx.note(path, 'generated-html-wrapper', 'normalized', `Removed foreign renderer ${tag} wrapper.`)
       return blocks(n.children, path)
@@ -134,7 +182,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
     if (Object.keys(attrs).length) result.attrs = attrs
     return result
   }
-  const blocks = (nodes, path) => coalesce(nodes.flatMap((n, i) => n.type === 'text' && /^\s*$/.test(n.value) ? [] : map(n, `${path}/children/${i}`, true)))
+  const blocks = (nodes, path, taskContext = false) => coalesce(nodes.flatMap((n, i) => n.type === 'text' && /^\s*$/.test(n.value) ? [] : map(n, `${path}/children/${i}`, true, taskContext)))
   return map(root, '')
 }
 
@@ -151,8 +199,7 @@ export function fromMdast(root, ctx = context('mdast')) {
     }
     if (n.type === 'text') return text(n.value)
     if (['paragraph', 'strong', 'emphasis', 'blockquote', 'listItem'].includes(n.type)) {
-      if (n.checked !== undefined && n.checked !== null) ctx.note(`${path}/checked`, 'unsupported-field', 'dropped', 'Task state is outside this adapter subset.')
-      return { type: ({ blockquote: 'block_quote', listItem: 'list_item' })[n.type] ?? n.type, children: children() }
+      return { ...(n.type==='listItem' && n.checked!==undefined && n.checked!==null?{checked:n.checked}:{}), type: ({ blockquote: 'block_quote', listItem: 'list_item' })[n.type] ?? n.type, children: children() }
     }
     if (n.type === 'heading') return { type: 'heading', level: n.depth, children: children() }
     if (n.type === 'break' || n.type === 'thematicBreak') return { type: n.type === 'break' ? 'hard_break' : 'thematic_break' }
@@ -169,6 +216,12 @@ export function fromMdast(root, ctx = context('mdast')) {
       if (reference) ctx.note(path, 'reference-resolved', 'normalized', 'Resolved Markdown reference spelling.')
       const image = n.type.startsWith('image')
       return { type: image ? 'image' : 'link', ...(image ? { src: dest.url, alt: n.alt ?? '' } : { href: dest.url, children: children() }), ...(dest.title ? { title: dest.title } : {}) }
+    }
+    if (n.type === 'footnoteReference') return {type:'footnote_ref',label:n.identifier}
+    if (n.type === 'footnoteDefinition') return {type:'footnote',label:n.identifier,children:children()}
+    if (n.type === 'table') {
+      if(n.align?.some(Boolean))ctx.note(`${path}/align`,'unsupported-field','dropped','Column alignment is outside this mdast table subset.')
+      return {type:'table',rows:n.children.map((r,i)=>({type:'table_row',cells:r.children.map((cell,j)=>({type:'table_cell',header:i===0,children:coalesce(cell.children.map((c,k)=>map(c,`${path}/children/${i}/children/${j}/children/${k}`)))}))}))}
     }
     if (n.type === 'delete') return { type: 'strike', children: children() }
     return ctx.unsupported(n, path, ['html', 'table', 'footnoteDefinition'].includes(n.type))
@@ -207,8 +260,7 @@ export function fromDjot(root, ctx = context('djot')) {
     const children = () => coalesce((n.children ?? []).flatMap((c, i) => map(c, `${path}/children/${i}`)))
     let result
     if (n.tag === 'doc') {
-      for (const label of Object.keys(n.footnotes ?? {})) ctx.note(`${path}/footnotes/${label}`, 'unsupported-node', 'dropped', 'Footnotes are outside this adapter subset.')
-      return document(children())
+      return document([...children(),...Object.entries(n.footnotes??{}).map(([label,note])=>({type:'footnote',label,children:coalesce(note.children.map((c,i)=>map(c,`/footnotes/${label}/children/${i}`)))}))])
     }
     if (n.tag === 'section') {
       if (n.attributes) ctx.note(`${path}/attributes`, 'unsupported-field', 'dropped', 'Authored section attributes cannot survive section flattening.')
@@ -217,6 +269,18 @@ export function fromDjot(root, ctx = context('djot')) {
     }
     if (n.tag === 'str') result = text(n.text)
     else if (['para', 'emph', 'strong', 'block_quote', 'list_item'].includes(n.tag)) result = { type: ({ para: 'paragraph', emph: 'emphasis' })[n.tag] ?? n.tag, children: children() }
+    else if (n.tag === 'span') result={type:'span',children:children()}
+    else if (n.tag === 'footnote_reference') result={type:'footnote_ref',label:n.text}
+    else if (n.tag === 'definition_list') result={type:'definition_list',items:children()}
+    else if (n.tag === 'definition_list_item') return children()
+    else if (n.tag === 'term' || n.tag === 'definition') result={type:n.tag==='term'?'definition_term':'definition_description',children:children()}
+    else if (n.tag === 'table') {
+      const caption=n.children.find(c=>c.tag==='caption');if(caption?.children.length)ctx.note(`${path}/caption`,'unsupported-field','dropped','Djot table captions are outside this subset.')
+      result={type:'table',rows:n.children.filter(c=>c.tag==='row').map((r,i)=>map(r,`${path}/rows/${i}`))}
+    }
+    else if(n.tag==='row')result={type:'table_row',cells:children()}
+    else if(n.tag==='cell'){if(n.align && n.align!=='default')ctx.note(`${path}/align`,'unsupported-field','dropped','Djot cell alignment is outside this subset.');result={type:'table_cell',header:n.head,children:children()}}
+    else if(n.tag==='task_list_item')result={type:'list_item',checked:n.checkbox==='checked',children:children()}
     else if (n.tag === 'heading') result = { type: 'heading', level: n.level, children: children() }
     else if (n.tag === 'soft_break') result = text(' ')
     else if (['hard_break', 'thematic_break'].includes(n.tag)) result = { type: n.tag }
@@ -226,7 +290,7 @@ export function fromDjot(root, ctx = context('djot')) {
       const destination = n.destination ?? root.references?.[n.reference]?.destination
       if (destination === undefined) return ctx.unsupported(n, path)
       result = { type: n.tag, ...(n.tag === 'image' ? { src: destination, alt: children().map(plain).join('') } : { href: destination, children: children() }) }
-    } else if (n.tag === 'bullet_list' || n.tag === 'ordered_list') {
+    } else if (n.tag === 'bullet_list' || n.tag === 'ordered_list' || n.tag === 'task_list') {
       if (n.tag === 'ordered_list' && n.style && !['1.', '1)', '(1)'].includes(n.style)) ctx.note(`${path}/style`, 'unsupported-field', 'dropped', 'Lettered and roman numbering styles are outside this adapter subset.')
       result = { type: 'list', ordered: n.tag === 'ordered_list', tight: n.tight, items: children(), ...(n.tag === 'ordered_list' && (n.start ?? 1) !== 1 ? { start: n.start } : {}) }
     }

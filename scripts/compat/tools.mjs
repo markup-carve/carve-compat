@@ -12,6 +12,8 @@ import * as djot from '@djot/djot'
 import { load as loadAscii, getVersion as asciiVersion } from '@asciidoctor/core'
 import { XMLParser } from 'fast-xml-parser'
 import { parse, toAstJson } from '@markup-carve/carve'
+import { fromDocbook } from './docbook.mjs'
+import { fromPandoc, toPandoc } from './pandoc.mjs'
 import { context, document, coalesce, text, plain, parseHtml, fromHast, fromMdast, fromCommonmark, fromDjot, fromDocutils, fromMd4c } from './trees.mjs'
 
 const md = unified().use(remarkParse).use(remarkGfm)
@@ -20,12 +22,12 @@ const mdWriter = unified().use(remarkGfm).use(remarkStringify)
 const hastWriter = unified().use(rehypeStringify)
 const native = (command, args, input) => execFileSync(command, args, { input, encoding: 'utf8', timeout: 15000, maxBuffer: 8 * 1024 * 1024 })
 
-export const toolNames = ['mdast', 'hast', 'commonmark', 'cmark', 'djot', 'docutils', 'asciidoctor', 'md4c']
-export const nativeTools = ['cmark', 'docutils', 'md4c']
+export const toolNames = ['mdast', 'hast', 'commonmark', 'cmark', 'djot', 'docutils', 'asciidoctor', 'md4c', 'pandoc']
+export const nativeTools = ['cmark', 'docutils', 'md4c', 'pandoc']
 
 export async function readForeign(tool, source) {
   const ctx = context(tool)
-  let ast, html, raw, version
+  let ast, html, raw, version, independentAst, independentSource, independentDiagnostics
   if (tool === 'mdast') {
     raw = md.parse(source)
     ast = fromMdast(raw, ctx)
@@ -65,6 +67,17 @@ export async function readForeign(tool, source) {
     ast = await fromAscii(raw, ctx)
     html = await raw.convert()
     version = asciiVersion()
+    const docbook = await loadAscii(source, { backend:'docbook5', header_footer:true, safe:'secure', attributes:{'sectids!':'','experimental!':'',showtitle:''} })
+    independentSource = await docbook.convert()
+    const independentContext = context('asciidoctor-docbook')
+    independentAst = fromDocbook(independentSource, independentContext, {hasHeader:docbook.hasHeader()})
+    independentDiagnostics = independentContext.diagnostics
+  } else if (tool === 'pandoc') {
+    const command = process.env.CARVE_PANDOC ?? 'pandoc'
+    raw = JSON.parse(native(command, ['--from=markdown-smart-auto_identifiers', '--to=json'], source))
+    ast = fromPandoc(raw, ctx)
+    html = native(command, ['--from=json', '--to=html5', '--syntax-highlighting=none'], JSON.stringify(raw))
+    version = native(command, ['--version'], '').split('\n')[0]
   } else if (tool === 'md4c') {
     const command = process.env.CARVE_MD4C_DRIVER ?? '.cache/compat/md4c-driver'
     raw = native(command, [], source).trim().split('\n').map(line => JSON.parse(line))
@@ -75,7 +88,7 @@ export async function readForeign(tool, source) {
   const packages = { mdast: 'remark-parse', hast: 'rehype-parse', commonmark: 'commonmark' }
   if (packages[tool]) version = JSON.parse(readFileSync(new URL(`../../node_modules/${packages[tool]}/package.json`, import.meta.url))).version
   ctx.note('', 'foreign-source-coordinates', 'normalized', 'Mapped tree has no Carve source positions and uses srcByteLength 0.')
-  return { ast, html, diagnostics: ctx.diagnostics, version }
+  return { ast, html, diagnostics: ctx.diagnostics, version, ...(independentAst ? {independentAst,independentSource,independentDiagnostics} : {}) }
 }
 
 function cmarkTree(records) {
@@ -155,6 +168,11 @@ export function exportForeign(tool, ast) {
       source = exportRichSource(tool, ast, ctx)
     } else source = djot.renderDjot(tree)
   }
+  else if (tool === 'pandoc') {
+    const command = process.env.CARVE_PANDOC ?? 'pandoc'
+    const api = JSON.parse(native(command, ['--from=markdown', '--to=json'], '') )['pandoc-api-version']
+    source = native(command, ['--from=json', '--to=markdown-smart-auto_identifiers-simple_tables-multiline_tables-grid_tables', '--wrap=none'], JSON.stringify(toPandoc(ast, api, ctx)))
+  }
   else if (tool === 'docutils' || tool === 'asciidoctor') source = exportRichSource(tool, ast, ctx)
   else throw new Error(`Unknown compatibility tool: ${tool}`)
   return { source, diagnostics: ctx.diagnostics }
@@ -169,11 +187,15 @@ function exportFields(n, path, ctx, allowed = []) {
 
 export function toMdast(root, ctx = context('mdast')) {
   const map = (n, path) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', ...(ctx.tool==='mdast'?['checked', 'label', 'header', 'rows', 'cells']:[])])
     const children = () => (n.children ?? n.items ?? []).map((c, i) => map(c, `${path}/children/${i}`))
     if (n.type === 'strike' && ['commonmark', 'cmark', 'md4c'].includes(ctx.tool)) return { type: 'text', value: plain(ctx.unsupported(n, path)) }
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
+    if (n.type === 'list_item' && ctx.tool === 'mdast') return {type:'listItem',children:children(),...(n.checked === undefined ? {} : {checked:n.checked})}
+    if (n.type === 'table' && ctx.tool === 'mdast') return {type:'table',align:n.rows[0].cells.map(()=>null),children:n.rows.map((r,i)=>({type:'tableRow',children:r.cells.map((c,j)=>({type:'tableCell',children:c.children.map((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`))}))}))}
+    if (n.type === 'footnote_ref' && ctx.tool === 'mdast') return {type:'footnoteReference',identifier:n.label}
+    if (n.type === 'footnote' && ctx.tool === 'mdast') return {type:'footnoteDefinition',identifier:n.label,children:children()}
     if (['paragraph', 'strong', 'emphasis', 'block_quote', 'list_item', 'strike'].includes(n.type)) return { type: ({ block_quote: 'blockquote', list_item: 'listItem', strike: 'delete' })[n.type] ?? n.type, children: children() }
     if (n.type === 'heading') return { type: 'heading', depth: n.level, children: children() }
     if (n.type === 'code') return { type: 'inlineCode', value: n.value }
@@ -190,14 +212,15 @@ export function toMdast(root, ctx = context('mdast')) {
 export function toHast(root, ctx = context('hast')) {
   const element = (tagName, children = [], properties = {}) => ({ type: 'element', tagName, children, properties })
   const map = (n, path, tight = false) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', 'attrs'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', 'attrs', 'checked', 'header', 'rows', 'cells'])
     const children = () => (n.children ?? n.items ?? []).flatMap((c, i) => map(c, `${path}/children/${i}`, n.type === 'list' ? n.tight : tight))
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
     let out
     if (n.type === 'paragraph' && tight) return children()
-    const tags = { paragraph: 'p', emphasis: 'em', strong: 'strong', strike: 'del', block_quote: 'blockquote', list_item: 'li', hard_break: 'br', thematic_break: 'hr' }
-    if (tags[n.type]) out = element(tags[n.type], children())
+    const tags = { paragraph: 'p', emphasis: 'em', strong: 'strong', strike: 'del', block_quote: 'blockquote', list_item: 'li', span:'span', definition_list:'dl', definition_term:'dt', definition_description:'dd', hard_break: 'br', thematic_break: 'hr' }
+    if (n.type === 'table') out=element('table', n.rows.map((r,i)=>element('tr',r.cells.map((c,j)=>element(c.header?'th':'td',c.children.flatMap((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`)))))))
+    else if (tags[n.type]) out = element(tags[n.type], children())
     else if (n.type === 'heading') out = element(`h${n.level}`, children())
     else if (n.type === 'code') out = element('code', [{ type: 'text', value: n.value }])
     else if (n.type === 'code_block') out = element('pre', [element('code', [{ type: 'text', value: n.content }], n.lang ? { className: [`language-${n.lang}`] } : {})])
@@ -205,6 +228,7 @@ export function toHast(root, ctx = context('hast')) {
     else if (n.type === 'image') out = element('img', [], { src: n.src, alt: n.alt, ...(n.title ? { title: n.title } : {}) })
     else if (n.type === 'list') out = element(n.ordered ? 'ol' : 'ul', children(), n.ordered && n.start ? { start: n.start } : {})
     else return { type: 'text', value: plain(ctx.unsupported(n, path)) }
+    if (n.type === 'list_item' && n.checked !== undefined) out.children.unshift(element('input',[],{type:'checkbox',checked:n.checked,disabled:true}),{type:'text',value:' '})
     if (n.attrs) Object.assign(out.properties, { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { className: n.attrs.classes } : {}), ...n.attrs.keyValues })
     return out
   }
@@ -213,17 +237,22 @@ export function toHast(root, ctx = context('hast')) {
 
 export function toDjot(root, ctx = context('djot')) {
   const map = (n, path) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'checked', 'label', 'header', 'rows', 'cells'])
     const children = () => (n.children ?? n.items ?? []).map((c, i) => map(c, `${path}/children/${i}`))
     let out
-    if (n.type === 'document') out = { tag: 'doc', references: {}, autoReferences: {}, footnotes: {}, children: children() }
+    if (n.type === 'document') out = { tag:'doc', references:{}, autoReferences:{}, footnotes:Object.fromEntries(n.children.filter(c=>c.type==='footnote').map((c,i)=>[c.label,{tag:'footnote',label:c.label,children:c.children.map((v,j)=>map(v,`/footnotes/${c.label}/children/${j}`))}])),children:n.children.filter(c=>c.type!=='footnote').map((c,i)=>map(c,`/children/${i}`)) }
+    else if (n.type === 'footnote_ref') out={tag:'footnote_reference',text:n.label}
+    else if (n.type === 'span') out={tag:'span',children:children()}
+    else if (n.type === 'table') out={tag:'table',children:n.rows.map((r,i)=>({tag:'row',head:r.cells.every(c=>c.header),children:r.cells.map((c,j)=>({tag:'cell',head:c.header,align:'default',children:c.children.map((v,k)=>map(v,`${path}/rows/${i}/cells/${j}/children/${k}`))}))}))}
+    else if (n.type === 'definition_list') { const entries=[];for(let i=0;i<n.items.length;i++){const item=n.items[i];if(item.type==='definition_term')entries.push({tag:'definition_list_item',children:[{tag:'term',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))}]});else entries.at(-1).children.push({tag:'definition',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))})}out={tag:'definition_list',children:entries} }
+    else if (n.type === 'list_item' && n.checked !== undefined) out={tag:'task_list_item',checkbox:n.checked?'checked':'unchecked',children:children()}
     else if ((n.type === 'text' || n.type === 'escaped_text')) out = { tag: 'str', text: n.value }
     else if (['paragraph', 'emphasis', 'strong', 'block_quote', 'list_item'].includes(n.type)) out = { tag: ({ paragraph: 'para', emphasis: 'emph' })[n.type] ?? n.type, children: children() }
     else if (n.type === 'heading') out = { tag: 'heading', level: n.level, children: children() }
     else if (n.type === 'code') out = { tag: 'verbatim', text: n.value }
     else if (n.type === 'code_block') out = { tag: 'code_block', text: n.content, ...(n.lang ? { lang: n.lang } : {}) }
     else if (n.type === 'link' || n.type === 'image') out = { tag: n.type, destination: n.href ?? n.src, children: n.type === 'image' ? [{ tag: 'str', text: n.alt }] : children() }
-    else if (n.type === 'list') out = { tag: n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? '1.' : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
+    else if (n.type === 'list') out = { tag: n.items.some(i=>i.checked!==undefined) ? 'task_list' : n.ordered ? 'ordered_list' : 'bullet_list', tight: n.tight, style: n.ordered ? '1.' : '-', ...(n.ordered ? { start: n.start ?? 1 } : {}), children: children() }
     else if (n.type === 'hard_break' || n.type === 'thematic_break') out = { tag: n.type }
     else out = { tag: 'str', text: plain(ctx.unsupported(n, path)) }
     if (n.attrs) out.attributes = { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { class: n.attrs.classes.join(' ') } : {}), ...n.attrs.keyValues }

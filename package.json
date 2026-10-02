@@ -13,7 +13,8 @@
     "compat:javascript": "node scripts/external-compat.mjs --javascript",
     "site:build": "node scripts/build-site.mjs",
     "site:preview": "python3 -m http.server 4173 --directory dist",
-    "test:site": "playwright test"
+    "test:site": "playwright test",
+    "compat:provision": "node scripts/provision-engines.mjs && node scripts/provision-pandoc.mjs"
   },
   "devDependencies": {
     "@asciidoctor/core": "4.1.0",
