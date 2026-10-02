@@ -5,7 +5,7 @@
     "format": "Markdown + GFM",
     "tree": "unified syntax tree",
     "url": "https://github.com/syntax-tree/mdast",
-    "description": "Markdown parsed by remark, including GFM strike. Checks the public Markdown importer too."
+    "description": "Markdown parsed by remark, including GFM strike, tasks, notes and table alignment. Checks the public Markdown importer too."
   },
   {
     "id": "hast",
@@ -13,7 +13,7 @@
     "format": "HTML",
     "tree": "HTML syntax tree",
     "url": "https://github.com/syntax-tree/hast",
-    "description": "HTML parsed by rehype. Covers authored attributes, destinations, code and block nesting."
+    "description": "HTML parsed by rehype. Checks rich table interchange, including captions, widths, spans, attributed sections and block cells."
   },
   {
     "id": "commonmark",
@@ -37,7 +37,7 @@
     "format": "Djot",
     "tree": "Djot AST",
     "url": "https://github.com/jgm/djot.js",
-    "description": "Djot parsing, rendering and writing, including lettered lists and repeated notes. A tested workaround covers the pinned writer's hard-break crash."
+    "description": "Djot parsing, rendering and writing, with repeated and nested notes, definitions, tasks, table captions and alignment. A tested workaround covers hard breaks."
   },
   {
     "id": "docutils",
@@ -69,6 +69,6 @@
     "format": "Pandoc Markdown",
     "tree": "Native JSON AST",
     "url": "https://pandoc.org/",
-    "description": "Pinned native reader and writer. Checks lettered lists, tables and notes, with explicit losses for note identity and richer table fields."
+    "description": "Pinned native reader and writer. Rich tables use JSON interchange; note identity, vertical alignment and source-spelling boundaries remain explicit."
   }
 ]

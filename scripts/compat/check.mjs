@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict'
+import {isDeepStrictEqual} from 'node:util'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import Ajv2020 from 'ajv/dist/2020.js'
-import { fromAstJson, toAstJson, parse, renderCarve, renderHtml, resolve, markdownToCarve, djotToCarve, htmlToCarve } from '@markup-carve/carve'
-import { context, semantics, plain, parseHtml, fromHast, authoredAttributes } from './trees.mjs'
+import { fromAstJson, toAstJson, parse, renderCarve, renderHtml, resolve, markdownToCarve, djotToCarve, htmlToCarve, renderCarveWithConversionReport } from '@markup-carve/carve'
+import { context, semantics, htmlSemantics, plain, parseHtml, fromHast, authoredAttributes } from './trees.mjs'
 import { engineNames, engineMetadata, cachedEngine, engineProjection } from './engines.mjs'
+import { toPandoc } from './pandoc.mjs'
 import { toolNames, readForeign, exportForeign } from './tools.mjs'
 
 const schema = JSON.parse(readFileSync(new URL('../../resources/ast-schema.json', import.meta.url)))
@@ -24,7 +26,10 @@ export function validateCorpus(data = corpus) {
   assert.equal(new Set(data.cases.map(c => c.id)).size, data.cases.length, 'Duplicate case identifier')
   for (const c of data.cases) {
     assert.match(c.id, /^[a-z0-9-]+$/)
-    assert.equal(typeof c.carve, 'string', `${c.id}: missing Carve expectation`)
+    if(c.ast)validateAst(c.ast)
+    else assert.equal(typeof c.carve, 'string', `${c.id}: missing Carve expectation`)
+    if(c.ast)assert.ok(Array.isArray(c.sourceChanges), `${c.id}: missing source change expectation`)
+    if(c.ast)assert.ok(Array.isArray(c.sourceDiagnostics), `${c.id}: missing source conversion expectation`)
     assert.ok((c.tools ?? toolNames).length > 0, `${c.id}: no tools selected`)
     for (const tool of c.tools ?? toolNames) {
       assert.ok(toolNames.includes(tool), `${c.id}: unknown tool ${tool}`)
@@ -43,7 +48,8 @@ export function validateLossCorpus(data = lossCorpus) {
     assert.ok(['import', 'export'].includes(c.direction), `${c.id}: unknown loss direction`)
     assert.ok(c.tools.length > 0, `${c.id}: no loss tools selected`)
     for (const tool of c.tools) assert.ok(toolNames.includes(tool), `${c.id}: unknown loss tool ${tool}`)
-    assert.equal(typeof c[c.direction === 'import' ? 'source' : 'carve'], 'string')
+    if(c.direction==='export' && c.ast)validateAst(c.ast)
+    else assert.equal(typeof c[c.direction === 'import' ? 'source' : 'carve'], 'string')
     assert.equal(typeof c.expected.code, 'string')
     assert.equal(typeof c.expected.path, 'string')
     assert.ok(['degraded', 'dropped'].includes(c.expected.fidelity))
@@ -59,6 +65,7 @@ export function checkIndependent(result) {
 }
 
 export async function checkCase(tool, fixture) {
+  if(fixture.ast)return checkInterchangeCase(tool,fixture)
   const progress = { checks: [], diagnostics: [], evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve } }
   try {
   const expected = semantics(toAstJson(parse(fixture.carve)))
@@ -85,7 +92,7 @@ export async function checkCase(tool, fixture) {
   const carveHtml = renderHtml(resolve(fromAstJson(result.ast)))
   const carveContext = context('carve')
   const carveRendered = fromHast(parseHtml(carveHtml), carveContext, { generated: true, ...authored })
-  assert.deepEqual(semantics(rendered), semantics(carveRendered), `${tool}/${fixture.id}: independent HTML structure`)
+  assert.deepEqual(htmlSemantics(rendered,tool,renderedContext), htmlSemantics(carveRendered,tool,carveContext), `${tool}/${fixture.id}: independent HTML structure`)
   assert.deepEqual(renderedContext.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: HTML comparison lost structure`)
   assert.deepEqual(carveContext.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: Carve HTML comparison lost structure`)
 
@@ -123,8 +130,66 @@ export async function checkCase(tool, fixture) {
   validateAst(reread.ast)
   assert.deepEqual(semantics(reread.ast), expected, `${tool}/${fixture.id}: foreign source round trip`)
   assert.deepEqual(reread.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: foreign source round trip lost structure`)
-  return { tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[]), ...(reread.independentDiagnostics??[])], version: result.version }
+  return { tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...carveContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[]), ...(reread.independentDiagnostics??[])], version: result.version }
   } catch (error) { error.compatibilityEvidence = progress; throw error }
+}
+
+export function sourceChanges(before, after, path='') {
+  if(isDeepStrictEqual(before,after))return []
+  if(!before || !after || typeof before!=='object' || typeof after!=='object' || Array.isArray(before)!==Array.isArray(after))return [{path,...(before!==undefined?{before}:{}),...(after!==undefined?{after}:{})}]
+  return [...new Set([...Object.keys(before),...Object.keys(after)])].flatMap(key=>sourceChanges(before[key],after[key],`${path}/${key.replace(/~/g,'~0').replace(/\//g,'~1')}`)).sort((a,b)=>a.path.localeCompare(b.path))
+}
+
+export async function checkInterchangeCase(tool, fixture) {
+  const source=fixture[sourceFormats[tool]], format=fixture.formats?.[tool]
+  const progress={checks:[],diagnostics:[],evidence:{sourceFormat:format??sourceFormats[tool],source,expectedAst:fixture.ast,scope:'AST interchange; reference Carve source conversion checked separately'}}
+  try {
+    const result=await readForeign(tool,source,format)
+    Object.assign(progress,{version:result.version,diagnostics:result.diagnostics})
+    progress.evidence.ast=result.ast
+    validateAst(result.ast)
+    assert.deepEqual(semantics(result.ast),semantics(fixture.ast),`${tool}/${fixture.id}: authored interchange expectation`)
+    assert.deepEqual(result.diagnostics.filter(d=>['dropped','degraded'].includes(d.fidelity)),[],`${tool}/${fixture.id}: interchange import lost fields`)
+    progress.checks.push('ast-schema','ast-mapping')
+    const decoded=toAstJson(fromAstJson(result.ast))
+    validateAst(decoded)
+    assert.deepEqual(semantics(decoded),semantics(fixture.ast),`${tool}/${fixture.id}: JSON interchange`)
+    progress.checks.push('json-roundtrip')
+    let exported
+    if(tool==='pandoc'){const ctx=context(tool);exported={source:JSON.stringify(toPandoc(result.ast,result.foreignAst['pandoc-api-version'],ctx)),diagnostics:ctx.diagnostics}}
+    else exported=exportForeign(tool,result.ast)
+    progress.evidence.exportedSource=exported.source
+    progress.diagnostics.push(...exported.diagnostics)
+    assert.deepEqual(exported.diagnostics.filter(d=>['dropped','degraded'].includes(d.fidelity)),[],`${tool}/${fixture.id}: interchange export lost fields`)
+    const reread=await readForeign(tool,exported.source,tool==='pandoc'?'pandoc-json':undefined)
+    validateAst(reread.ast)
+    progress.diagnostics.push(...reread.diagnostics)
+    assert.deepEqual(semantics(reread.ast),semantics(fixture.ast),`${tool}/${fixture.id}: foreign interchange round trip`)
+    assert.deepEqual(reread.diagnostics.filter(d=>['dropped','degraded'].includes(d.fidelity)),[],`${tool}/${fixture.id}: foreign reread lost fields`)
+    progress.checks.push('foreign-ast-roundtrip')
+    const conversion=renderCarveWithConversionReport(fromAstJson(result.ast))
+    progress.evidence.carveConversion=conversion
+    assert.deepEqual(conversion.report.diagnostics.map(d=>({code:d.code,node:d.node,field:d.field})),fixture.sourceDiagnostics,`${tool}/${fixture.id}: source conversion boundary`)
+    progress.checks.push('source-conversion-diagnostics')
+    const reparsed=toAstJson(parse(conversion.value))
+    validateAst(reparsed)
+    const changes=sourceChanges(semantics(result.ast),semantics(reparsed))
+    assert.deepEqual(changes,fixture.sourceChanges,`${tool}/${fixture.id}: declared source conversion changes`)
+    progress.evidence.sourceChanges=changes
+    for(const change of changes)progress.diagnostics.push({tool:'javascript',path:change.path,code:'source-conversion-change',fidelity:'degraded',message:'An asserted AST field changes when the reference canonical Carve source is reparsed. The declared before/after values are shown in the source conversion evidence.'})
+    if(changes.length && !conversion.report.diagnostics.length)progress.diagnostics.push({tool:'javascript',path:'',code:'missing-source-conversion-diagnostic',fidelity:'degraded',message:'The pinned reference writer reports no conversion diagnostic for these declared source changes; tracked upstream as an engine reporting gap.'})
+    progress.checks.push('source-conversion-changes')
+    const authored=authoredAttributes(result.ast), foreignCtx=context(tool), carveCtx=context('carve')
+    const foreignHtml=fromHast(parseHtml(result.html),foreignCtx,{generated:tool!=='hast',renderer:tool,...authored})
+    const carveHtml=fromHast(parseHtml(renderHtml(resolve(fromAstJson(result.ast)))),carveCtx,{generated:true,...authored})
+    const actualHtmlView=htmlSemantics(foreignHtml,tool,foreignCtx), expectedHtmlView=htmlSemantics(carveHtml,tool,carveCtx)
+    progress.diagnostics.push(...foreignCtx.diagnostics,...carveCtx.diagnostics)
+    assert.deepEqual(actualHtmlView,expectedHtmlView,`${tool}/${fixture.id}: independent HTML structure`)
+    assert.deepEqual([...foreignCtx.diagnostics,...carveCtx.diagnostics].filter(d=>['dropped','degraded'].includes(d.fidelity)),[],`${tool}/${fixture.id}: HTML comparison lost fields`)
+    progress.checks.push('html-structure')
+    progress.evidence.foreignHtml=result.html
+    return {tool,case:fixture.id,status:'passed',kind:'supported',...progress}
+  }catch(error){error.compatibilityEvidence=progress;throw error}
 }
 
 export async function checkLossCase(tool, fixture) {
@@ -132,9 +197,9 @@ export async function checkLossCase(tool, fixture) {
   const progress = { checks: [], diagnostics: [], evidence: { direction: fixture.direction, sourceFormat: fixture.direction === 'import' ? sourceFormats[tool] : 'carve', source: fixture.source ?? fixture.carve, expected: { ...fixture.expected, path: expectedPath }, retained: fixture.retained } }
   try {
   let result
-  if (fixture.direction === 'import') result = await readForeign(tool, fixture.source)
+  if (fixture.direction === 'import') result = await readForeign(tool, fixture.source, fixture.formats?.[tool])
   else {
-    const exported = exportForeign(tool, toAstJson(parse(fixture.carve)))
+    const exported = exportForeign(tool, fixture.ast ?? toAstJson(parse(fixture.carve)))
     progress.diagnostics = exported.diagnostics
     progress.evidence.exportedSource = exported.source
     const reread = await readForeign(tool, exported.source)
@@ -158,15 +223,15 @@ export async function checkLossCase(tool, fixture) {
 export function checkEngineCase(engine, tool, fixture, baseline) {
   const progress = { checks: [], diagnostics: [...baseline.diagnostics], evidence: { ...baseline.evidence } }
   try {
-    const expected = baseline.kind === 'supported' ? toAstJson(parse(fixture.carve)) : baseline.evidence.ast
-    const source = baseline.kind === 'supported' ? fixture.carve : renderCarve(fromAstJson(baseline.evidence.ast))
+    const expected = baseline.kind === 'supported' && !fixture.ast ? toAstJson(parse(fixture.carve)) : baseline.evidence.ast
+    const source = baseline.kind === 'supported' && !fixture.ast ? fixture.carve : renderCarve(fromAstJson(baseline.evidence.ast))
     const result = cachedEngine(engine, baseline.evidence.ast, source)
     Object.assign(progress.evidence, { engineAst:result.decodedAst, engineCarve:result.canonical })
-    for (const ast of baseline.kind==='supported'?[result.decodedAst,result.reparsedAst,result.parsedAst]:[result.decodedAst]) validateAst(ast)
+    for (const ast of baseline.kind==='supported' && !fixture.ast?[result.decodedAst,result.reparsedAst,result.parsedAst]:[result.decodedAst]) validateAst(ast)
     progress.checks.push('ast-schema')
     assert.deepEqual(semantics(engineProjection(result.decodedAst,baseline.evidence.ast,progress.diagnostics)),semantics(baseline.evidence.ast),`${engine}/${tool}/${fixture.id}: JSON interchange`)
     progress.checks.push('json-roundtrip')
-    if(baseline.kind==='supported'){
+    if(baseline.kind==='supported' && !fixture.ast){
     assert.deepEqual(semantics(engineProjection(result.reparsedAst,baseline.evidence.ast,progress.diagnostics)),semantics(baseline.evidence.ast),`${engine}/${tool}/${fixture.id}: Carve source round trip`)
     progress.checks.push('carve-source-roundtrip')
     assert.deepEqual(semantics(engineProjection(result.parsedAst,expected,progress.diagnostics)),semantics(expected),`${engine}/${tool}/${fixture.id}: authored Carve source parse`)
@@ -174,10 +239,12 @@ export function checkEngineCase(engine, tool, fixture, baseline) {
     }
     const ctx = context(engine), authored = authoredAttributes(baseline.evidence.ast)
     const actualHtml = fromHast(parseHtml(result.html),ctx,{generated:true,...authored})
-    const expectedHtml = fromHast(parseHtml(renderHtml(resolve(fromAstJson(baseline.evidence.ast)))),context('reference'),{generated:true,...authored})
-    progress.diagnostics.push(...ctx.diagnostics)
-    assert.deepEqual(semantics(actualHtml),semantics(expectedHtml),`${engine}/${tool}/${fixture.id}: rendered HTML structure`)
-    assert.deepEqual(ctx.diagnostics.filter(d=>['degraded','dropped'].includes(d.fidelity)),[],`${engine}/${tool}/${fixture.id}: HTML comparison lost structure`)
+    const expectedContext=context('reference')
+    const expectedHtml = fromHast(parseHtml(renderHtml(resolve(fromAstJson(baseline.evidence.ast)))),expectedContext,{generated:true,...authored})
+    const actualHtmlView=htmlSemantics(actualHtml,engine,ctx), expectedHtmlView=htmlSemantics(expectedHtml,engine,expectedContext)
+    progress.diagnostics.push(...ctx.diagnostics,...expectedContext.diagnostics)
+    assert.deepEqual(actualHtmlView,expectedHtmlView,`${engine}/${tool}/${fixture.id}: rendered HTML structure`)
+    assert.deepEqual([...ctx.diagnostics,...expectedContext.diagnostics].filter(d=>['degraded','dropped'].includes(d.fidelity)),[],`${engine}/${tool}/${fixture.id}: HTML comparison lost structure`)
     progress.checks.push('html-structure')
     return { ...baseline, engine, ...progress, version:baseline.version }
   } catch(error) { error.compatibilityEvidence = progress; throw error }

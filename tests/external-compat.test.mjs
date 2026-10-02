@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { parse as parseDjot, renderDjot } from '@djot/djot'
 import { corpus, lossCorpus, checkCase, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
 import { toolNames, nativeTools, readForeign, toMdast, toHast, toDjot } from '../scripts/compat/tools.mjs'
-import { context, semantics, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
+import { context, semantics, htmlSemantics, fromDjot, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
 
 import {toPandoc,fromPandoc} from '../scripts/compat/pandoc.mjs'
 
@@ -24,7 +24,7 @@ test('every declared compatibility fixture has a source and every tool has cover
     assert.ok(['import', 'export'].includes(fixture.direction))
     assert.ok(fixture.tools.length)
     for (const tool of fixture.tools) assert.ok(toolNames.includes(tool))
-    assert.equal(typeof fixture[fixture.direction === 'import' ? 'source' : 'carve'], 'string')
+    if(!fixture.ast)assert.equal(typeof fixture[fixture.direction === 'import' ? 'source' : 'carve'], 'string')
   }
   assert.throws(() => validateCorpus({ schemaVersion: 1, cases: [] }), /empty/)
   const broken = structuredClone(corpus)
@@ -41,7 +41,7 @@ test('the Djot hard-break writer workaround still corresponds to an upstream fai
 
 for (const tool of javascriptTools) {
   for (const fixture of corpus.cases.filter(c => (c.tools ?? toolNames).includes(tool))) {
-    test(`${tool}/${fixture.id}: schema, AST, rendering, and both source round trips`, async () => {
+    test(`${tool}/${fixture.id}: declared schema, mapping, rendering and conversion checks`, async () => {
       const result = await checkCase(tool, fixture)
       assert.equal(result.status, 'passed')
       assert.equal(result.checks.length, 7)
@@ -168,9 +168,9 @@ test('a missing Carve engine produces failed comparisons instead of silent skips
 test('rich exporters report unsupported fields on internal table and definition nodes',()=>{
   const ast={type:'document',srcByteLength:0,children:[{type:'table',rows:[{type:'table_row',attrs:{id:'row'},cells:[{type:'table_cell',header:true,align:'right',colspan:2,attrs:{classes:['cell']},children:[{type:'text',value:'x'}]}]}]}]}
   validateAst(ast)
-  for(const [tool,writer]of [['mdast',toMdast],['hast',toHast],['djot',toDjot]]){
+  for(const [tool,writer]of [['mdast',toMdast],['djot',toDjot]]){
     const ctx=context(tool);writer(ast,ctx)
-    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/align' && d.fidelity==='dropped'),tool)
+    if(tool==='mdast')assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/align' && d.fidelity==='dropped'),tool)
     assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/0/cells/0/colspan' && d.fidelity==='dropped'),tool)
   }
   const root={type:'document',srcByteLength:0,children:[{type:'definition_list',items:[{type:'definition_term',attrs:{id:'term'},children:[{type:'text',value:'Term'}]},{type:'definition_description',children:[{type:'paragraph',children:[{type:'text',value:'Definition'}]}]}]}]}
@@ -247,10 +247,11 @@ test('HTML bullet-list type attributes stay authored attributes without olType',
   assert.deepEqual(ast.children[0].attrs.keyValues, { type: 'i' })
 })
 
-test('rendered table-section attributes are not silently dismissed as generated', () => {
+test('rendered table-section attributes remain authored row-group attributes', () => {
   const ctx = context('hast')
-  fromHast(parseHtml('<table><thead id="authored"><tr><th>x</th></tr></thead></table>'), ctx, { generated: true, authoredIds: new Set(['authored']) })
-  assert.ok(ctx.diagnostics.some(d => d.path === '/children/0/children/0/properties' && d.fidelity === 'dropped'))
+  const ast=fromHast(parseHtml('<table><thead id="authored"><tr><th>x</th></tr></thead></table>'), ctx, { generated: true, authoredIds: new Set(['authored']) })
+  assert.equal(ast.children[0].rowGroups.headAttrs.id,'authored')
+  assert.equal(ctx.diagnostics.some(d => d.fidelity === 'dropped'),false)
 })
 
 
@@ -263,4 +264,114 @@ test('schema-valid unordered lists with a numbering style receive an export loss
     else toPandoc(root, [1, 23], ctx)
     assert.ok(ctx.diagnostics.some(d => d.path === '/children/0/olType' && d.fidelity === 'dropped'), tool)
   }
+})
+
+test('rich interchange checks reject changed authored fields and missing source diagnostics', async () => {
+  const fixture = corpus.cases.find(c => c.id === 'rich-table-combinations')
+  const changed = structuredClone(fixture)
+  changed.ast.children[0].rows[1].cells[0].attrs.id = 'other'
+  await assert.rejects(checkCase('hast', changed), /authored interchange expectation/)
+  await assert.rejects(checkCase('hast', { ...fixture, sourceDiagnostics: [] }), /source conversion boundary/)
+  await assert.rejects(checkCase('hast', { ...fixture, sourceChanges: [] }), /declared source conversion changes/)
+})
+
+test('generated row-header scope normalization keeps authored scope assertions', () => {
+  const html = parseHtml('<table><tbody><tr><th scope="row">x</th><td>y</td></tr></tbody></table>')
+  const generated = fromHast(html, undefined, { generated: true })
+  const authored = fromHast(html, undefined, { generated: true, authoredKeyValues: new Set(['scope=row']) })
+  assert.equal(generated.children[0].rows[0].cells[0].attrs, undefined)
+  assert.equal(authored.children[0].rows[0].cells[0].attrs.keyValues.scope, 'row')
+})
+
+test('Pandoc reports vertical alignment that its table model cannot represent', () => {
+  const root = { type: 'document', srcByteLength: 0, children: [{ type: 'table', columns: [{ valign: 'top' }], rows: [{ type: 'table_row', cells: [{ type: 'table_cell', header: false, valign: 'bottom', children: [{ type: 'text', value: 'x' }] }] }] }] }
+  validateAst(root)
+  const ctx = context('pandoc')
+  toPandoc(root, [1, 23], ctx)
+  for (const path of ['/children/0/columns/0/valign', '/children/0/rows/0/cells/0/valign']) assert.ok(ctx.diagnostics.some(d => d.path === path && d.fidelity === 'dropped'))
+})
+
+test('rich table HTML precision normalization stays visible while AST widths stay exact', () => {
+  const fixture = corpus.cases.find(c => c.id === 'pandoc-block-table-cell')
+  const root = fixture.ast, changed = structuredClone(root)
+  changed.children[0].columns[0].width += 0.000001
+  assert.notDeepEqual(semantics(root), semantics(changed))
+  const ctx=context('pandoc')
+  assert.deepEqual(htmlSemantics(root,'pandoc',ctx),htmlSemantics(changed,'pandoc',ctx))
+  assert.ok(ctx.diagnostics.some(d=>d.code==='html-width-precision' && d.fidelity==='normalized'))
+})
+
+test('HTML rowspan zero and excessive spans normalize to the row-group boundary', () => {
+  for (const value of ['0', '3']) {
+    const ctx=context('hast')
+    const ast=fromHast(parseHtml(`<table><tr><td rowspan="${value}">a</td><td>b</td></tr><tr><td>c</td></tr></table>`),ctx)
+    validateAst(ast)
+    assert.equal(ast.children[0].rows[0].cells[0].rowspan,2)
+    assert.equal(ast.children[0].rows[1].cells[0].span,'rowspan')
+    assert.ok(ctx.diagnostics.some(d=>d.code==='html-rowspan-clamped' && d.fidelity==='normalized'))
+  }
+})
+
+test('row headers are counted after expanding spans when an explicit group is needed', () => {
+  const ast=fromHast(parseHtml('<table><tbody id="group"><tr><th rowspan="2">g</th><th>a</th><td>x</td></tr><tr><th>b</th><td>y</td></tr></tbody></table>'))
+  validateAst(ast)
+  assert.equal(ast.children[0].rowGroups.bodies[0].rowHeadColumns,2)
+  const ctx=context('pandoc');toPandoc(ast,[1,23],ctx)
+  assert.equal(ctx.diagnostics.some(d=>d.fidelity==='dropped'),false)
+  const plain=fromHast(parseHtml('<table><tr><th>A</th><th>B</th></tr><tr><th>r</th><td>x</td></tr></table>'))
+  assert.equal(plain.children[0].rowGroups,undefined)
+})
+
+test('HTML cell style attributes do not overwrite semantic alignment', () => {
+  const root={type:'document',srcByteLength:0,children:[{type:'table',rows:[{type:'table_row',cells:[{type:'table_cell',header:false,align:'right',attrs:{keyValues:{style:'color: red'}},children:[{type:'text',value:'x'}]}]}]}]}
+  const ctx=context('hast'),out=toHast(root,ctx)
+  const cell=out.children[0].children[0].children[0].children[0]
+  assert.match(cell.properties.style,/color: red/)
+  assert.match(cell.properties.style,/text-align: right/)
+  const reread=fromHast(out)
+  assert.equal(reread.children[0].rows[0].cells[0].align,'right')
+})
+
+test('Djot diagnoses per-cell alignment that cannot be encoded by its header separator', () => {
+  for(const headers of [false,true]){
+    const cells=[{type:'table_cell',header:headers,children:[{type:'text',value:'head'}]},{type:'table_cell',header:false,align:'right',children:[{type:'text',value:'body'}]}]
+    const root={type:'document',srcByteLength:0,children:[{type:'table',rows:cells.map(cell=>({type:'table_row',cells:[cell]}))}]}
+    const ctx=context('djot');toDjot(root,ctx)
+    assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/rows/1/cells/0/align' && d.fidelity==='dropped'))
+  }
+})
+
+test('Djot caption attributes outside the Carve table-caption slot are diagnosed', () => {
+  const ctx=context('djot')
+  const foreign=parseDjot('| x |\n\n^ Caption\n')
+  foreign.children[0].children[0].attributes={id:'caption'}
+  const ast=fromDjot(foreign,ctx)
+  validateAst(ast)
+  assert.ok(ctx.diagnostics.some(d=>d.path==='/children/0/caption/attributes' && d.fidelity==='dropped'))
+  assert.equal(ast.children[0].caption[0].value,'Caption')
+})
+
+test('Pandoc section key/value attributes follow generated HTML normalization', () => {
+  const ctx=context('pandoc')
+  const ast=fromHast(parseHtml('<table><tbody data-foo="bar"><tr><td>x</td></tr></tbody></table>'),ctx,{generated:true,renderer:'pandoc',authoredKeyValues:new Set(['foo=bar'])})
+  validateAst(ast)
+  assert.deepEqual(ast.children[0].rowGroups.bodies[0].attrs.keyValues,{foo:'bar'})
+  assert.ok(ctx.diagnostics.some(d=>d.code==='generated-html-attribute'))
+})
+
+test('single-paragraph HTML captions normalize without losing attributes', () => {
+  const ctx=context('hast')
+  const ast=fromHast(parseHtml('<table><caption><p id="caption">Cap</p></caption><tr><td>x</td></tr></table>'),ctx)
+  validateAst(ast)
+  assert.equal(ast.children[0].caption[0].type,'span')
+  assert.equal(ast.children[0].caption[0].attrs.id,'caption')
+  assert.equal(ctx.diagnostics.some(d=>['dropped','degraded'].includes(d.fidelity)),false)
+})
+
+test('legacy HTML column layout attributes are preserved rather than reported as dropped', () => {
+  const ctx=context('hast')
+  const ast=fromHast(parseHtml('<table><colgroup align="center" valign="top"><col></colgroup><tr><td>x</td></tr></table>'),ctx)
+  validateAst(ast)
+  assert.deepEqual(ast.children[0].columns,[{align:'center',valign:'top'}])
+  assert.equal(ctx.diagnostics.some(d=>d.fidelity==='dropped'),false)
 })

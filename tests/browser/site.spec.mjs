@@ -110,3 +110,55 @@ test('engine selection and permalinks preserve separate engine evidence', async 
   await expect(page.locator('#detail-summary')).toHaveText('Authored ID lost')
   await page.click('#reset');await expect(page.locator('#engine-filter')).toHaveValue('javascript')
 })
+
+test('cached report and application assets refresh when the website loads', async ({ page }) => {
+  const { createServer } = await import('node:http')
+  const old = { ...report, passed: 1, failed: 1, rows: report.rows.map((row, i) => ({ ...row, status: i ? 'failed' : 'passed' })) }
+  let current = old, reads = 0, scriptReads = 0
+  const server = createServer((request, response) => {
+    const path = new URL(request.url, 'http://localhost').pathname
+    if (path === '/report.json') { reads++; response.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=600' }); response.end(JSON.stringify(current)); return }
+    if(path==='/app.js'){scriptReads++;const app=readFileSync('dist/app.js','utf8');response.writeHead(200,{'Content-Type':'text/javascript','Cache-Control':'max-age=600'});response.end(request.url.includes('?')?app:app.replace("fetch(path, {cache:'no-store'})",'fetch(path)'));return}
+    if (path === '/warm') { response.writeHead(200, { 'Content-Type': 'text/html' }); response.end('<html><body>Warm cache</body></html>'); return }
+    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/icon.svg': ['icon.svg', 'image/svg+xml'], '/manifest.json': ['manifest.json', 'application/json'] }
+    const file = files[path]
+    if (!file) { response.writeHead(404); response.end(); return }
+    response.writeHead(200, { 'Content-Type': file[1] }); response.end(readFileSync(`dist/${file[0]}`))
+  })
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
+  try {
+    const base = `http://127.0.0.1:${server.address().port}`
+    await page.goto(`${base}/warm`)
+    await page.evaluate(async () => { await (await fetch('/report.json')).json(); await (await fetch('/report.json')).json(); await (await fetch('/app.js')).text() })
+    expect(reads).toBe(1)
+    expect(scriptReads).toBe(1)
+    current = report
+    await page.goto(base)
+    await expect(page.locator('#run-status')).toContainText('2 passed · 0 failed')
+    expect(reads).toBe(2)
+    expect(scriptReads).toBe(2)
+    await expect(page.locator('#load-error')).toBeHidden()
+  } finally { await new Promise(resolve => server.close(resolve)) }
+})
+
+test('AST interchange cases show their source-conversion boundaries', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('#engine-filter').selectOption('javascript')
+  const button=page.locator('button[data-case="rich-table-combinations"][data-tool="hast"]')
+  await expect(button).toHaveText('I')
+  await button.click()
+  await expect(page.locator('#detail-summary')).toContainText('AST fields')
+  await expect(page.locator('#detail-summary')).toContainText('do not claim a lossless source round trip')
+  await page.getByText('Reference source before/after changes',{exact:true}).click()
+  await expect(page.locator('#detail-panes')).toContainText('/children/0/rowGroups')
+  await expect(page.locator('#detail-panes')).toContainText('Reference Carve source conversion and diagnostics')
+})
+
+test('failed AST interchange rows retain their error message', async ({ page }) => {
+  const failed={...report,passed:0,failed:1,rows:[{...report.rows[0],case:'interchange-failure',status:'failed',error:'Source conversion boundary failed',evidence:{scope:'AST interchange',sourceChanges:[]}}]}
+  await page.route('**/report.json',route=>route.fulfill({json:failed}))
+  await page.goto('/')
+  await page.locator('#matrix tbody button').click()
+  await expect(page.locator('#detail-summary')).toHaveText('Source conversion boundary failed')
+  await expect(page.locator('#detail-summary')).not.toContainText('preserved')
+})

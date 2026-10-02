@@ -1,3 +1,4 @@
+import { tableGroups } from './tables.mjs'
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -25,7 +26,7 @@ const native = (command, args, input) => execFileSync(command, args, { input, en
 export const toolNames = ['mdast', 'hast', 'commonmark', 'cmark', 'djot', 'docutils', 'asciidoctor', 'md4c', 'pandoc']
 export const nativeTools = ['cmark', 'docutils', 'md4c', 'pandoc']
 
-export async function readForeign(tool, source) {
+export async function readForeign(tool, source, format) {
   const ctx = context(tool)
   let ast, html, raw, version, independentAst, independentSource, independentDiagnostics
   if (tool === 'mdast') {
@@ -74,7 +75,7 @@ export async function readForeign(tool, source) {
     independentDiagnostics = independentContext.diagnostics
   } else if (tool === 'pandoc') {
     const command = process.env.CARVE_PANDOC ?? 'pandoc'
-    raw = JSON.parse(native(command, ['--from=markdown-smart-auto_identifiers', '--to=json'], source))
+    raw = JSON.parse(native(command, [format==='pandoc-json'?'--from=json':'--from=markdown-smart-auto_identifiers', '--to=json'], source))
     ast = fromPandoc(raw, ctx)
     html = native(command, ['--from=json', '--to=html5', '--syntax-highlighting=none'], JSON.stringify(raw))
     version = native(command, ['--version'], '').split('\n')[0]
@@ -88,7 +89,7 @@ export async function readForeign(tool, source) {
   const packages = { mdast: 'remark-parse', hast: 'rehype-parse', commonmark: 'commonmark' }
   if (packages[tool]) version = JSON.parse(readFileSync(new URL(`../../node_modules/${packages[tool]}/package.json`, import.meta.url))).version
   ctx.note('', 'foreign-source-coordinates', 'normalized', 'Mapped tree has no Carve source positions and uses srcByteLength 0.')
-  return { ast, html, diagnostics: ctx.diagnostics, version, ...(independentAst ? {independentAst,independentSource,independentDiagnostics} : {}) }
+  return { ast, html, diagnostics: ctx.diagnostics, version, ...(tool==='pandoc'?{foreignAst:raw}:{}), ...(independentAst ? {independentAst,independentSource,independentDiagnostics} : {}) }
 }
 
 function cmarkTree(records) {
@@ -189,13 +190,13 @@ const childSlot = n => ['children','items','rows','cells'].find(key=>n[key]!==un
 
 export function toMdast(root, ctx = context('mdast')) {
   const map = (n, path) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', ...(ctx.tool==='mdast'?['checked', 'label', 'header', 'rows', 'cells']:[])])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', ...(ctx.tool==='mdast'?['checked', 'label', 'header', 'rows', 'cells', 'columns']:[])])
     const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/${childSlot(n)}/${i}`))
     if (n.type === 'strike' && ['commonmark', 'cmark', 'md4c'].includes(ctx.tool)) return { type: 'text', value: plain(ctx.unsupported(n, path)) }
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
     if (n.type === 'list_item' && ctx.tool === 'mdast') return {type:'listItem',children:children(),...(n.checked === undefined ? {} : {checked:n.checked})}
-    if (n.type === 'table' && ctx.tool === 'mdast') return {type:'table',align:n.rows[0].cells.map(()=>null),children:children()}
+    if (n.type === 'table' && ctx.tool === 'mdast') {for(const [i,column]of (n.columns??[]).entries())for(const key of ['width','valign'])if(column[key])ctx.note(`${path}/columns/${i}/${key}`,'unsupported-field','dropped','GFM tables cannot retain column widths or vertical alignment.');return {type:'table',align:n.rows[0].cells.map((_,i)=>n.columns?.[i]?.align??null),children:children()}}
     if (n.type === 'table_row' && ctx.tool === 'mdast') return {type:'tableRow',children:children()}
     if (n.type === 'table_cell' && ctx.tool === 'mdast') return {type:'tableCell',children:children()}
     if (n.type === 'footnote_ref' && ctx.tool === 'mdast') return {type:'footnoteReference',identifier:n.label}
@@ -216,16 +217,27 @@ export function toMdast(root, ctx = context('mdast')) {
 export function toHast(root, ctx = context('hast')) {
   const element = (tagName, children = [], properties = {}) => ({ type: 'element', tagName, children, properties })
   const map = (n, path, tight = false) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', 'attrs', 'checked', 'header', 'rows', 'cells'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'title', 'content', 'lang', 'attrs', 'checked', 'header', 'rows', 'cells', 'caption', 'columns', 'rowGroups', 'blocks', 'align', 'valign', 'colspan', 'rowspan', 'span'])
     const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).flatMap((c, i) => map(c, `${path}/${childSlot(n)}/${i}`, n.type === 'list' ? n.tight : tight))
     if (n.type === 'document') return { type: 'root', children: children() }
     if ((n.type === 'text' || n.type === 'escaped_text')) return { type: 'text', value: n.value }
     let out
     if (n.type === 'paragraph' && tight) return children()
     const tags = { paragraph: 'p', emphasis: 'em', strong: 'strong', strike: 'del', block_quote: 'blockquote', list_item: 'li', span:'span', definition_list:'dl', definition_term:'dt', definition_description:'dd', hard_break: 'br', thematic_break: 'hr' }
-    if (n.type === 'table') out=element('table',children())
-    else if(n.type==='table_row')out=element('tr',children())
-    else if(n.type==='table_cell')out=element(n.header?'th':'td',children())
+    if (n.type === 'table') {
+      const groups=tableGroups(n), elements=[]
+      const properties=attrs=>({... (attrs?.id?{id:attrs.id}:{}),...(attrs?.classes?{className:attrs.classes}:{}),...attrs?.keyValues})
+      if(n.caption)elements.push(element('caption',n.caption.map((c,i)=>map(c,`${path}/caption/${i}`))))
+      if(n.columns)elements.push(element('colgroup',n.columns.map(c=>element('col',[],{style:[c.align?`text-align: ${c.align}`:'',c.valign?`vertical-align: ${c.valign}`:'',c.width?`width: ${c.width*100}%`:''].filter(Boolean).join('; ')}))))
+      let index=0
+      const take=count=>Array.from({length:count},()=>{const i=index++;return map(n.rows[i],`${path}/rows/${i}`)})
+      if(groups.headRows || groups.headAttrs)elements.push(element('thead',take(groups.headRows),properties(groups.headAttrs)))
+      for(const body of groups.bodies)elements.push(element('tbody',take(body.headRows+body.bodyRows),properties(body.attrs)))
+      if(groups.footRows || groups.footAttrs)elements.push(element('tfoot',take(groups.footRows),properties(groups.footAttrs)))
+      out=element('table',elements)
+    }
+    else if(n.type==='table_row')out=element('tr',n.cells.flatMap((c,i)=>c.span?[]:[map(c,`${path}/cells/${i}`)]))
+    else if(n.type==='table_cell')out=element(n.header?'th':'td',(n.blocks??n.children).map((c,i)=>map(c,`${path}/${n.blocks?'blocks':'children'}/${i}`)),{...(n.colspan?{colSpan:n.colspan}:{}),...(n.rowspan?{rowSpan:n.rowspan}:{}),...((n.align||n.valign)?{style:[n.align?`text-align: ${n.align}`:'',n.valign?`vertical-align: ${n.valign}`:''].filter(Boolean).join('; ')}:{})})
     else if (tags[n.type]) out = element(tags[n.type], children())
     else if (n.type === 'heading') out = element(`h${n.level}`, children())
     else if (n.type === 'code') out = element('code', [{ type: 'text', value: n.value }])
@@ -235,7 +247,10 @@ export function toHast(root, ctx = context('hast')) {
     else if (n.type === 'list') out = element(n.ordered ? 'ol' : 'ul', children(), n.ordered && n.start ? { start: n.start } : {})
     else return { type: 'text', value: plain(ctx.unsupported(n, path)) }
     if (n.type === 'list_item' && n.checked !== undefined) out.children.unshift(element('input',[],{type:'checkbox',checked:n.checked,disabled:true}),{type:'text',value:' '})
+    if(n.type==='table_cell' && n.attrs?.keyValues?.style && out.properties.style)out.properties.style=`${n.attrs.keyValues.style}; ${out.properties.style}`
+    const cellStyle=n.type==='table_cell'?out.properties.style:undefined
     if (n.attrs) Object.assign(out.properties, { ...(n.attrs.id ? { id: n.attrs.id } : {}), ...(n.attrs.classes ? { className: n.attrs.classes } : {}), ...n.attrs.keyValues })
+    if(cellStyle)out.properties.style=cellStyle
     return out
   }
   return map(root, '')
@@ -243,7 +258,7 @@ export function toHast(root, ctx = context('hast')) {
 
 export function toDjot(root, ctx = context('djot')) {
   const map = (n, path) => {
-    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'olType', 'checked', 'label', 'header', 'rows', 'cells'])
+    exportFields(n, path, ctx, ['value', 'level', 'ordered', 'tight', 'start', 'href', 'src', 'alt', 'content', 'lang', 'attrs', 'olType', 'checked', 'label', 'header', 'rows', 'cells', 'caption', 'align'])
     if(n.type==='list' && !n.ordered && n.olType)ctx.note(`${path}/olType`,'unsupported-field','dropped','Numbering styles cannot be retained on an unordered foreign list.')
     const children = () => (n.children ?? n.items ?? n.rows ?? n.cells ?? []).map((c, i) => map(c, `${path}/${childSlot(n)}/${i}`))
     let out
@@ -251,9 +266,20 @@ export function toDjot(root, ctx = context('djot')) {
     else if(n.type==='footnote')out={tag:'footnote',label:n.label,children:children()}
     else if (n.type === 'footnote_ref') out={tag:'footnote_reference',text:n.label}
     else if (n.type === 'span') out={tag:'span',children:children()}
-    else if (n.type === 'table') out={tag:'table',children:children()}
+    else if (n.type === 'table') {
+      const header=n.rows[0]?.cells.length && n.rows[0].cells.every(c=>c.header)?0:-1
+      const invalid=new Set()
+      for(const row of n.rows)for(const [j,cell]of row.cells.entries())if(header<0?cell.align:cell.align!==n.rows[0].cells[j]?.align)invalid.add(j)
+      for(const [i,row]of n.rows.entries())for(const [j,cell]of row.cells.entries()){
+        if(cell.align && invalid.has(j))ctx.note(`${path}/rows/${i}/cells/${j}/align`,'unsupported-field','dropped','Djot table alignment must be uniform per column and declared by a leading header row.')
+        if(cell.header!==row.cells.every(c=>c.header))ctx.note(`${path}/rows/${i}/cells/${j}/header`,'unsupported-field','dropped','Djot header flags apply to a whole row rather than individual cells.')
+      }
+      const mapped=children()
+      for(const row of mapped)for(const [j,cell]of row.children.entries())if(invalid.has(j))cell.align='default'
+      out={tag:'table',children:[{tag:'caption',children:(n.caption??[]).map((c,i)=>map(c,`${path}/caption/${i}`))},...mapped]}
+    }
     else if(n.type==='table_row')out={tag:'row',head:n.cells.every(c=>c.header),children:children()}
-    else if(n.type==='table_cell')out={tag:'cell',head:n.header,align:'default',children:children()}
+    else if(n.type==='table_cell')out={tag:'cell',head:n.header,align:n.align??'default',children:children()}
     else if (n.type === 'definition_list') { const entries=[];for(let i=0;i<n.items.length;i++){const item=n.items[i];exportFields(item,`${path}/items/${i}`,ctx);if(item.type==='definition_term')entries.push({tag:'definition_list_item',children:[{tag:'term',children:item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`))}]});else {const blocks=item.children.map((c,j)=>map(c,`${path}/items/${i}/children/${j}`));if(entries.at(-1).children.length>1){ctx.note(`${path}/items/${i}`,'unsupported-field','degraded','Djot source groups multiple descriptions under one term into a single body.');entries.at(-1).children[1].children.push(...blocks)}else entries.at(-1).children.push({tag:'definition',children:blocks})}}out={tag:'definition_list',children:entries} }
     else if (n.type === 'list_item' && n.checked !== undefined) out={tag:'task_list_item',checkbox:n.checked?'checked':'unchecked',children:children()}
     else if ((n.type === 'text' || n.type === 'escaped_text')) out = { tag: 'str', text: n.value }
