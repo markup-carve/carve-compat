@@ -40,7 +40,10 @@ HTML and Pandoc adapters retain table captions, column widths, cell spans,
 row and cell attributes, explicit row groups, section attributes and block
 cells. GFM retains column alignment. Djot retains captions and cell alignment.
 Combination fixtures include attributed spanning cells, formatted captions,
-multiple body groups, row headers, footers and blocks inside cells.
+multiple body groups, row headers, footers and blocks inside cells. Additional
+fixtures combine preserved footers, formatted captions, widths, attributed
+cells, rowspans and colspans, including a footer with no leading head. A Pandoc
+JSON fixture combines fractional widths with section attributes and block cells.
 
 An authored AST expectation distinguishes these interchange tests from ordinary
 Carve source fixtures. They check foreign parsing, schema validity, exact field
@@ -50,11 +53,20 @@ does not preserve every JSON field. These rows explicitly list their scope.
 
 Carve source cannot spell block cells, section attributes or short captions.
 The reference engine's conversion report and reparsed source changes must match
-each fixture's declared expectations. The pinned JavaScript writer also loses
-some row-group information without reporting it. [Issue #2457](https://github.com/markup-carve/carve-js/issues/2457)
-tracks that engine gap. Column metadata can reparse as table attributes instead
-of the original AST fields. Both forms of change are visible in the evidence;
-AST interchange passing does not claim a lossless source round trip.
+each fixture's declared expectations. The JavaScript writer preserves leading
+heads, one body without intermediate headers, and footers through generated
+source attributes. Columns remain columns after reparsing; their added source
+attributes are recorded as normalization. The [engine regressions](https://github.com/markup-carve/carve-js/blob/main/test/table-source-metadata.test.ts)
+check diagnostics for conflicting authored metadata. Decimal percentage
+conversion preserves fractional widths.
+
+[Issue #2457](https://github.com/markup-carve/carve-js/issues/2457) tracked the
+missing row-group diagnostic. [PR #2459](https://github.com/markup-carve/carve-js/pull/2459)
+fixed reporting, and [PR #2460](https://github.com/markup-carve/carve-js/pull/2460)
+adds source preservation and metadata conflict checks. Multiple bodies and
+body-level row headers remain explicit source-conversion boundaries. Section
+attributes and block cells are reported separately. AST interchange passing
+does not claim a lossless source round trip.
 Native engine rows verify JSON and HTML; they do not claim source round trips
 for these AST fixtures or independent conversion-diagnostic implementations.
 

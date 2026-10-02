@@ -138,7 +138,7 @@ test('cached report and application assets refresh when the website loads', asyn
     expect(reads).toBe(2)
     expect(scriptReads).toBe(2)
     await expect(page.locator('#load-error')).toBeHidden()
-  } finally { await new Promise(resolve => server.close(resolve)) }
+  } finally { await new Promise(resolve => { server.close(resolve); server.closeAllConnections() }) }
 })
 
 test('AST interchange cases show their source-conversion boundaries', async ({ page }) => {

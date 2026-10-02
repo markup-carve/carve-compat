@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parse as parseDjot, renderDjot } from '@djot/djot'
-import { corpus, lossCorpus, checkCase, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
+import { corpus, lossCorpus, checkCase, isTableMetadataSpelling, checkIndependent, checkLossCase, validateCorpus, validateLossCorpus, validateAst, runCompatibility } from '../scripts/compat/check.mjs'
 import { toolNames, nativeTools, readForeign, toMdast, toHast, toDjot } from '../scripts/compat/tools.mjs'
 import { context, semantics, htmlSemantics, fromDjot, fromMd4c, fromHast, parseHtml } from '../scripts/compat/trees.mjs'
 
@@ -374,4 +374,44 @@ test('legacy HTML column layout attributes are preserved rather than reported as
   validateAst(ast)
   assert.deepEqual(ast.children[0].columns,[{align:'center',valign:'top'}])
   assert.equal(ctx.diagnostics.some(d=>d.fidelity==='dropped'),false)
+})
+
+
+test('metadata source spellings remain visible without claiming a missing loss diagnostic', async () => {
+  const fixtures = corpus.cases.filter(c => ['footer-caption-widths-and-rowspan','footer-caption-widths-without-head','footer-caption-widths-and-colspan'].includes(c.id))
+  assert.equal(fixtures.length, 3)
+  for (const fixture of fixtures) {
+    const result = await checkCase('hast', fixture)
+    const changes = result.diagnostics.filter(d => d.code === 'source-conversion-change')
+    assert.ok(changes.length)
+    assert.ok(changes.every(d => d.fidelity === 'normalized'))
+    assert.ok(!result.diagnostics.some(d => d.code === 'missing-source-conversion-diagnostic'))
+  }
+})
+
+test('metadata normalization excludes arbitrary attributes, replacements, and changed metadata', () => {
+  const before = { children: [{ type: 'table', columns: [{ width: 0.4 }] }] }
+  const after = { children: [{ type: 'table', columns: [{ width: 0.4 }], attrs: { keyValues: { widths: '40' } } }] }
+  const change = { path: '/children/0/attrs', after: after.children[0].attrs }
+  assert.equal(isTableMetadataSpelling(before, after, change), true)
+  assert.equal(isTableMetadataSpelling(before, after, { ...change, before: {} }), false)
+  assert.equal(isTableMetadataSpelling(before, after, { ...change, after: { keyValues: { foo: 'bar' } } }), false)
+  assert.equal(isTableMetadataSpelling(before, { children: [{ ...after.children[0], columns: [{ width: 0.5 }] }] }, change), false)
+})
+
+test('row-group spellings require a preserved partition', () => {
+  const groups = { headRows: 0, bodies: [{ headRows: 0, bodyRows: 1 }], footRows: 1 }
+  const before = { children: [{ type: 'table', rowGroups: groups }] }
+  const after = { children: [{ type: 'table', rowGroups: groups, attrs: { keyValues: { 'footer-rows': '1' } } }] }
+  const change = { path: '/children/0/attrs', after: after.children[0].attrs }
+  assert.equal(isTableMetadataSpelling(before, after, change), true)
+  assert.equal(isTableMetadataSpelling(before, { children: [{ ...after.children[0], rowGroups: { ...groups, footRows: 0 } }] }, change), false)
+})
+
+test('Pandoc HTML truncates fractional percentages instead of rounding them', () => {
+  const ast = { children: [{ type: 'table', rows: [], columns: [{ width: 0.013 }, { width: 0.987 }] }] }
+  const expected = { children: [{ type: 'table', rows: [], columns: [{ width: 0.01 }, { width: 0.98 }] }] }
+  assert.deepEqual(htmlSemantics(ast, 'pandoc', context('pandoc')), expected)
+  assert.deepEqual(htmlSemantics(expected, 'pandoc', context('pandoc')), expected)
+  assert.deepEqual(ast.children[0].columns, [{ width: 0.013 }, { width: 0.987 }])
 })

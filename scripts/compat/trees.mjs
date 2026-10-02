@@ -38,7 +38,7 @@ export function htmlSemantics(ast, renderer, ctx) {
   const walk=node=>{
     if(node.type==='table' && node.columns){
       for(const row of node.rows)for(const [i,cell]of row.cells.entries())for(const key of ['align','valign'])if(cell[key]===undefined && node.columns[i]?.[key])cell[key]=node.columns[i][key]
-      for(const column of node.columns){delete column.align;delete column.valign;if(column.width){const precision=renderer==='pandoc'?100:1e12;const rounded=Math.round(column.width*precision)/precision;if(rounded!==column.width)ctx.note('','html-width-precision','normalized',renderer==='pandoc'?'Compared column widths at the whole-percentage precision emitted by Pandoc HTML.':'Ignored decimal formatting noise in rendered HTML widths; AST widths remain exact.');column.width=rounded}}
+      for(const column of node.columns){delete column.align;delete column.valign;if(column.width){const precision=renderer==='pandoc'?100:1e12;const rounded=(renderer==='pandoc'?Math.floor(column.width*precision+1e-10):Math.round(column.width*precision))/precision;if(rounded!==column.width)ctx.note('','html-width-precision','normalized',renderer==='pandoc'?'Compared column widths at the truncated whole-percentage precision emitted by Pandoc HTML.':'Ignored decimal formatting noise in rendered HTML widths; AST widths remain exact.');column.width=rounded}}
       if(!node.columns.some(c=>Object.keys(c).length))delete node.columns
     }
     for(const key of ['children','items','rows','cells','blocks'])node[key]?.forEach(walk)
