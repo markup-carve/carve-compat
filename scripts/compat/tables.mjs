@@ -42,9 +42,19 @@ export function htmlLayout(properties) {
     const colon=declaration.indexOf(':'), key=declaration.slice(0,colon).trim().toLowerCase(), value=declaration.slice(colon+1).trim().toLowerCase()
     if (key === 'text-align' && ['left', 'right', 'center'].includes(value)) out.align = value
     else if (key === 'vertical-align' && ['top', 'middle', 'bottom'].includes(value)) out.valign = value
-    else if (key === 'width' && /^\d+(\.\d+)?%$/.test(value) && Number.parseFloat(value) > 0 && Number.parseFloat(value) <= 100) out.width = Number.parseFloat(value) / 100
+    else if (key === 'width' && /^\d+(\.\d+)?%$/.test(value) && Number.parseFloat(value) > 0 && Number.parseFloat(value) <= 100) out.width = Number(shiftTableWidth(value.slice(0, -1), -2))
     else remaining.push(declaration)
   }
   return { ...out, ...(remaining.length ? { residualStyle: remaining.join(';') } : {}) }
 }
 
+
+export function shiftTableWidth(value, places) {
+  const match = /^([+]?)(\d+(?:\.\d*)?|\.\d+)(?:[eE]([+-]?\d+))?$/.exec(String(value).trim())
+  if (!match) throw new Error('Invalid decimal table width')
+  const mantissa = match[2], digits = mantissa.replace('.', '')
+  const point = (mantissa.includes('.') ? mantissa.indexOf('.') : mantissa.length) + Number(match[3] ?? 0) + places
+  if (!Number.isSafeInteger(point) || Math.abs(point) > 1000) throw new Error('Table width exponent exceeds the decimal limit')
+  const shifted = point <= 0 ? `0.${'0'.repeat(-point)}${digits}` : point >= digits.length ? `${digits}${'0'.repeat(point - digits.length)}` : `${digits.slice(0, point)}.${digits.slice(point)}`
+  return shifted.replace(/^0+(?=\d)/, '')
+}

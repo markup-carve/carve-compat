@@ -3,7 +3,7 @@ const node = (tag, text, className) => { const el = document.createElement(tag);
 const append = (parent, ...children) => { parent.append(...children); return parent }
 const fetchJson = async path => { const response = await fetch(path, {cache:'no-store'}); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return response.json() }
 let report, tools, activeButton
-const checkLabels = { 'independent-docbook':'Separate DocBook output', 'foreign-ast-roundtrip':'Foreign AST interchange', 'source-conversion-changes':'Declared source conversion changes', 'source-conversion-diagnostics':'Reference source conversion diagnostics', 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
+const checkLabels = { 'reference-source-read':'Read reference source', 'native-source-read':'Reference reads engine source', 'independent-docbook':'Separate DocBook output', 'foreign-ast-roundtrip':'Foreign AST interchange', 'source-conversion-changes':'Declared source conversion changes', 'source-conversion-diagnostics':'Reference source conversion diagnostics', 'ast-schema': 'AST schema', 'ast-mapping': 'Semantic structure', 'html-structure': 'HTML structure', 'carve-source-roundtrip': 'Carve source round trip', 'json-roundtrip': 'JSON interchange', 'foreign-source-roundtrip': 'Foreign source round trip', 'built-in-importer-rendering': 'Public importer', 'loss-diagnostic': 'Exact loss diagnostic', 'fallback-schema': 'Fallback schema', 'fallback-content': 'Readable fallback' }
 function ring(passed, total) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 48 48'); svg.classList.add('ring'); svg.setAttribute('aria-hidden', 'true')
@@ -56,8 +56,8 @@ function showDetail(row, button, scroll = true) {
   $('#detail-checks').textContent = (row.checks ?? []).map(c => `✓ ${checkLabels[c] ?? c}`).join('  ·  ')
   const panes = $('#detail-panes'); panes.replaceChildren(); const e = row.evidence ?? {}
   if (e.source !== undefined) panes.append(pane(`Input source · ${e.sourceFormat}`, e.source, true))
-  if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Source changes are checked by the JavaScript reference against declared before/after values; they do not claim a lossless source round trip. Native engines verify the imported AST through their listed checks.`
-  if(e.sourceChanges)panes.append(pane('Reference source before/after changes',e.sourceChanges))
+  if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Each engine checks source changes against declared before/after values; this does not claim a lossless source round trip. Conversion-diagnostic checks use the JavaScript reference.`
+  if(e.sourceChanges)panes.append(pane('Engine source before/after changes',e.sourceChanges))
   if(e.expectedAst)panes.append(pane('Authored AST expectation',e.expectedAst))
   if(e.carveConversion)panes.append(pane('Reference Carve source conversion and diagnostics',e.carveConversion))
   if (e.carve !== undefined) panes.append(pane('Authored Carve expectation', e.carve, true))

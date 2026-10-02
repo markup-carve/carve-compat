@@ -53,6 +53,14 @@ produce the named diagnostic at its declared path, preserve the declared
 readable content and yield a schema-valid fallback tree. Missing executables, parser errors and
 unexplained losses fail the run.
 
+AST fixtures compare authored foreign fields through JSON and foreign AST
+interchange. All three Carve engines also export and reparse the mapped AST;
+the resulting changes must exactly match `sourceChanges`, or the explicitly
+listed `sourceChangesByEngine` override for that engine. Added table metadata
+counts as normalization only when it reconstructs the unchanged partition or
+columns. The JavaScript conversion report must match `sourceDiagnostics`.
+Native rows reuse that report; they do not assert independent native reporting.
+
 ## Normalization boundaries
 
 Mapped trees have no Carve source coordinates and use `srcByteLength: 0`.

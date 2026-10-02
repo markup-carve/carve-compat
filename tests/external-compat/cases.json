@@ -2243,31 +2243,18 @@
       "formats": {
         "pandoc": "pandoc-json"
       },
-      "sourceDiagnostics": [
-        {
-          "code": "field-unspellable",
-          "node": "table",
-          "field": "rowGroups"
-        }
-      ],
+      "sourceDiagnostics": [],
       "sourceChanges": [
         {
-          "path": "/children/0/rowGroups",
-          "before": {
-            "headRows": 1,
-            "bodies": [
-              {
-                "headRows": 1,
-                "bodyRows": 1,
-                "rowHeadColumns": 1
-              },
-              {
-                "headRows": 1,
-                "bodyRows": 1,
-                "rowHeadColumns": 1
-              }
-            ],
-            "footRows": 1
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "header-rows": "1",
+              "footer-rows": "1",
+              "body-rows": "1,1",
+              "body-header-rows": "1,1",
+              "body-header-cols": "1,1"
+            }
           }
         }
       ]
@@ -3084,6 +3071,684 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "multiple-bodies-caption-widths-and-spans",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><caption>Groups</caption><colgroup><col style=\"width: 33.3%\"><col style=\"width: 66.7%\"></colgroup><thead><tr><th colspan=\"2\">All</th></tr></thead><tbody><tr><th>First</th><th>Unit</th></tr><tr><th>A</th><td>1</td></tr></tbody><tbody><tr><th>Second</th><th>Unit</th></tr><tr><th rowspan=\"2\">B</th><td>2</td></tr><tr><td>3</td></tr></tbody><tfoot><tr><td>Total</td><td>6</td></tr></tfoot></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "caption": [
+              {
+                "type": "text",
+                "value": "Groups"
+              }
+            ],
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "All"
+                      }
+                    ],
+                    "colspan": 2
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "span": "colspan",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "First"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Unit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Second"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Unit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ],
+                    "rowspan": 2
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "span": "rowspan",
+                    "children": []
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "3"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Total"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "6"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "columns": [
+              {
+                "width": 0.333
+              },
+              {
+                "width": 0.667
+              }
+            ],
+            "rowGroups": {
+              "headRows": 1,
+              "bodies": [
+                {
+                  "headRows": 1,
+                  "bodyRows": 1,
+                  "rowHeadColumns": 1
+                },
+                {
+                  "headRows": 1,
+                  "bodyRows": 2,
+                  "rowHeadColumns": 1
+                }
+              ],
+              "footRows": 1
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "header"
+        },
+        {
+          "code": "field-unspellable",
+          "node": "table_cell",
+          "field": "header"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "widths": "33.3,66.7",
+              "header-rows": "1",
+              "footer-rows": "1",
+              "body-rows": "1,2",
+              "body-header-rows": "1,1",
+              "body-header-cols": "1,1"
+            }
+          }
+        },
+        {
+          "path": "/children/0/rows/0/cells/1/header",
+          "before": true,
+          "after": false
+        },
+        {
+          "path": "/children/0/rows/5/cells/0/header",
+          "before": true,
+          "after": false
+        }
+      ],
+      "sourceChangesByEngine": {
+        "php": [
+          {
+            "path": "/children/0/attrs",
+            "after": {
+              "keyValues": {
+                "widths": "33.3,66.7",
+                "header-rows": "1",
+                "footer-rows": "1",
+                "body-rows": "1,2",
+                "body-header-rows": "1,1",
+                "body-header-cols": "1,1"
+              }
+            }
+          },
+          {
+            "path": "/children/0/rows/5/cells/0/header",
+            "before": true,
+            "after": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "empty-body-before-intermediate-header",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><tbody></tbody><tbody><tr><th>Group</th><th>Unit</th></tr><tr><td>a</td><td>b</td></tr></tbody></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Group"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Unit"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "a"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "b"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 0,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 0
+                },
+                {
+                  "headRows": 1,
+                  "bodyRows": 1
+                }
+              ],
+              "footRows": 0
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "body-rows": "0,1",
+              "body-header-rows": "0,1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "head-and-foot-with-no-bodies",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><thead><tr><th>H</th><th>G</th></tr></thead><tfoot><tr><td>F</td><td>T</td></tr></tfoot></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "H"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": true,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "G"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "F"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "T"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 1,
+              "bodies": [],
+              "footRows": 1
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "header-rows": "1",
+              "footer-rows": "1",
+              "body-rows": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "plain-adjacent-bodies-with-precise-widths",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><colgroup><col style=\"width: 33.3%\"><col style=\"width: 66.7%\"></colgroup><tbody><tr><td>a</td><td>b</td></tr></tbody><tbody><tr><td>c</td><td>d</td></tr></tbody></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "a"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "b"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "c"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "d"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "columns": [
+              {
+                "width": 0.333
+              },
+              {
+                "width": 0.667
+              }
+            ],
+            "rowGroups": {
+              "headRows": 0,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                }
+              ],
+              "footRows": 0
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "widths": "33.3,66.7",
+              "body-rows": "1,1"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "middle-and-trailing-empty-table-bodies",
+      "tools": [
+        "hast"
+      ],
+      "html": "<table><tbody><tr><td>A</td><td>1</td></tr></tbody><tbody class=\"gap\"></tbody><tbody><tr><td>B</td><td>2</td></tr></tbody><tbody></tbody></table>",
+      "ast": {
+        "type": "document",
+        "children": [
+          {
+            "type": "table",
+            "rows": [
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "A"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "table_row",
+                "cells": [
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "B"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table_cell",
+                    "header": false,
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "rowGroups": {
+              "headRows": 0,
+              "bodies": [
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 0,
+                  "attrs": {
+                    "classes": [
+                      "gap"
+                    ]
+                  }
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 1
+                },
+                {
+                  "headRows": 0,
+                  "bodyRows": 0
+                }
+              ],
+              "footRows": 0
+            }
+          }
+        ],
+        "srcByteLength": 0
+      },
+      "sourceDiagnostics": [
+        {
+          "code": "field-unspellable",
+          "node": "table",
+          "field": "rowGroups.bodies[1].attrs"
+        }
+      ],
+      "sourceChanges": [
+        {
+          "path": "/children/0/attrs",
+          "after": {
+            "keyValues": {
+              "body-rows": "1,0,1,0"
+            }
+          }
+        },
+        {
+          "path": "/children/0/rowGroups/bodies/1/attrs",
+          "before": {
+            "classes": [
+              "gap"
+            ]
+          }
         }
       ]
     }

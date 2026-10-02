@@ -30,6 +30,12 @@ test('every declared compatibility fixture has a source and every tool has cover
   const broken = structuredClone(corpus)
   delete broken.cases[0].markdown
   assert.throws(() => validateCorpus(broken), /missing mdast source/)
+  const invalidEngine = structuredClone(corpus)
+  const astFixture = invalidEngine.cases.find(c => c.ast)
+  astFixture.sourceChangesByEngine = { typo: [] }
+  assert.throws(() => validateCorpus(invalidEngine), /invalid source change engine/)
+  astFixture.sourceChangesByEngine = { php: {} }
+  assert.throws(() => validateCorpus(invalidEngine), /invalid php source change expectation/)
   const brokenLoss = structuredClone(lossCorpus)
   brokenLoss.cases[0].tools.push('typo')
   assert.throws(() => validateLossCorpus(brokenLoss), /unknown loss tool typo/)
@@ -414,4 +420,22 @@ test('Pandoc HTML truncates fractional percentages instead of rounding them', ()
   assert.deepEqual(htmlSemantics(ast, 'pandoc', context('pandoc')), expected)
   assert.deepEqual(htmlSemantics(expected, 'pandoc', context('pandoc')), expected)
   assert.deepEqual(ast.children[0].columns, [{ width: 0.013 }, { width: 0.987 }])
+})
+
+test('body metadata is normalized only when its partition survives', () => {
+  const groups = { headRows: 0, footRows: 0, bodies: [{ headRows: 1, bodyRows: 1, rowHeadColumns: 1 }, { headRows: 0, bodyRows: 0 }] }
+  const before = { children: [{ type: 'table', rowGroups: groups }] }
+  const after = { children: [{ type: 'table', rowGroups: groups, attrs: { keyValues: { 'body-rows': '1,0', 'body-header-rows': '1,0', 'body-header-cols': '1,' } } }] }
+  const change = { path: '/children/0/attrs', after: after.children[0].attrs }
+  assert.equal(isTableMetadataSpelling(before, after, change), true)
+  assert.equal(isTableMetadataSpelling(before, { children: [{ ...after.children[0], rowGroups: { ...groups, bodies: [{ headRows: 0, bodyRows: 2 }] } }] }, change), false)
+  const keyChange = { path: '/children/0/attrs/keyValues/body-rows', after: '1,0' }
+  assert.equal(isTableMetadataSpelling(before, after, keyChange), true)
+})
+
+test('HAST percentages retain exact AST fractions', async () => {
+  const { readForeign } = await import('../scripts/compat/tools.mjs')
+  const html = '<table><colgroup><col style="width: 33.3%"><col style="width: 66.7%"></colgroup><tbody><tr><td>a</td><td>b</td></tr></tbody></table>'
+  const result = await readForeign('hast', html)
+  assert.deepEqual(result.ast.children[0].columns, [{ width: 0.333 }, { width: 0.667 }])
 })

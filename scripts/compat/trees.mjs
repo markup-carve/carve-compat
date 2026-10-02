@@ -163,7 +163,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
       let headAttrs, footAttrs
       const sectionRows = (section, sp) => section.children.filter(c => c.tagName === 'tr').map((r, i) => map(r, `${sp}/rows/${i}`, true))
       let direct = []
-      const addBody = (body, attrs) => { if(!body.length && !attrs)return; const expanded=expand(body);rows.push(...expanded); let headRows=0;while(headRows<expanded.length && expanded[headRows].cells.length && expanded[headRows].cells.every(c=>c.header))headRows++; const tail=expanded.slice(headRows);const leading=row=>{let count=0;for(const cell of row.cells){if(!cell.header)break;count++}return count};const rowHeadColumns=tail.length?Math.min(...tail.map(leading)):0;bodies.push({headRows,bodyRows:body.length-headRows,...(rowHeadColumns?{rowHeadColumns}:{}),...(attrs?{attrs}:{})}) }
+      const addBody = (body, attrs, explicit = false) => { if(!body.length && !attrs && !explicit)return; const expanded=expand(body);rows.push(...expanded); let headRows=0;while(headRows<expanded.length && expanded[headRows].cells.length && expanded[headRows].cells.every(c=>c.header))headRows++; const tail=expanded.slice(headRows);const leading=row=>{let count=0;for(const cell of row.cells){if(!cell.header)break;count++}return count};const rowHeadColumns=tail.length?Math.min(...tail.map(leading)):0;bodies.push({headRows,bodyRows:body.length-headRows,...(rowHeadColumns?{rowHeadColumns}:{}),...(attrs?{attrs}:{})}) }
       const flush = () => { addBody(direct); direct=[] }
       for (const [i, child] of n.children.entries()) {
         const cp = `${path}/children/${i}`
@@ -190,7 +190,7 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
         }
         else if(child.tagName==='thead'){flush();head.push(...sectionRows(child,cp));headAttrs=sectionAttrs(child,cp)}
         else if(child.tagName==='tfoot'){flush();foot.push(...sectionRows(child,cp));footAttrs=sectionAttrs(child,cp)}
-        else if(child.tagName==='tbody'){flush();addBody(sectionRows(child,cp),sectionAttrs(child,cp))}
+        else if(child.tagName==='tbody'){flush();addBody(sectionRows(child,cp),sectionAttrs(child,cp),true)}
         else if(child.tagName==='tr')direct.push(map(child,`${path}/rows/${i}`,true))
         else if(child.tagName)ctx.note(cp,'unsupported-field','dropped','Unsupported child of an HTML table.')
       }
