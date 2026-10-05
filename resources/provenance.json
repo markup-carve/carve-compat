@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/markup-carve/carve",
-  "revision": "3100de44e031163c30106d78d2d411eefa455d34",
+  "revision": "f25fb0944ce5f65c4ffd4143f15331d276646998",
   "path": "resources/ast-schema.json",
   "license": "MIT"
 }
