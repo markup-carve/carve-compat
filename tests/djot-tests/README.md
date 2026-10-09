@@ -20,3 +20,8 @@ Both sides of the HTML comparison use generated mode with the Djot renderer.
 This removes generated section wrappers and heading IDs. It also ignores
 authored heading IDs, so this lane does not measure them. Code whitespace stays
 significant; rendered HTML whitespace is collapsed outside code.
+
+`declared.json` lists two documented Carve rendering differences: the
+`role="math"` attribute on math spans and a lone image rendered without `<p>`.
+Each one is re-checked through its normalization, applied to both sides, as in
+the CommonMark lane.

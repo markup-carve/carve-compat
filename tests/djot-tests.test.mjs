@@ -4,7 +4,7 @@ import { readFileSync, mkdtempSync, cpSync, writeFileSync, rmSync } from 'node:f
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parseTests, validateDjotTests, djotTestsPath, loadDjotDeclarations, runDjotTests, testfiles } from '../scripts/compat/djot-tests.mjs'
-import { compareHtml } from '../scripts/compat/commonmark-spec.mjs'
+import { compareHtml, applyDeclaration, dropMathRole } from '../scripts/compat/commonmark-spec.mjs'
 import { validateHtmlSuite } from '../scripts/compat/validate-html-suite.mjs'
 
 const counts = {
@@ -98,16 +98,18 @@ test('JavaScript Djot lane measures every HTML example and accounts for every ou
   assert.deepEqual(report.suite.excluded,{options:6,filters:0})
   assert.equal(report.rows.length,268)
   assert.deepEqual(report.rows.map(r => r.example),examples.map(e => e.example))
-  assert.deepEqual(report.declarations,[])
-  assert.equal(report.declaredSha256,null)
+  assert.deepEqual(report.declarations.map(d => d.id),['math-role','lone-image-block'])
+  assert.match(report.declaredSha256,/^[a-f0-9]{64}$/)
+  for (const d of report.declarations) { assert.deepEqual(d.stale.javascript,[]); assert.deepEqual(d.insufficient.javascript,[]) }
+  assert.equal(report.totals.javascript.declared,11)
   assert.ok(!Object.hasOwn(report,'baselines'))
   assert.deepEqual(report.notMeasuredEngines,['php','rust'])
-  validateHtmlSuite(report,{label:'Djot',examples,differences:[],sourceKey:'source'})
+  validateHtmlSuite(report,{label:'Djot',examples,differences:loadDjotDeclarations(examples).differences,sourceKey:'source'})
   const emphasis = report.rows.find(r => r.example === 'emphasis.test:1')
   assert.equal(emphasis.source, '*foo bar*\n')
   assert.equal(emphasis.status, 'match')
   assert.match(emphasis.carveHtml, /<strong>foo bar<\/strong>/)
-  assert.equal(Object.values(report.totals.javascript.honesty).reduce((sum,n)=>sum+n,0),report.totals.javascript.match + report.totals.javascript.mismatch)
+  assert.equal(Object.values(report.totals.javascript.honesty).reduce((sum,n)=>sum+n,0),report.totals.javascript.match + report.totals.javascript.mismatch + report.totals.javascript.declared)
   for (const selection of [[],['javascript','javascript'],['unknown']]) assert.throws(() => runDjotTests(selection))
 })
 
@@ -117,4 +119,14 @@ test('the Djot comparison keeps authored divs', () => {
   assert.equal(compareHtml('<div class="foo"><p>Hi</p></div>', '<div class="foo"><p>Hi</p><div></div></div>', generated).status, 'mismatch')
   assert.equal(compareHtml('<div class="foo"><p>Hi</p></div>', '<div class="foo">\n  <p>Hi</p>\n</div>', generated).status, 'match')
   assert.equal(compareHtml('<section id="a"><h1>A</h1></section>', '<h1 id="A">A</h1>', generated).status, 'match')
+})
+
+test('the math-role declaration drops only role=math on math spans, on both sides', () => {
+  const expected = '<p><span class="math inline">\\(x\\)</span></p>'
+  const actual = '<p><span class="math inline" role="math">\\(x\\)</span></p>'
+  const difference = { id:'math-role', normalization:'drop-math-role' }
+  assert.equal(applyDeclaration(compareHtml(expected,actual,{expectedGenerated:true}),difference).status,'declared')
+  assert.equal(applyDeclaration(compareHtml('<p><span class="note">x</span></p>','<p><span class="note" role="math">x</span></p>',{expectedGenerated:true}),difference).status,'mismatch')
+  assert.equal(applyDeclaration(compareHtml(expected,'<p><span class="math inline" role="math">\\(y\\)</span></p>',{expectedGenerated:true}),difference).status,'mismatch')
+  assert.deepEqual(dropMathRole({type:'span',attrs:{classes:['math','inline'],keyValues:{role:'math',k:'v'}}}),{type:'span',attrs:{classes:['math','inline'],keyValues:{k:'v'}}})
 })

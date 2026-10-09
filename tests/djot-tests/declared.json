@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "differences": [
+    {
+      "id": "math-role",
+      "normalization": "drop-math-role",
+      "reason": "Carve adds role=\"math\" to every math span; djot.js does not.",
+      "reference": "https://github.com/markup-carve/carve/blob/9f7c3f7a44952d2bb3d9ac461ed9c04b7caaf563/resources/spec/15a-semantics-math-crossrefs.ebnf#L6-L7",
+      "examples": ["math.test:4", "math.test:10", "math.test:16", "math.test:22", "math.test:30", "math.test:40", "math.test:56", "regression.test:30"]
+    },
+    {
+      "id": "lone-image-block",
+      "normalization": "unwrap-lone-image-paragraph",
+      "reason": "Carve renders a paragraph whose only content is one image as a bare <img>, without <p>.",
+      "reference": "https://github.com/markup-carve/carve/blob/9f7c3f7a44952d2bb3d9ac461ed9c04b7caaf563/docs/comparison.md#L60",
+      "examples": ["links_and_images.test:9", "links_and_images.test:157", "links_and_images.test:171"]
+    }
+  ]
+}
