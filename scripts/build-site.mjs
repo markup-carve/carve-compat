@@ -34,6 +34,25 @@ if (existsSync(commonmarkPath)) {
   assert.ok(commonmark.rows.every(r => commonmark.selectedEngines.includes(r.engine) && ['match','mismatch','not-comparable','failed'].includes(r.status)), 'Invalid CommonMark result row')
   assert.deepEqual(Object.keys(commonmark.totals).sort(), [...commonmark.selectedEngines].sort())
   const statuses = [['match','match'],['mismatch','mismatch'],['not-comparable','notComparable'],['failed','failed']]
+  assert.ok(commonmark.baselines === undefined || (commonmark.baselines !== null && typeof commonmark.baselines === 'object' && !Array.isArray(commonmark.baselines)), 'Invalid CommonMark baselines')
+  const baselines = Object.keys(commonmark.baselines ?? {})
+  for (const name of baselines) {
+    assert.equal(name, 'pandoc-djot', 'Unknown CommonMark baseline')
+    const baseline = commonmark.baselines[name], rows = baseline.rows
+    for (const tool of ['converter','renderer']) for (const key of ['name','version']) assert.equal(typeof baseline[tool]?.[key], 'string', `Missing CommonMark baseline ${tool} ${key}`)
+    assert.equal(baseline.converter.command, '-f commonmark -t djot --wrap=preserve', 'Invalid CommonMark baseline command')
+    assert.ok(Array.isArray(rows), `CommonMark ${name}: missing rows`)
+    assert.equal(rows.length, spec.length, `CommonMark ${name}: incomplete rows`)
+    assert.equal(new Set(rows.map(r => r.example)).size, spec.length, `CommonMark ${name}: duplicate example`)
+    for (const row of rows) {
+      assert.ok(['match','mismatch','not-comparable','failed'].includes(row.status), 'Invalid CommonMark baseline status')
+      assert.equal(row.section, byExample.get(row.example)?.section, 'Invalid CommonMark baseline example or section')
+      for (const key of ['output','html']) assert.equal(typeof row[key], 'string', `CommonMark baseline row missing ${key}`)
+      if (Object.hasOwn(row, 'error')) assert.equal(typeof row.error, 'string', 'Invalid CommonMark baseline error')
+      assert.ok(!Object.hasOwn(row, 'honesty') && !Object.hasOwn(row, 'reportClass'), 'CommonMark baseline has no fidelity report')
+    }
+    for (const [status,key] of statuses) assert.equal(baseline.totals?.[key], rows.filter(r => r.status === status).length, `CommonMark ${name}: inconsistent ${key} count`)
+  }
   for (const row of commonmark.rows) {
     assert.equal(row.section, byExample.get(row.example)?.section, 'Invalid CommonMark example or section')
     assert.equal(row.markdown, byExample.get(row.example)?.markdown, 'CommonMark Markdown differs from the spec')
@@ -59,6 +78,8 @@ if (existsSync(commonmarkPath)) {
   assert.deepEqual(commonmark.sections.map(s => s.section), [...new Set(spec.map(e => e.section))], 'Invalid CommonMark section order')
   for (const s of commonmark.sections) {
     assert.equal(s.examples, spec.filter(e => e.section === s.section).length)
+    assert.deepEqual(Object.keys(s.baselines ?? {}).sort(), [...baselines].sort(), 'Invalid CommonMark section baselines')
+    for (const name of baselines) for (const [status,key] of statuses) assert.equal(s.baselines[name]?.[key], commonmark.baselines[name].rows.filter(r => r.section === s.section && r.status === status).length, `CommonMark ${name}/${s.section}: inconsistent ${key} count`)
     for (const engine of commonmark.selectedEngines) for (const [status,key] of statuses) assert.equal(s.results?.[engine]?.[key], commonmark.rows.filter(r => r.engine === engine && r.section === s.section && r.status === status).length, `CommonMark ${engine}/${s.section}: inconsistent ${key} count`)
   }
 }

@@ -53,6 +53,8 @@ jobs:
           CARVE_PANDOC: .cache/pandoc/bin/pandoc
         run: npm run compat:check -- --report=reports/latest.json
       - name: Measure CommonMark spec examples (measurement, no gate)
+        env:
+          CARVE_PANDOC: .cache/pandoc/bin/pandoc
         run: npm run compat:commonmark -- --report=reports/commonmark.json
       - name: Build report website
         id: site

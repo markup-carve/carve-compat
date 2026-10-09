@@ -95,6 +95,15 @@ outside code, trims inline edges in paragraphs, headings, table cells, and defin
 terms, and ignores Carve's generated heading IDs and section wrappers. Code whitespace
 remains significant.
 
+The default `pandoc-djot` baseline converts the same examples with pinned Pandoc
+3.11 using `pandoc -f commonmark -t djot --wrap=preserve`, then renders the Djot
+with pinned djot.js (`@djot/djot` 0.3.2). It uses the same HTML comparator and
+shows what a general converter keeps. This is a reference point, not a target
+for Carve. Pandoc has no fidelity report, so the baseline has no report class or
+honesty outcome. Every row in this lane, Carve and baseline alike, renders with
+raw HTML passthrough on. Pandoc writes raw HTML as Djot `=html` raw content, which
+djot.js passes through.
+
 Results are `match`, `mismatch`, `not-comparable` when the HTML mapper cannot
 represent the expected structure, or `failed` when importing fails. Importer
 reports have three classes: `names-loss` names a degraded or dropped feature;
@@ -110,13 +119,16 @@ drops a leading tab that HTML rendering collapses anyway. JavaScript names
 `structure-unspellable`; PHP and Rust report only `fidelity-unverified`.
 
 ```sh
-npm run compat:commonmark -- --report=reports/commonmark.json
+CARVE_PANDOC=.cache/pandoc/bin/pandoc npm run compat:commonmark -- --report=reports/commonmark.json
 ```
 
 The default selects JavaScript, PHP, and Rust. Use `--engines=javascript` for the
-reference importer alone. Mismatches never fail this lane's CI step. Infrastructure
-errors, including invalid vendored data, engine pin mismatches, and crashed drivers,
-fail the run. The report includes every example and totals by engine and spec section.
+reference importer alone, or `--baselines=none` to omit the baseline. The library
+function `runCommonmarkSpec` omits baselines unless `{ baselines: ['pandoc-djot'] }`
+is supplied. Mismatches never fail this lane's CI step. Infrastructure
+errors, including invalid vendored data, engine pin mismatches, missing or
+incorrect Pandoc versions, and crashed drivers, fail the run. The report includes
+every example and totals by engine, baseline, and spec section.
 The site includes the report when present; `--commonmark=path` selects another file.
 See [vendored data provenance and license](tests/commonmark-spec/README.md).
 
