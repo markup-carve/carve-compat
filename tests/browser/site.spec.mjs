@@ -8,9 +8,9 @@ const report = { ...measured, selected: ['mdast'], notMeasured: ['hast', 'common
 const commonmark = {
   schemaVersion:1, kind:'commonmark-spec', spec:{version:'0.31.2',examples:652}, selectedEngines:['javascript','php'], engines:{javascript:{name:'Carve JavaScript'},php:{name:'Carve PHP'}},
   reportDisagreements:[{example:485,section:'Links',classes:{javascript:'clean',php:'names-loss'},codes:{javascript:[],php:['link-loss']}}],
-  totals:{javascript:{honesty:{reported:0,unassessed:0,'silent-loss':1,'false-loss':0,ok:0},match:0,mismatch:1,notComparable:0,failed:1,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}},php:{honesty:{reported:1,unassessed:0,'silent-loss':0,'false-loss':0,ok:0},match:0,mismatch:1,notComparable:0,failed:0,mismatchByReport:{'names-loss':1,'unverified-only':0,clean:0}}},
+  totals:{javascript:{honesty:{reported:0,unassessed:0,'silent-loss':1,'false-loss':0,ok:0},match:0,mismatch:1,declared:0,notComparable:0,failed:1,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}},php:{honesty:{reported:1,unassessed:0,'silent-loss':0,'false-loss':0,ok:0},match:0,mismatch:1,declared:0,notComparable:0,failed:0,mismatchByReport:{'names-loss':1,'unverified-only':0,clean:0}}},
   baselines:{'pandoc-djot':{converter:{name:'pandoc',version:'3.11',command:'-f commonmark -t djot --wrap=preserve'},renderer:{name:'@djot/djot',version:'0.3.2'},totals:{match:1,mismatch:1,notComparable:0,failed:0},rows:[{example:485,section:'Links',status:'match',output:'[foo]()',html:'<p><a href="">foo</a></p>'},{example:486,section:'Links',status:'mismatch',output:'baseline-only evidence',html:'<p>baseline-only evidence</p>'}]}},
-  sections:[{section:'Links',examples:2,results:{javascript:{match:0,mismatch:1,notComparable:0,failed:1},php:{match:0,mismatch:1,notComparable:0,failed:0}},baselines:{'pandoc-djot':{match:1,mismatch:1,notComparable:0,failed:0}}}],
+  sections:[{section:'Links',examples:2,results:{javascript:{match:0,mismatch:1,declared:0,notComparable:0,failed:1},php:{match:0,mismatch:1,declared:0,notComparable:0,failed:0}},baselines:{'pandoc-djot':{match:1,mismatch:1,notComparable:0,failed:0}}}],
   rows:[
     {engine:'javascript',example:485,section:'Links',status:'mismatch',markdown:'[foo]()',expectedHtml:'<p><a href="">foo</a></p>',carve:'foo',carveHtml:'<p>foo</p>',diagnostics:[],reportClass:'clean'},
     {engine:'javascript',example:486,section:'Links',status:'failed',markdown:'broken input',expectedHtml:'<p>broken input</p>',carve:'',carveHtml:'',diagnostics:[],reportClass:'clean',error:'Importer failed'},
@@ -26,7 +26,7 @@ test('CommonMark measurement shows totals, section counts, failures and engine f
   await expect(page.locator('#commonmark-totals tbody tr')).toHaveCount(3)
   const baselineRow = page.locator('#commonmark-totals tbody tr').last()
   await expect(baselineRow.locator('th')).toHaveText('pandoc to Djot (baseline)')
-  await expect(baselineRow.locator('td')).toHaveText(['1','1','0','0',...Array(8).fill('n/a')])
+  await expect(baselineRow.locator('td')).toHaveText(['1','1','n/a','0','0',...Array(8).fill('n/a')])
   await expect(page.locator('#commonmark-baseline-note')).toContainText('reference point, not a target for Carve')
   await expect(page.locator('#commonmark-sections thead th').last()).toHaveText('pandoc to Djot (baseline)')
   await expect(page.locator('#commonmark-sections tbody td').last()).toHaveText('1/2')
@@ -34,7 +34,7 @@ test('CommonMark measurement shows totals, section counts, failures and engine f
   await expect(page.locator('#commonmark-examples')).not.toContainText('baseline-only evidence')
   await expect(page.locator('#commonmark-totals thead')).toContainText('Clean report = silent')
   for (const outcome of ['reported','unassessed','silent-loss','false-loss','ok']) await expect(page.locator('#commonmark-totals thead')).toContainText(outcome)
-  await expect(page.locator('#commonmark-totals tbody tr').first().locator('td').nth(9)).toHaveText('1')
+  await expect(page.locator('#commonmark-totals tbody tr').first().locator('td').nth(10)).toHaveText('1')
   await expect(page.locator('#commonmark-disagreements a')).toHaveAttribute('href', 'https://spec.commonmark.org/0.31.2/#example-485')
   await expect(page.locator('#commonmark-disagreements')).toContainText('Links')
   await expect(page.locator('#commonmark-disagreements')).toContainText('Carve JavaScript: clean')
@@ -72,6 +72,31 @@ test('CommonMark Markdown and HTML evidence stays text', async ({ page }) => {
   await expect(page.locator('#commonmark-disagreements')).toContainText(payload)
   await expect(page.locator('#commonmark-totals tbody tr').last()).toContainText(payload)
   await expect(page.locator('#commonmark-sections tbody td').last()).toContainText(payload)
+  await expect(page.locator('#commonmark img, #commonmark script')).toHaveCount(0)
+  expect(await page.evaluate(() => window.commonmarkInjected)).toBeUndefined()
+})
+
+test('CommonMark declarations show counts and warnings while excluding declared rows from mismatches', async ({ page }) => {
+  const changed = structuredClone(commonmark)
+  changed.totals.javascript.declared = 1
+  changed.sections[0].results.javascript.declared = 1
+  changed.rows.push({engine:'javascript',example:520,section:'Links',status:'declared',markdown:'![alt](a.png)',expectedHtml:'<p><img src="a.png" alt="alt"></p>',carveHtml:'<img src="a.png" alt="alt">',diagnostics:[],reportClass:'clean',declaration:{id:'lone-image-block'}})
+  const payload = '<img src=x onerror="window.commonmarkInjected=true"><script>window.commonmarkInjected=true</script>'
+  changed.declarations = [{id:'lone-image-block',reason:payload,reference:'https://example.com/rendering',examples:[520,572,573],declared:{javascript:1,php:0},stale:{javascript:[572],php:[]},insufficient:{javascript:[],php:[573]}}]
+  await page.route('**/commonmark.json', route => route.fulfill({json:changed}))
+  await page.goto('/')
+  await expect(page.locator('#commonmark-totals thead th').nth(3)).toHaveText('Declared')
+  await expect(page.locator('#commonmark-totals tbody tr').first().locator('td').nth(2)).toHaveText('1')
+  await expect(page.locator('#commonmark-totals tbody tr').last().locator('td').nth(2)).toHaveText('n/a')
+  await expect(page.locator('#commonmark-sections tbody td').first()).toHaveText('0/2')
+  await expect(page.locator('#commonmark-declarations')).toContainText(payload)
+  await expect(page.locator('#commonmark-declarations')).toContainText('Carve JavaScript: 1 declared examples')
+  await expect(page.locator('#commonmark-declarations')).toContainText('Carve PHP: 0 declared examples')
+  await expect(page.locator('#commonmark-declarations')).toContainText('Carve JavaScript stale: examples 572')
+  await expect(page.locator('#commonmark-declarations')).toContainText('Carve PHP insufficient: examples 573')
+  await expect(page.locator('#commonmark-declarations a')).toHaveAttribute('href', 'https://example.com/rendering')
+  await expect(page.locator('#commonmark-examples>li')).toHaveCount(3)
+  await expect(page.locator('#commonmark-examples')).not.toContainText('Example 520')
   await expect(page.locator('#commonmark img, #commonmark script')).toHaveCount(0)
   expect(await page.evaluate(() => window.commonmarkInjected)).toBeUndefined()
 })

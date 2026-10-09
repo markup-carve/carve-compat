@@ -31,8 +31,10 @@ test('the site includes an optional CommonMark report and rejects stale or incon
     const report = { schemaVersion:1, generatedAt:'2026-01-01T00:00:00Z', engine:{}, schema:{sha256:hash('resources/ast-schema.json')}, fixtureHashes:Object.fromEntries(['cases.json','losses.json'].map(file => [file,hash(`tests/external-compat/${file}`)])), selected:[], notMeasured:[], rows:[], passed:0, failed:0 }
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify(report))
     const spec = JSON.parse(readFileSync('tests/commonmark-spec/spec.json'))
-    const counts = {match:652,mismatch:0,notComparable:0,failed:0}
+    const counts = {match:652,mismatch:0,declared:0,notComparable:0,failed:0}
     const commonmark = { schemaVersion:1, kind:'commonmark-spec', spec:{sha256:hash('tests/commonmark-spec/spec.json'),examples:652}, engineConfigSha256:hash('resources/engines.json'), selectedEngines:['javascript'], engines:{javascript:{name:'Carve JavaScript'}}, reportDisagreements:[], totals:{javascript:{...counts,honesty:{reported:0,unassessed:0,'silent-loss':0,'false-loss':0,ok:652},mismatchByReport:{'names-loss':0,'unverified-only':0,clean:0}}}, rows:spec.map(e => ({engine:'javascript',example:e.example,section:e.section,status:'match',markdown:e.markdown,expectedHtml:e.html,carve:'',carveHtml:'',diagnostics:[],reportClass:'clean',honesty:'ok'})), sections:[...new Set(spec.map(e => e.section))].map(section => {const examples = spec.filter(e => e.section === section).length;return {section,examples,results:{javascript:{...counts,match:examples}}}}) }
+    commonmark.declaredSha256 = hash('tests/commonmark-spec/declared.json')
+    commonmark.declarations = JSON.parse(readFileSync('tests/commonmark-spec/declared.json')).differences.map(d => ({...d,declared:{javascript:0},stale:{javascript:[...d.examples]},insufficient:{javascript:[]}}))
     const custom = join(dir,'optional.json'), output = join(dir,'dist/commonmark.json')
     const build = (...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/build-site.mjs', import.meta.url)),...args], { cwd:dir, encoding:'utf8' })
     const absent = build(); assert.equal(absent.status, 0, absent.stderr); assert.match(absent.stdout, /built without it/); assert.equal(existsSync(output), false)
@@ -41,6 +43,9 @@ test('the site includes an optional CommonMark report and rejects stale or incon
     assert.equal(included.status, 0, included.stderr); assert.match(included.stdout, /Included CommonMark/)
     assert.deepEqual(JSON.parse(readFileSync(output)), commonmark)
     for (const broken of [
+      {...commonmark,declaredSha256:'stale'}, {...commonmark,declarations:[]},
+      {...commonmark,declarations:[{...commonmark.declarations[0],declared:{javascript:1}}]},
+      {...commonmark,totals:{javascript:{...commonmark.totals.javascript,declared:1}}},
       {...commonmark,schemaVersion:2}, {...commonmark,kind:'other'}, {...commonmark,spec:{sha256:'stale'}}, {...commonmark,engineConfigSha256:'stale'},
       {...commonmark,totals:{javascript:{...commonmark.totals.javascript,match:653}}},
       {...commonmark,totals:{javascript:{...commonmark.totals.javascript,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}}}},
@@ -72,6 +77,9 @@ test('the site includes an optional CommonMark report and rejects stale or incon
       [baselineReport({totals:{...baseline.totals,match:653}}), /pandoc-djot: inconsistent match count/],
       [baselineReport({rows:rows.slice(1)}), /pandoc-djot: incomplete rows/],
       [baselineReport({rows:[rows[0],...rows.slice(0,-1)]}), /pandoc-djot: duplicate example/],
+      [baselineReport({totals:{...baseline.totals,declared:0}}), /baseline has no declared count/],
+      [baselineReport({rows:[{...rows[0],status:'declared'},...rows.slice(1)]}), /Invalid CommonMark baseline status/],
+      [baselineReport({rows:[{...rows[0],declaration:{id:'lone-image-block'}},...rows.slice(1)]}), /baseline has no declaration/],
       [baselineReport({rows:[{...rows[0],status:'other'},...rows.slice(1)]}), /Invalid CommonMark baseline status/],
       [baselineReport({rows:[{...rows[0],section:'other'},...rows.slice(1)]}), /Invalid CommonMark baseline example or section/],
       [baselineReport({rows:[{...rows[0],html:null},...rows.slice(1)]}), /baseline row missing html/],
@@ -88,6 +96,36 @@ test('the site includes an optional CommonMark report and rejects stale or incon
     writeFileSync(custom, JSON.stringify(withoutBaseline))
     assert.equal(build('--commonmark=optional.json').status, 0)
     assert.deepEqual(JSON.parse(readFileSync(output)).baselines, {})
+    const declared = structuredClone(withoutBaseline), id = declared.declarations[0].id
+    const image = declared.rows.find(r => r.example === 520), insufficient = declared.rows.find(r => r.example === 572)
+    image.status = 'declared'; image.declaration = {id}
+    insufficient.status = 'mismatch'; insufficient.declaration = {id,insufficient:true}; insufficient.honesty = 'silent-loss'
+    declared.totals.javascript.match -= 2; declared.totals.javascript.declared++; declared.totals.javascript.mismatch++
+    declared.totals.javascript.honesty.ok--; declared.totals.javascript.honesty['silent-loss']++
+    declared.totals.javascript.mismatchByReport.clean++
+    for (const row of [image,insufficient]) {
+      const counts = declared.sections.find(s => s.section === row.section).results.javascript
+      counts.match--; counts[row.status]++
+    }
+    declared.declarations[0].declared.javascript = 1
+    declared.declarations[0].stale.javascript = declared.declarations[0].examples.filter(e => ![520,572].includes(e))
+    declared.declarations[0].insufficient.javascript = [572]
+    writeFileSync(custom, JSON.stringify(declared))
+    const includedDeclared = build('--commonmark=optional.json')
+    assert.equal(includedDeclared.status, 0, includedDeclared.stderr)
+    assert.deepEqual(JSON.parse(readFileSync(output)), declared)
+    for (const mutate of [
+      r => { r.rows.find(row => row.example === 520).declaration.id = 'unknown' },
+      r => { delete r.rows.find(row => row.example === 572).declaration },
+      r => { r.declarations[0].insufficient.javascript = [] },
+      r => { r.declarations[0].stale.javascript = [] },
+      r => { r.sections.find(s => s.section === image.section).results.javascript.declared++ },
+      r => { r.rows[0].status = 'declared'; r.rows[0].declaration = {id} },
+    ]) {
+      const broken = structuredClone(declared); mutate(broken)
+      writeFileSync(custom, JSON.stringify(broken))
+      assert.equal(build('--commonmark=optional.json').status, 1)
+    }
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:'stale'}))
     assert.equal(build().status, 1, 'Stale importer assessment must fail')
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:hash('resources/importer-assessment.json')}))

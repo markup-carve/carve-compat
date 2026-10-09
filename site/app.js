@@ -120,10 +120,21 @@ function fillCommonmark(data) {
   const engines = data.selectedEngines, name = engine => data.engines[engine]?.name ?? engine
   const outcomes = ['reported','unassessed','silent-loss','false-loss','ok']
   const baselines = Object.entries(data.baselines ?? {}), baselineName = 'pandoc to Djot (baseline)'
-  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent',...outcomes], engines.map(engine => {
+  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Declared','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent',...outcomes], engines.map(engine => {
     const t = data.totals[engine]
-    return [name(engine),t.match,t.mismatch,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean,...outcomes.map(outcome => t.honesty?.[outcome] ?? 'Not measured')]
-  }).concat(baselines.map(([,{totals:t}]) => [baselineName,t.match,t.mismatch,t.notComparable,t.failed,...Array(3 + outcomes.length).fill('n/a')])))
+    return [name(engine),t.match,t.mismatch,t.declared,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean,...outcomes.map(outcome => t.honesty?.[outcome] ?? 'Not measured')]
+  }).concat(baselines.map(([,{totals:t}]) => [baselineName,t.match,t.mismatch,'n/a',t.notComparable,t.failed,...Array(3 + outcomes.length).fill('n/a')])))
+  const declarations = $('#commonmark-declarations'); declarations.replaceChildren()
+  for (const d of data.declarations ?? []) {
+    const item = node('li'), link = node('a', 'Reference')
+    if (typeof d.reference === 'string' && URL.canParse(d.reference) && new URL(d.reference).protocol === 'https:') link.href = d.reference
+    item.append(node('span', `${d.reason} `), link, node('span', ` · ${engines.map(engine => `${name(engine)}: ${d.declared[engine]} declared examples`).join(' · ')}`))
+    for (const kind of ['stale','insufficient']) for (const engine of engines) {
+      if (d[kind][engine]?.length) item.append(node('span', ` · ${name(engine)} ${kind}: examples ${d[kind][engine].join(', ')}`))
+    }
+    declarations.append(item)
+  }
+  if (!declarations.children.length) declarations.append(node('li', 'No declared rendering differences.'))
   $('#commonmark-baseline-note').hidden = baselines.length === 0
   const disagreements = $('#commonmark-disagreements'); disagreements.replaceChildren()
   for (const row of data.reportDisagreements ?? []) {
@@ -134,7 +145,7 @@ function fillCommonmark(data) {
   }
   if (!disagreements.children.length) disagreements.append(node('li', 'No report class disagreements among the selected engines.'))
   $('#commonmark-silent').textContent = `Silent losses with clean reports: ${engines.map(engine => `${name(engine)} ${data.totals[engine].mismatchByReport.clean}`).join(' · ')}`
-  commonmarkTable('#commonmark-sections', 'Matches / comparable examples by spec section', ['Section',...engines.map(name),...baselines.map(() => baselineName)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch}` }),...baselines.map(([baseline]) => { const t = s.baselines[baseline]; return `${t.match}/${t.match + t.mismatch}` })]))
+  commonmarkTable('#commonmark-sections', 'Matches / comparable examples by spec section', ['Section',...engines.map(name),...baselines.map(() => baselineName)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch + t.declared}` }),...baselines.map(([baseline]) => { const t = s.baselines[baseline]; return `${t.match}/${t.match + t.mismatch}` })]))
   const filter = $('#commonmark-engine-filter')
   for (const engine of engines) { const option = node('option', name(engine)); option.value = engine; filter.append(option) }
   const renderExamples = () => {

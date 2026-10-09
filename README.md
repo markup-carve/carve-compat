@@ -95,6 +95,12 @@ outside code, trims inline edges in paragraphs, headings, table cells, and defin
 terms, and ignores Carve's generated heading IDs and section wrappers. Code whitespace
 remains significant.
 
+Documented Carve rendering differences are listed in `tests/commonmark-spec/declared.json`.
+Each declaration is rechecked by applying its named normalization to the expected
+semantic tree; only a matching comparison receives `declared` status. Reports flag
+stale declarations when the original comparison already matches and insufficient
+declarations when the normalized comparison still mismatches.
+
 The default `pandoc-djot` baseline converts the same examples with pinned Pandoc
 3.11 using `pandoc -f commonmark -t djot --wrap=preserve`, then renders the Djot
 with pinned djot.js (`@djot/djot` 0.3.2). It uses the same HTML comparator and
@@ -104,7 +110,7 @@ honesty outcome. Every row in this lane, Carve and baseline alike, renders with
 raw HTML passthrough on. Pandoc writes raw HTML as Djot `=html` raw content, which
 djot.js passes through.
 
-Results are `match`, `mismatch`, `not-comparable` when the HTML mapper cannot
+Results are `match`, `mismatch`, `declared`, `not-comparable` when the HTML mapper cannot
 represent the expected structure, or `failed` when importing fails. Importer
 reports have three classes: `names-loss` names a degraded or dropped feature;
 `unverified-only` has `fidelity-unverified` without a named loss; `clean` has
