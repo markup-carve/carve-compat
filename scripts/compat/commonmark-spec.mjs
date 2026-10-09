@@ -2,12 +2,11 @@ import assert from 'node:assert/strict'
 import { isDeepStrictEqual } from 'node:util'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { execFileSync, spawnSync } from 'node:child_process'
-import { parse, resolve, renderHtml } from '@markup-carve/carve'
+import { spawnSync } from 'node:child_process'
 import { parse as parseDjot, renderHTML } from '@djot/djot'
 import { context, semantics, parseHtml, fromHast, coalesce } from './trees.mjs'
-import { engineNames, engineMetadata } from './engines.mjs'
-import { reportClass, honesty, honestyOutcomes, runImportBatch } from './importer-report.mjs'
+import { engineNames } from './engines.mjs'
+import { runHtmlSuite } from './html-suite.mjs'
 export { reportClass } from './importer-report.mjs'
 
 export const specSha256 = 'd431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20'
@@ -16,7 +15,6 @@ const declaredPath = new URL('../../tests/commonmark-spec/declared.json', import
 const hash = value => createHash('sha256').update(value).digest('hex')
 const loss = d => ['degraded','dropped'].includes(d.fidelity)
 const counts = () => ({ match:0, mismatch:0, notComparable:0, failed:0 })
-const engineCounts = () => ({ ...counts(), declared:0 })
 const countKey = status => status === 'not-comparable' ? 'notComparable' : status
 const pins = JSON.parse(readFileSync(new URL('../../resources/engines.json', import.meta.url)))
 const pandocArgs = ['-f','commonmark','-t','djot','--wrap=preserve']
@@ -100,7 +98,7 @@ export function validateDeclarations(source = readFileSync(declaredPath), exampl
     assert.ok(typeof d.reference === 'string' && URL.canParse(d.reference) && new URL(d.reference).protocol === 'https:', 'Declaration reference must be an https URL')
     assert.ok(Array.isArray(d.examples) && d.examples.length > 0, 'Declaration examples must be a non-empty array')
     for (const example of d.examples) {
-      assert.ok(Number.isInteger(example) && known.has(example), 'Invalid declaration example')
+      assert.ok(known.has(example), 'Invalid declaration example')
       assert.ok(!assigned.has(example), 'Duplicate declaration example'); assigned.add(example)
     }
   }
@@ -114,64 +112,20 @@ export function applyDeclaration(comparison, difference) {
   return { ...comparison, status:matches ? 'declared' : 'mismatch', declaration:matches ? { id:difference.id } : { id:difference.id, insufficient:true } }
 }
 
-export function compareHtml(expectedHtml, carveHtml) {
+export function compareHtml(expectedHtml, carveHtml, { expectedGenerated = false } = {}) {
   const expectedContext = context('commonmark-spec')
-  const expected = renderedWhitespace(semantics(fromHast(parseHtml(layout(expectedHtml)), expectedContext, {})))
-  const actual = renderedWhitespace(semantics(fromHast(parseHtml(layout(carveHtml)), context('carve'), { generated:true })))
+  const expected = renderedWhitespace(semantics(fromHast(parseHtml(layout(expectedHtml)), expectedContext, expectedGenerated ? { generated:true, renderer:'djot', keepDivs:true } : {})))
+  const actual = renderedWhitespace(semantics(fromHast(parseHtml(layout(carveHtml)), context('carve'), { generated:true, renderer:'carve', ...(expectedGenerated ? { keepDivs:true } : {}) })))
   return { status:expectedContext.diagnostics.some(loss) ? 'not-comparable' : isDeepStrictEqual(expected, actual) ? 'match' : 'mismatch', expected, actual }
 }
 
 export function runCommonmarkSpec(selectedEngines = engineNames, { baselines:selectedBaselines = [] } = {}) {
   const startedAt = new Date(), started = performance.now(), examples = validateSpec()
   const declaredSource = readFileSync(declaredPath), differences = validateDeclarations(declaredSource, examples)
-  const byExample = new Map(differences.flatMap(d => d.examples.map(example => [example,d])))
-  assert.ok(selectedEngines.length > 0, 'No engines selected')
-  assert.equal(new Set(selectedEngines).size, selectedEngines.length, 'Duplicate selected engine')
-  for (const engine of selectedEngines) assert.ok(engineNames.includes(engine), `Unknown engine: ${engine}`)
   assert.ok(Array.isArray(selectedBaselines), 'Baselines must be an array')
   assert.equal(new Set(selectedBaselines).size, selectedBaselines.length, 'Duplicate selected baseline')
   for (const baseline of selectedBaselines) assert.equal(baseline, 'pandoc-djot', `Unknown baseline: ${baseline}`)
   const baselines = Object.fromEntries(selectedBaselines.map(baseline => [baseline,runPandocDjotBaseline(examples)]))
-  const metadata = Object.fromEntries(selectedEngines.map(engine => [engine,engineMetadata(engine)]))
-  const engines = Object.fromEntries(Object.entries(metadata).map(([engine,{root,binary,...meta}]) => [engine,meta]))
-  const reference = engineMetadata('javascript'), pkg = JSON.parse(readFileSync(new URL('../../node_modules/@markup-carve/carve/package.json', import.meta.url)))
-  const totals = Object.fromEntries(selectedEngines.map(engine => [engine,{ ...engineCounts(), honesty:Object.fromEntries(honestyOutcomes.map(outcome => [outcome,0])), mismatchByReport:{ 'names-loss':0, 'unverified-only':0, clean:0 } }]))
-  const sections = [...new Set(examples.map(e => e.section))].map(section => ({ section, examples:examples.filter(e => e.section === section).length, results:Object.fromEntries(selectedEngines.map(engine => [engine,engineCounts()])), baselines:Object.fromEntries(selectedBaselines.map(baseline => [baseline,counts()])) }))
-  for (const [baseline,result] of Object.entries(baselines)) for (const row of result.rows) sections.find(s => s.section === row.section).baselines[baseline][countKey(row.status)]++
-  const rows = []
-  for (const engine of selectedEngines) {
-    const batch = runImportBatch(engine, examples.map(e => e.markdown))
-    for (const [i,e] of examples.entries()) {
-      const result = batch[i]
-      const diagnostics = result.report?.diagnostics ?? []
-      const row = { engine, example:e.example, section:e.section, status:'failed', markdown:e.markdown, expectedHtml:e.html, carve:result.value ?? '', carveHtml:'', diagnostics, reportClass:reportClass(diagnostics) }
-      if (Object.hasOwn(result, 'error')) row.error = result.error
-      else {
-        try {
-          row.carveHtml = renderHtml(resolve(parse(result.value)))
-          const comparison = applyDeclaration(compareHtml(e.html, row.carveHtml), byExample.get(e.example))
-          row.status = comparison.status
-          if (comparison.declaration) row.declaration = comparison.declaration
-        } catch (error) { row.error = `Rendering the imported Carve failed: ${error.message}` }
-      }
-      row.honesty = ['match','mismatch','declared'].includes(row.status) ? honesty(row.status !== 'mismatch', row.reportClass) : null
-      if (row.honesty !== null) totals[engine].honesty[row.honesty]++
-      rows.push(row)
-      totals[engine][countKey(row.status)]++
-      if (row.status === 'mismatch') totals[engine].mismatchByReport[row.reportClass]++
-      sections.find(s => s.section === e.section).results[engine][countKey(row.status)]++
-    }
-  }
-  const declarations = differences.map(d => {
-    const selected = engine => rows.filter(r => r.engine === engine && d.examples.includes(r.example))
-    return { ...d, declared:Object.fromEntries(selectedEngines.map(engine => [engine,selected(engine).filter(r => r.status === 'declared').length])), stale:Object.fromEntries(selectedEngines.map(engine => [engine,selected(engine).filter(r => r.status === 'match').map(r => r.example)])), insufficient:Object.fromEntries(selectedEngines.map(engine => [engine,selected(engine).filter(r => r.declaration?.insufficient).map(r => r.example)])) }
-  })
-  const reportDisagreements = examples.flatMap(e => {
-    const results = rows.filter(row => row.example === e.example)
-    if (new Set(results.map(row => row.reportClass)).size < 2) return []
-    return [{ example:e.example, section:e.section, classes:Object.fromEntries(results.map(row => [row.engine,row.reportClass])), codes:Object.fromEntries(results.map(row => [row.engine,row.diagnostics.map(d => d.code)])) }]
-  })
-  let suiteRevision
-  try { suiteRevision = execFileSync('git', ['rev-parse','HEAD'], { encoding:'utf8' }).trim() } catch { suiteRevision = 'unavailable' }
-  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, renderer:{ name:pkg.name, version:reference.version, dependency:reference.dependency }, engines, selectedEngines, notMeasuredEngines:engineNames.filter(e => !selectedEngines.includes(e)), engineConfigSha256:hash(readFileSync(new URL('../../resources/engines.json', import.meta.url))), startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), suiteRevision, declaredSha256:hash(declaredSource), declarations, totals, baselines, sections, rows, reportDisagreements }
+  const measured = runHtmlSuite(selectedEngines, { examples, format:'markdown', sourceKey:'markdown', differences, baselines, compare:comparison => applyDeclaration(compareHtml(comparison.expectedHtml, comparison.carveHtml), comparison.difference) })
+  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, ...measured, startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), declaredSha256:hash(declaredSource) }
 }

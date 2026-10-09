@@ -56,6 +56,8 @@ jobs:
         env:
           CARVE_PANDOC: .cache/pandoc/bin/pandoc
         run: npm run compat:commonmark -- --report=reports/commonmark.json
+      - name: Measure djot.js test examples (measurement, no gate)
+        run: npm run compat:djot -- --report=reports/djot.json
       - name: Build report website
         id: site
         run: |
@@ -72,6 +74,7 @@ jobs:
           path: |
             reports/latest.json
             reports/commonmark.json
+            reports/djot.json
             test-results/
           if-no-files-found: warn
       - name: Package website

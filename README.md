@@ -138,6 +138,32 @@ every example and totals by engine, baseline, and spec section.
 The site includes the report when present; `--commonmark=path` selects another file.
 See [vendored data provenance and license](tests/commonmark-spec/README.md).
 
+## Djot test examples
+
+This measurement lane imports the 268 HTML examples from the pinned djot.js
+functional suite with each selected Carve engine. It renders each engine's Carve
+output with the JavaScript reference renderer and compares it with upstream's
+expected HTML using the CommonMark lane's comparator. Both sides use generated
+mode for Djot section wrappers and heading IDs. This also ignores authored
+heading IDs, so the lane does not measure them. Divs are kept with their
+attributes on both sides, so a lost or extra fenced div counts as a mismatch.
+
+```sh
+npm run compat:djot -- --report=reports/djot.json
+```
+
+The default selects JavaScript, PHP, and Rust; `--engines=javascript` selects
+only the reference importer. Six examples with renderer options are excluded.
+The upstream file list excludes `filters.test`. The report records exclusions,
+totals by engine and file, report classes, honesty outcomes, and report class
+disagreements. There are no baselines or declared differences yet. An absent
+`tests/djot-tests/declared.json` means no declarations.
+
+Mismatches do not fail the CI measurement step. Invalid vendored data, engine
+pin mismatches, and crashed drivers fail the run. The site includes
+`reports/djot.json` when present; `--djot=path` selects another file.
+See [vendored data provenance and license](tests/djot-tests/README.md).
+
 ## Build and preview the website
 
 ```sh
