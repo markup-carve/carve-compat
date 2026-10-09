@@ -32,7 +32,7 @@ test('the site includes an optional CommonMark report and rejects stale or incon
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify(report))
     const spec = JSON.parse(readFileSync('tests/commonmark-spec/spec.json'))
     const counts = {match:652,mismatch:0,notComparable:0,failed:0}
-    const commonmark = { schemaVersion:1, kind:'commonmark-spec', spec:{sha256:hash('tests/commonmark-spec/spec.json'),examples:652}, engineConfigSha256:hash('resources/engines.json'), selectedEngines:['javascript'], engines:{javascript:{name:'Carve JavaScript'}}, totals:{javascript:{...counts,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:0}}}, rows:spec.map(e => ({engine:'javascript',example:e.example,section:e.section,status:'match',markdown:e.markdown,expectedHtml:e.html,carve:'',carveHtml:'',diagnostics:[],reportClass:'clean'})), sections:[...new Set(spec.map(e => e.section))].map(section => {const examples = spec.filter(e => e.section === section).length;return {section,examples,results:{javascript:{...counts,match:examples}}}}) }
+    const commonmark = { schemaVersion:1, kind:'commonmark-spec', spec:{sha256:hash('tests/commonmark-spec/spec.json'),examples:652}, engineConfigSha256:hash('resources/engines.json'), selectedEngines:['javascript'], engines:{javascript:{name:'Carve JavaScript'}}, reportDisagreements:[], totals:{javascript:{...counts,honesty:{reported:0,unassessed:0,'silent-loss':0,'false-loss':0,ok:652},mismatchByReport:{'names-loss':0,'unverified-only':0,clean:0}}}, rows:spec.map(e => ({engine:'javascript',example:e.example,section:e.section,status:'match',markdown:e.markdown,expectedHtml:e.html,carve:'',carveHtml:'',diagnostics:[],reportClass:'clean',honesty:'ok'})), sections:[...new Set(spec.map(e => e.section))].map(section => {const examples = spec.filter(e => e.section === section).length;return {section,examples,results:{javascript:{...counts,match:examples}}}}) }
     const custom = join(dir,'optional.json'), output = join(dir,'dist/commonmark.json')
     const build = (...args) => spawnSync(process.execPath, [fileURLToPath(new URL('../scripts/build-site.mjs', import.meta.url)),...args], { cwd:dir, encoding:'utf8' })
     const absent = build(); assert.equal(absent.status, 0, absent.stderr); assert.match(absent.stdout, /built without it/); assert.equal(existsSync(output), false)
@@ -49,10 +49,16 @@ test('the site includes an optional CommonMark report and rejects stale or incon
       {...commonmark,rows:[{...commonmark.rows[0],markdown:'wrong source'},...commonmark.rows.slice(1)]},
       {...commonmark,rows:[{...commonmark.rows[0],expectedHtml:'wrong expectation'},...commonmark.rows.slice(1)]},
       {...commonmark,engines:{}}, {...commonmark,sections:[]},
+      {...commonmark,reportDisagreements:{}},
+      {...commonmark,totals:{javascript:{...commonmark.totals.javascript,honesty:{reported:0,unassessed:0,'silent-loss':0,'false-loss':0,ok:651}}}},
+      {...commonmark,rows:[{...commonmark.rows[0],honesty:'false-loss'},...commonmark.rows.slice(1)]},
     ]) {
       writeFileSync(custom, JSON.stringify(broken))
       assert.equal(build('--commonmark=optional.json').status, 1)
     }
+    writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:'stale'}))
+    assert.equal(build().status, 1, 'Stale importer assessment must fail')
+    writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:hash('resources/importer-assessment.json')}))
     assert.equal(build().status, 0); assert.equal(existsSync(output), false, 'Absent report must remove a stale site artifact')
   } finally { rmSync(dir, { recursive:true, force:true }) }
 })
