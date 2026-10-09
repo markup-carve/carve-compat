@@ -2,8 +2,9 @@ import assert from 'node:assert/strict'
 import { isDeepStrictEqual } from 'node:util'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { parse, resolve, renderHtml } from '@markup-carve/carve'
+import { parse as parseDjot, renderHTML } from '@djot/djot'
 import { context, semantics, parseHtml, fromHast, coalesce } from './trees.mjs'
 import { engineNames, engineMetadata } from './engines.mjs'
 import { reportClass, honesty, honestyOutcomes, runImportBatch } from './importer-report.mjs'
@@ -15,6 +16,33 @@ const hash = value => createHash('sha256').update(value).digest('hex')
 const loss = d => ['degraded','dropped'].includes(d.fidelity)
 const counts = () => ({ match:0, mismatch:0, notComparable:0, failed:0 })
 const countKey = status => status === 'not-comparable' ? 'notComparable' : status
+const pins = JSON.parse(readFileSync(new URL('../../resources/engines.json', import.meta.url)))
+const pandocArgs = ['-f','commonmark','-t','djot','--wrap=preserve']
+
+export function runPandocDjotBaseline(examples) {
+  const binary = process.env.CARVE_PANDOC ?? '.cache/pandoc/bin/pandoc'
+  const options = { encoding:'utf8', timeout:15000, maxBuffer:8*1024*1024 }
+  const version = spawnSync(binary, ['--version'], options)
+  if (version.error || version.status !== 0) throw new Error(`Pandoc baseline infrastructure error: ${version.error?.message ?? version.stderr}`)
+  assert.equal(version.stdout.split(/\r?\n/)[0], `pandoc ${pins.pandoc.version}`, 'Pandoc baseline infrastructure error: version differs from resources/engines.json')
+  const pkg = JSON.parse(readFileSync(new URL('../../node_modules/@djot/djot/package.json', import.meta.url)))
+  const baseline = { converter:{ name:'pandoc', version:pins.pandoc.version, command:pandocArgs.join(' ') }, renderer:{ name:pkg.name, version:pkg.version }, totals:counts(), rows:[] }
+  for (const e of examples) {
+    const row = { example:e.example, section:e.section, status:'failed', output:'', html:'' }
+    try {
+      const converted = spawnSync(binary, pandocArgs, { ...options, input:e.markdown })
+      row.output = converted.stdout ?? ''
+      if (converted.error || converted.status !== 0) row.error = converted.stderr || converted.error?.message || `Pandoc exited with status ${converted.status}`
+      else {
+        row.html = renderHTML(parseDjot(row.output))
+        row.status = compareHtml(e.html, row.html).status
+      }
+    } catch (error) { row.error = `Pandoc to Djot baseline failed: ${error.message}` }
+    baseline.rows.push(row)
+    baseline.totals[countKey(row.status)]++
+  }
+  return baseline
+}
 
 export function validateSpec(source = readFileSync(specPath)) {
   const examples = JSON.parse(source.toString())
@@ -53,16 +81,21 @@ export function compareHtml(expectedHtml, carveHtml) {
   return { status:expectedContext.diagnostics.some(loss) ? 'not-comparable' : isDeepStrictEqual(expected, actual) ? 'match' : 'mismatch', expected, actual }
 }
 
-export function runCommonmarkSpec(selectedEngines = engineNames) {
+export function runCommonmarkSpec(selectedEngines = engineNames, { baselines:selectedBaselines = [] } = {}) {
   const startedAt = new Date(), started = performance.now(), examples = validateSpec()
   assert.ok(selectedEngines.length > 0, 'No engines selected')
   assert.equal(new Set(selectedEngines).size, selectedEngines.length, 'Duplicate selected engine')
   for (const engine of selectedEngines) assert.ok(engineNames.includes(engine), `Unknown engine: ${engine}`)
+  assert.ok(Array.isArray(selectedBaselines), 'Baselines must be an array')
+  assert.equal(new Set(selectedBaselines).size, selectedBaselines.length, 'Duplicate selected baseline')
+  for (const baseline of selectedBaselines) assert.equal(baseline, 'pandoc-djot', `Unknown baseline: ${baseline}`)
+  const baselines = Object.fromEntries(selectedBaselines.map(baseline => [baseline,runPandocDjotBaseline(examples)]))
   const metadata = Object.fromEntries(selectedEngines.map(engine => [engine,engineMetadata(engine)]))
   const engines = Object.fromEntries(Object.entries(metadata).map(([engine,{root,binary,...meta}]) => [engine,meta]))
   const reference = engineMetadata('javascript'), pkg = JSON.parse(readFileSync(new URL('../../node_modules/@markup-carve/carve/package.json', import.meta.url)))
   const totals = Object.fromEntries(selectedEngines.map(engine => [engine,{ ...counts(), honesty:Object.fromEntries(honestyOutcomes.map(outcome => [outcome,0])), mismatchByReport:{ 'names-loss':0, 'unverified-only':0, clean:0 } }]))
-  const sections = [...new Set(examples.map(e => e.section))].map(section => ({ section, examples:examples.filter(e => e.section === section).length, results:Object.fromEntries(selectedEngines.map(engine => [engine,counts()])) }))
+  const sections = [...new Set(examples.map(e => e.section))].map(section => ({ section, examples:examples.filter(e => e.section === section).length, results:Object.fromEntries(selectedEngines.map(engine => [engine,counts()])), baselines:Object.fromEntries(selectedBaselines.map(baseline => [baseline,counts()])) }))
+  for (const [baseline,result] of Object.entries(baselines)) for (const row of result.rows) sections.find(s => s.section === row.section).baselines[baseline][countKey(row.status)]++
   const rows = []
   for (const engine of selectedEngines) {
     const batch = runImportBatch(engine, examples.map(e => e.markdown))
@@ -92,5 +125,5 @@ export function runCommonmarkSpec(selectedEngines = engineNames) {
   })
   let suiteRevision
   try { suiteRevision = execFileSync('git', ['rev-parse','HEAD'], { encoding:'utf8' }).trim() } catch { suiteRevision = 'unavailable' }
-  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, renderer:{ name:pkg.name, version:reference.version, dependency:reference.dependency }, engines, selectedEngines, notMeasuredEngines:engineNames.filter(e => !selectedEngines.includes(e)), engineConfigSha256:hash(readFileSync(new URL('../../resources/engines.json', import.meta.url))), startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), suiteRevision, totals, sections, rows, reportDisagreements }
+  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, renderer:{ name:pkg.name, version:reference.version, dependency:reference.dependency }, engines, selectedEngines, notMeasuredEngines:engineNames.filter(e => !selectedEngines.includes(e)), engineConfigSha256:hash(readFileSync(new URL('../../resources/engines.json', import.meta.url))), startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), suiteRevision, totals, baselines, sections, rows, reportDisagreements }
 }

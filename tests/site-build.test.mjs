@@ -56,6 +56,38 @@ test('the site includes an optional CommonMark report and rejects stale or incon
       writeFileSync(custom, JSON.stringify(broken))
       assert.equal(build('--commonmark=optional.json').status, 1)
     }
+    const statuses = [['match','match'],['mismatch','mismatch'],['not-comparable','notComparable'],['failed','failed']]
+    const count = rows => Object.fromEntries(statuses.map(([status,key]) => [key,rows.filter(r => r.status === status).length]))
+    const rows = spec.map(e => ({example:e.example,section:e.section,status:statuses[e.example % 4][0],output:'Djot source',html:'<p>Rendered Djot</p>'}))
+    const baseline = {converter:{name:'pandoc',version:'3.11',command:'-f commonmark -t djot --wrap=preserve'},renderer:{name:'@djot/djot',version:'0.3.2'},totals:count(rows),rows}
+    const withBaseline = {...commonmark,baselines:{'pandoc-djot':baseline},sections:commonmark.sections.map(s => ({...s,baselines:{'pandoc-djot':count(rows.filter(r => r.section === s.section))}}))}
+    writeFileSync(custom, JSON.stringify(withBaseline))
+    const includedBaseline = build('--commonmark=optional.json')
+    assert.equal(includedBaseline.status, 0, includedBaseline.stderr)
+    assert.deepEqual(JSON.parse(readFileSync(output)), withBaseline)
+    const baselineReport = patch => ({...withBaseline,baselines:{'pandoc-djot':{...baseline,...patch}}})
+    const wrongSection = structuredClone(withBaseline); wrongSection.sections[0].baselines['pandoc-djot'].match++
+    const missingSection = structuredClone(withBaseline); delete missingSection.sections[0].baselines
+    for (const [broken,message] of [
+      [baselineReport({totals:{...baseline.totals,match:653}}), /pandoc-djot: inconsistent match count/],
+      [baselineReport({rows:rows.slice(1)}), /pandoc-djot: incomplete rows/],
+      [baselineReport({rows:[rows[0],...rows.slice(0,-1)]}), /pandoc-djot: duplicate example/],
+      [baselineReport({rows:[{...rows[0],status:'other'},...rows.slice(1)]}), /Invalid CommonMark baseline status/],
+      [baselineReport({rows:[{...rows[0],section:'other'},...rows.slice(1)]}), /Invalid CommonMark baseline example or section/],
+      [baselineReport({rows:[{...rows[0],html:null},...rows.slice(1)]}), /baseline row missing html/],
+      [baselineReport({rows:[{...rows[0],honesty:'ok'},...rows.slice(1)]}), /baseline has no fidelity report/],
+      [wrongSection, /pandoc-djot\/Tabs: inconsistent match count/],
+      [missingSection, /Invalid CommonMark section baselines/],
+    ]) {
+      writeFileSync(custom, JSON.stringify(broken))
+      const result = build('--commonmark=optional.json')
+      assert.equal(result.status, 1)
+      assert.match(result.stderr, message)
+    }
+    const withoutBaseline = {...commonmark,baselines:{},sections:commonmark.sections.map(s => ({...s,baselines:{}}))}
+    writeFileSync(custom, JSON.stringify(withoutBaseline))
+    assert.equal(build('--commonmark=optional.json').status, 0)
+    assert.deepEqual(JSON.parse(readFileSync(output)).baselines, {})
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:'stale'}))
     assert.equal(build().status, 1, 'Stale importer assessment must fail')
     writeFileSync(join(dir,'reports/latest.json'), JSON.stringify({...report,importerAssessmentSha256:hash('resources/importer-assessment.json')}))
