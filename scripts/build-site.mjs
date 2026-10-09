@@ -1,7 +1,12 @@
-import { readFileSync, mkdirSync, cpSync, writeFileSync } from 'node:fs'
+import { readFileSync, mkdirSync, cpSync, writeFileSync, existsSync, rmSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-const reportPath = process.argv[2] ?? 'reports/latest.json'
+let reportPath = 'reports/latest.json', commonmarkPath = 'reports/commonmark.json', positional = false
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith('--commonmark=') && arg.slice('--commonmark='.length)) commonmarkPath = arg.slice('--commonmark='.length)
+  else if (!arg.startsWith('-') && !positional) { reportPath = arg; positional = true }
+  else throw new Error(`Unknown argument: ${arg}`)
+}
 const report = JSON.parse(readFileSync(reportPath))
 assert.equal(report.schemaVersion, 1)
 assert.ok(report.generatedAt && report.engine && report.schema, 'Generate a fresh provenance-bearing report before building the site')
@@ -13,6 +18,44 @@ const hash = path => createHash('sha256').update(readFileSync(path)).digest('hex
 assert.equal(report.schema.sha256, hash('resources/ast-schema.json'), 'Schema changed after this report was measured')
 for (const file of ['cases.json', 'losses.json']) assert.equal(report.fixtureHashes?.[file], hash(`tests/external-compat/${file}`), `${file} changed after this report was measured`)
 if(report.engineConfigSha256)assert.equal(report.engineConfigSha256,hash('resources/engines.json'),'Engine pins changed after this report was measured')
+let commonmark
+if (existsSync(commonmarkPath)) {
+  commonmark = JSON.parse(readFileSync(commonmarkPath))
+  assert.equal(commonmark.schemaVersion, 1)
+  assert.equal(commonmark.kind, 'commonmark-spec')
+  assert.equal(commonmark.spec?.sha256, hash('tests/commonmark-spec/spec.json'), 'CommonMark spec changed after this report was measured')
+  assert.equal(commonmark.engineConfigSha256, hash('resources/engines.json'), 'Engine pins changed after the CommonMark measurement')
+  const spec = JSON.parse(readFileSync('tests/commonmark-spec/spec.json')), byExample = new Map(spec.map(e => [e.example,e]))
+  assert.equal(commonmark.spec.examples, spec.length, 'Incomplete CommonMark spec measurement')
+  assert.ok(Array.isArray(commonmark.rows) && Array.isArray(commonmark.selectedEngines) && commonmark.selectedEngines.length > 0)
+  assert.equal(new Set(commonmark.selectedEngines).size, commonmark.selectedEngines.length)
+  assert.ok(commonmark.rows.every(r => commonmark.selectedEngines.includes(r.engine) && ['match','mismatch','not-comparable','failed'].includes(r.status)), 'Invalid CommonMark result row')
+  assert.deepEqual(Object.keys(commonmark.totals).sort(), [...commonmark.selectedEngines].sort())
+  const statuses = [['match','match'],['mismatch','mismatch'],['not-comparable','notComparable'],['failed','failed']]
+  for (const row of commonmark.rows) {
+    assert.equal(row.section, byExample.get(row.example)?.section, 'Invalid CommonMark example or section')
+    assert.equal(row.markdown, byExample.get(row.example)?.markdown, 'CommonMark Markdown differs from the spec')
+    assert.equal(row.expectedHtml, byExample.get(row.example)?.html, 'CommonMark expected HTML differs from the spec')
+    for (const key of ['markdown','expectedHtml','carve','carveHtml']) assert.equal(typeof row[key], 'string', `CommonMark row missing ${key}`)
+    assert.ok(Array.isArray(row.diagnostics) && row.diagnostics.every(d => typeof d?.code === 'string'), 'Invalid CommonMark diagnostics')
+    assert.ok(['names-loss','unverified-only','clean'].includes(row.reportClass), 'Invalid CommonMark report class')
+  }
+  for (const engine of commonmark.selectedEngines) {
+    const rows = commonmark.rows.filter(r => r.engine === engine), totals = commonmark.totals[engine]
+    assert.equal(typeof commonmark.engines?.[engine]?.name, 'string', `Missing CommonMark engine metadata: ${engine}`)
+    assert.equal(rows.length, spec.length, `CommonMark ${engine}: incomplete rows`)
+    assert.equal(new Set(rows.map(r => r.example)).size, spec.length, `CommonMark ${engine}: duplicate example`)
+    for (const [status,key] of statuses) assert.equal(totals[key], rows.filter(r => r.status === status).length, `CommonMark ${engine}: inconsistent ${key} count`)
+    assert.ok(rows.filter(r => r.status === 'mismatch').every(r => ['names-loss','unverified-only','clean'].includes(r.reportClass)), 'Invalid CommonMark mismatch report class')
+    for (const cls of ['names-loss','unverified-only','clean']) assert.equal(totals.mismatchByReport?.[cls], rows.filter(r => r.status === 'mismatch' && r.reportClass === cls).length, `CommonMark ${engine}: inconsistent ${cls} count`)
+  }
+  assert.ok(Array.isArray(commonmark.sections), 'Missing CommonMark section results')
+  assert.deepEqual(commonmark.sections.map(s => s.section), [...new Set(spec.map(e => e.section))], 'Invalid CommonMark section order')
+  for (const s of commonmark.sections) {
+    assert.equal(s.examples, spec.filter(e => e.section === s.section).length)
+    for (const engine of commonmark.selectedEngines) for (const [status,key] of statuses) assert.equal(s.results?.[engine]?.[key], commonmark.rows.filter(r => r.engine === engine && r.section === s.section && r.status === status).length, `CommonMark ${engine}/${s.section}: inconsistent ${key} count`)
+  }
+}
 const tools = JSON.parse(readFileSync('site/tools.json'))
 assert.ok([...report.selected, ...report.notMeasured].every(t => tools.some(tool => tool.id === t)))
 mkdirSync('dist', { recursive: true })
@@ -22,9 +65,12 @@ assert.ok(readFileSync('site/index.html','utf8').includes('href="style.css"'),'S
 const html=readFileSync('site/index.html','utf8').replace('src="app.js"',`src="app.js?v=${hash('site/app.js').slice(0,12)}"`).replace('href="style.css"',`href="style.css?v=${hash('site/style.css').slice(0,12)}"`)
 writeFileSync('dist/index.html',html)
 writeFileSync('dist/report.json', JSON.stringify(report, null, 2) + '\n')
+if (commonmark) writeFileSync('dist/commonmark.json', JSON.stringify(commonmark, null, 2) + '\n')
+else rmSync('dist/commonmark.json', { force:true })
 writeFileSync('dist/manifest.json', JSON.stringify({ generatedAt: report.generatedAt, runUrl: process.env.GITHUB_RUN_ID ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : null, tools }, null, 2) + '\n')
 cpSync('resources/engines.json','dist/engines.json')
 cpSync('resources/ast-schema.json', 'dist/ast-schema.json')
 cpSync('tests/external-compat/cases.json', 'dist/cases.json')
 cpSync('tests/external-compat/losses.json', 'dist/losses.json')
 console.log(`Built site from ${report.rows.length} measured cases (${report.failed} failures).`)
+console.log(commonmark ? `Included CommonMark report from ${commonmarkPath} (${commonmark.rows.length} examples across engines).` : `CommonMark report absent at ${commonmarkPath}; built without it.`)
