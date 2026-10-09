@@ -26,7 +26,7 @@ function fillOverview(manifest) {
   const pin = report.engine.dependency.split('#')[1]; if (/^[a-f0-9]{40}$/.test(pin)) engine.href = `https://github.com/markup-carve/carve-js/commit/${pin}`
   if (manifest.runUrl) $('#run-link').href = manifest.runUrl
   for(const id of report.selectedEngines??['javascript']){const meta=report.engines?.[id]??report.engine;const rows=report.rows.filter(r=>(r.engine??'javascript')===id);const card=node('article',undefined,'engine-card');card.append(node('h3',meta.name??id),ring(rows.filter(r=>r.status==='passed').length,rows.length),node('p',`${rows.filter(r=>r.status==='passed').length} / ${rows.length} comparisons passed`),node('p',meta.version??meta.error??'Version unavailable','version'),...(meta.runtime?[node('p',meta.runtime,'version')]:[]) );$('#engine-cards').append(card);const option=node('option',meta.name??id);option.value=id;$('#engine-filter').append(option)}
-  const pairs = [['Suite revision', report.suiteRevision], ['Reference engine pin', report.engine.dependency], ['Schema revision', report.schema.revision], ['Engine config SHA-256',report.engineConfigSha256??'Unavailable'], ['Schema SHA-256', report.schema.sha256], ['cases.json SHA-256', report.fixtureHashes['cases.json']], ['losses.json SHA-256', report.fixtureHashes['losses.json']], ['Comparison duration', `${(report.durationMs / 1000).toFixed(1)} seconds`], ['Unmeasured targets', report.notMeasured.join(', ') || 'None']]
+  const pairs = [['Suite revision', report.suiteRevision], ['Reference engine pin', report.engine.dependency], ['Schema revision', report.schema.revision], ['Engine config SHA-256',report.engineConfigSha256??'Unavailable'], ['Importer assessment SHA-256',report.importerAssessmentSha256??'Unavailable'], ['Schema SHA-256', report.schema.sha256], ['cases.json SHA-256', report.fixtureHashes['cases.json']], ['losses.json SHA-256', report.fixtureHashes['losses.json']], ['Comparison duration', `${(report.durationMs / 1000).toFixed(1)} seconds`], ['Unmeasured targets', report.notMeasured.join(', ') || 'None']]
   for(const [id,meta]of Object.entries(report.engines??{}))pairs.push([`${id} revision`,meta.revision??meta.error??'Unavailable'])
   for (const [key, value] of pairs) append($('#provenance'), node('dt', key), node('dd', value))
   for (const tool of tools) {
@@ -56,6 +56,7 @@ function showDetail(row, button, scroll = true) {
   $('#detail-checks').textContent = (row.checks ?? []).map(c => `✓ ${checkLabels[c] ?? c}`).join('  ·  ')
   const panes = $('#detail-panes'); panes.replaceChildren(); const e = row.evidence ?? {}
   if (e.source !== undefined) panes.append(pane(`Input source · ${e.sourceFormat}`, e.source, true))
+  if (row.importer) panes.append(pane('Importer report', `Report class: ${row.importer.reportClass}\nHonesty: ${row.importer.honesty}\nDiagnostic codes: ${row.importer.codes.join(', ') || 'None'}`, true))
   if(e.scope && row.status==='passed')$('#detail-summary').textContent=`This fixture preserved its authored AST fields through the listed interchange checks. Scope: ${e.scope}. Each engine checks source changes against declared before/after values; this does not claim a lossless source round trip. Conversion-diagnostic checks use the JavaScript reference.`
   if(e.sourceChanges)panes.append(pane('Engine source before/after changes',e.sourceChanges))
   if(e.expectedAst)panes.append(pane('Authored AST expectation',e.expectedAst))
@@ -117,10 +118,19 @@ function commonmarkTable(selector, caption, headers, rows) {
 function fillCommonmark(data) {
   if (data.schemaVersion !== 1 || data.kind !== 'commonmark-spec' || !Array.isArray(data.rows) || !Array.isArray(data.sections) || !Array.isArray(data.selectedEngines)) throw new Error('Unsupported CommonMark report')
   const engines = data.selectedEngines, name = engine => data.engines[engine]?.name ?? engine
-  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent'], engines.map(engine => {
+  const outcomes = ['reported','unassessed','silent-loss','false-loss','ok']
+  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent',...outcomes], engines.map(engine => {
     const t = data.totals[engine]
-    return [name(engine),t.match,t.mismatch,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean]
+    return [name(engine),t.match,t.mismatch,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean,...outcomes.map(outcome => t.honesty?.[outcome] ?? 'Not measured')]
   }))
+  const disagreements = $('#commonmark-disagreements'); disagreements.replaceChildren()
+  for (const row of data.reportDisagreements ?? []) {
+    const item = node('li'), link = node('a', `Example ${row.example}`)
+    link.href = `https://spec.commonmark.org/0.31.2/#example-${row.example}`
+    item.append(link, node('span', ` · ${row.section} · ${engines.map(engine => `${name(engine)}: ${row.classes[engine]} (codes: ${row.codes[engine].join(', ') || 'None'})`).join(' · ')}`))
+    disagreements.append(item)
+  }
+  if (!disagreements.children.length) disagreements.append(node('li', 'No report class disagreements among the selected engines.'))
   $('#commonmark-silent').textContent = `Silent losses with clean reports: ${engines.map(engine => `${name(engine)} ${data.totals[engine].mismatchByReport.clean}`).join(' · ')}`
   commonmarkTable('#commonmark-sections', 'Matches / comparable examples by spec section', ['Section',...engines.map(name)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch}` })]))
   const filter = $('#commonmark-engine-filter')

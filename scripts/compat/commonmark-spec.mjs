@@ -2,11 +2,12 @@ import assert from 'node:assert/strict'
 import { isDeepStrictEqual } from 'node:util'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { execFileSync, spawnSync } from 'node:child_process'
-import { fileURLToPath } from 'node:url'
-import { migrateMarkdown, parse, resolve, renderHtml } from '@markup-carve/carve'
+import { execFileSync } from 'node:child_process'
+import { parse, resolve, renderHtml } from '@markup-carve/carve'
 import { context, semantics, parseHtml, fromHast, coalesce } from './trees.mjs'
 import { engineNames, engineMetadata } from './engines.mjs'
+import { reportClass, honesty, honestyOutcomes, runImportBatch } from './importer-report.mjs'
+export { reportClass } from './importer-report.mjs'
 
 export const specSha256 = 'd431b29d97b6f73e69d547109cf5081578fac931e72afe95639ebe766c1b2a20'
 const specPath = new URL('../../tests/commonmark-spec/spec.json', import.meta.url)
@@ -52,21 +53,6 @@ export function compareHtml(expectedHtml, carveHtml) {
   return { status:expectedContext.diagnostics.some(loss) ? 'not-comparable' : isDeepStrictEqual(expected, actual) ? 'match' : 'mismatch', expected, actual }
 }
 
-export function reportClass(diagnostics) {
-  if (diagnostics.some(d => loss(d) && d.code !== 'fidelity-unverified')) return 'names-loss'
-  return diagnostics.some(d => d.code === 'fidelity-unverified') ? 'unverified-only' : 'clean'
-}
-
-function validateImport(result) {
-  assert.ok(result && typeof result === 'object', 'Invalid migration driver result')
-  if (Object.hasOwn(result, 'error')) assert.equal(typeof result.error, 'string', 'Invalid migration error')
-  else {
-    assert.equal(typeof result.value, 'string', 'Missing migrated Carve source')
-    assert.ok(Array.isArray(result.report?.diagnostics), 'Missing migration diagnostics')
-  }
-  return result
-}
-
 export function runCommonmarkSpec(selectedEngines = engineNames) {
   const startedAt = new Date(), started = performance.now(), examples = validateSpec()
   assert.ok(selectedEngines.length > 0, 'No engines selected')
@@ -75,28 +61,13 @@ export function runCommonmarkSpec(selectedEngines = engineNames) {
   const metadata = Object.fromEntries(selectedEngines.map(engine => [engine,engineMetadata(engine)]))
   const engines = Object.fromEntries(Object.entries(metadata).map(([engine,{root,binary,...meta}]) => [engine,meta]))
   const reference = engineMetadata('javascript'), pkg = JSON.parse(readFileSync(new URL('../../node_modules/@markup-carve/carve/package.json', import.meta.url)))
-  const totals = Object.fromEntries(selectedEngines.map(engine => [engine,{ ...counts(), mismatchByReport:{ 'names-loss':0, 'unverified-only':0, clean:0 } }]))
+  const totals = Object.fromEntries(selectedEngines.map(engine => [engine,{ ...counts(), honesty:Object.fromEntries(honestyOutcomes.map(outcome => [outcome,0])), mismatchByReport:{ 'names-loss':0, 'unverified-only':0, clean:0 } }]))
   const sections = [...new Set(examples.map(e => e.section))].map(section => ({ section, examples:examples.filter(e => e.section === section).length, results:Object.fromEntries(selectedEngines.map(engine => [engine,counts()])) }))
   const rows = []
   for (const engine of selectedEngines) {
-    let batch
-    if (engine === 'php') {
-      batch = JSON.parse(execFileSync(process.env.CARVE_PHP ?? 'php', [fileURLToPath(new URL('./php-migrate-driver.php', import.meta.url))], { input:JSON.stringify(examples.map(e => e.markdown)), encoding:'utf8', timeout:120000, maxBuffer:64*1024*1024 }))
-      assert.ok(Array.isArray(batch) && batch.length === examples.length, 'Invalid PHP migration batch')
-      batch.forEach(validateImport)
-    }
+    const batch = runImportBatch(engine, examples.map(e => e.markdown))
     for (const [i,e] of examples.entries()) {
-      let result
-      if (engine === 'javascript') {
-        try { result = migrateMarkdown(e.markdown) } catch (error) { result = { error:error.message } }
-      } else if (engine === 'php') result = batch[i]
-      else {
-        const native = spawnSync(metadata[engine].binary, ['migrate','--from','markdown','--report','-'], { input:e.markdown, encoding:'utf8', timeout:15000, maxBuffer:64*1024*1024 })
-        if (native.error) throw native.error
-        assert.equal(native.signal, null, `Rust migration driver crashed: ${native.signal}`)
-        result = native.status === 0 ? { value:native.stdout, report:JSON.parse(native.stderr) } : { error:native.stderr.trim() || `Rust migration exited ${native.status}` }
-      }
-      validateImport(result)
+      const result = batch[i]
       const diagnostics = result.report?.diagnostics ?? []
       const row = { engine, example:e.example, section:e.section, status:'failed', markdown:e.markdown, expectedHtml:e.html, carve:result.value ?? '', carveHtml:'', diagnostics, reportClass:reportClass(diagnostics) }
       if (Object.hasOwn(result, 'error')) row.error = result.error
@@ -106,13 +77,20 @@ export function runCommonmarkSpec(selectedEngines = engineNames) {
           row.status = compareHtml(e.html, row.carveHtml).status
         } catch (error) { row.error = `Rendering the imported Carve failed: ${error.message}` }
       }
+      row.honesty = ['match','mismatch'].includes(row.status) ? honesty(row.status === 'match', row.reportClass) : null
+      if (row.honesty !== null) totals[engine].honesty[row.honesty]++
       rows.push(row)
       totals[engine][countKey(row.status)]++
       if (row.status === 'mismatch') totals[engine].mismatchByReport[row.reportClass]++
       sections.find(s => s.section === e.section).results[engine][countKey(row.status)]++
     }
   }
+  const reportDisagreements = examples.flatMap(e => {
+    const results = rows.filter(row => row.example === e.example)
+    if (new Set(results.map(row => row.reportClass)).size < 2) return []
+    return [{ example:e.example, section:e.section, classes:Object.fromEntries(results.map(row => [row.engine,row.reportClass])), codes:Object.fromEntries(results.map(row => [row.engine,row.diagnostics.map(d => d.code)])) }]
+  })
   let suiteRevision
   try { suiteRevision = execFileSync('git', ['rev-parse','HEAD'], { encoding:'utf8' }).trim() } catch { suiteRevision = 'unavailable' }
-  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, renderer:{ name:pkg.name, version:reference.version, dependency:reference.dependency }, engines, selectedEngines, notMeasuredEngines:engineNames.filter(e => !selectedEngines.includes(e)), engineConfigSha256:hash(readFileSync(new URL('../../resources/engines.json', import.meta.url))), startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), suiteRevision, totals, sections, rows }
+  return { schemaVersion:1, kind:'commonmark-spec', spec:{ version:'0.31.2', source:'https://spec.commonmark.org/0.31.2/spec.json', sha256:specSha256, examples:examples.length }, renderer:{ name:pkg.name, version:reference.version, dependency:reference.dependency }, engines, selectedEngines, notMeasuredEngines:engineNames.filter(e => !selectedEngines.includes(e)), engineConfigSha256:hash(readFileSync(new URL('../../resources/engines.json', import.meta.url))), startedAt:startedAt.toISOString(), generatedAt:new Date().toISOString(), durationMs:Math.round(performance.now() - started), suiteRevision, totals, sections, rows, reportDisagreements }
 }

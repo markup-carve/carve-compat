@@ -2,12 +2,13 @@ import { test, expect } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 const measured = JSON.parse(readFileSync('dist/report.json'))
 const report = { ...measured, selected: ['mdast'], notMeasured: ['hast', 'commonmark', 'cmark', 'djot', 'docutils', 'asciidoctor', 'md4c'], passed: 2, failed: 0, rows: [
-  { tool: 'mdast', case: 'inline-structure', kind: 'supported', status: 'passed', version: 'browser-fixture', checks: ['ast-schema'], diagnostics: [], evidence: { sourceFormat: 'markdown', source: '**word**', carve: '*word*', ast: { type: 'document', children: [] }, exportedSource: '**word**' } },
+  { tool: 'mdast', case: 'inline-structure', kind: 'supported', status: 'passed', version: 'browser-fixture', checks: ['ast-schema'], importer:{reportClass:'unverified-only',honesty:'ok',codes:['fidelity-unverified']}, diagnostics: [], evidence: { sourceFormat: 'markdown', source: '**word**', carve: '*word*', ast: { type: 'document', children: [] }, exportedSource: '**word**' } },
   { tool: 'mdast', case: 'unsupported-field', kind: 'loss', status: 'passed', version: 'browser-fixture', checks: ['loss-diagnostic'], diagnostics: [{ path: '/attrs', code: 'unsupported-field', fidelity: 'dropped', message: 'Browser fixture diagnostic.' }], evidence: { sourceFormat: 'carve', source: 'word', ast: { type: 'document', children: [] }, expected: { path: '/attrs', code: 'unsupported-field', fidelity: 'dropped' }, retained: 'word' } },
 ] }
 const commonmark = {
   schemaVersion:1, kind:'commonmark-spec', spec:{version:'0.31.2',examples:652}, selectedEngines:['javascript','php'], engines:{javascript:{name:'Carve JavaScript'},php:{name:'Carve PHP'}},
-  totals:{javascript:{match:0,mismatch:1,notComparable:0,failed:1,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}},php:{match:0,mismatch:1,notComparable:0,failed:0,mismatchByReport:{'names-loss':1,'unverified-only':0,clean:0}}},
+  reportDisagreements:[{example:485,section:'Links',classes:{javascript:'clean',php:'names-loss'},codes:{javascript:[],php:['link-loss']}}],
+  totals:{javascript:{honesty:{reported:0,unassessed:0,'silent-loss':1,'false-loss':0,ok:0},match:0,mismatch:1,notComparable:0,failed:1,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}},php:{honesty:{reported:1,unassessed:0,'silent-loss':0,'false-loss':0,ok:0},match:0,mismatch:1,notComparable:0,failed:0,mismatchByReport:{'names-loss':1,'unverified-only':0,clean:0}}},
   sections:[{section:'Links',examples:2,results:{javascript:{match:0,mismatch:1,notComparable:0,failed:1},php:{match:0,mismatch:1,notComparable:0,failed:0}}}],
   rows:[
     {engine:'javascript',example:485,section:'Links',status:'mismatch',markdown:'[foo]()',expectedHtml:'<p><a href="">foo</a></p>',carve:'foo',carveHtml:'<p>foo</p>',diagnostics:[],reportClass:'clean'},
@@ -21,6 +22,12 @@ test('CommonMark measurement shows totals, section counts, failures and engine f
   await expect(page.locator('#commonmark-title')).toHaveText('CommonMark spec examples')
   await expect(page.locator('#commonmark-totals tbody tr')).toHaveCount(2)
   await expect(page.locator('#commonmark-totals thead')).toContainText('Clean report = silent')
+  for (const outcome of ['reported','unassessed','silent-loss','false-loss','ok']) await expect(page.locator('#commonmark-totals thead')).toContainText(outcome)
+  await expect(page.locator('#commonmark-totals tbody tr').first().locator('td').nth(9)).toHaveText('1')
+  await expect(page.locator('#commonmark-disagreements a')).toHaveAttribute('href', 'https://spec.commonmark.org/0.31.2/#example-485')
+  await expect(page.locator('#commonmark-disagreements')).toContainText('Links')
+  await expect(page.locator('#commonmark-disagreements')).toContainText('Carve JavaScript: clean')
+  await expect(page.locator('#commonmark-disagreements')).toContainText('Carve PHP: names-loss (codes: link-loss)')
   await expect(page.locator('#commonmark-silent')).toContainText('Carve JavaScript 1')
   await expect(page.locator('#commonmark-sections tbody')).toContainText('0/1')
   await expect(page.locator('#commonmark-examples>li')).toHaveCount(3)
@@ -40,10 +47,14 @@ test('CommonMark Markdown and HTML evidence stays text', async ({ page }) => {
   const changed = structuredClone(commonmark)
   changed.rows[0].markdown = payload; changed.rows[0].expectedHtml = payload
   changed.rows[0].carve = payload; changed.rows[0].carveHtml = payload
+  changed.reportDisagreements[0].section = payload
+  changed.reportDisagreements[0].classes.javascript = payload
+  changed.reportDisagreements[0].codes.php = [payload]
   await page.route('**/commonmark.json', route => route.fulfill({json:changed}))
   await page.goto('/'); await page.selectOption('#commonmark-engine-filter', 'javascript')
   await page.locator('#commonmark-examples>li>details>summary').first().click()
   for (const pre of await page.locator('#commonmark-examples>li').first().locator('pre').all()) await expect(pre).toHaveText(payload)
+  await expect(page.locator('#commonmark-disagreements')).toContainText(payload)
   await expect(page.locator('#commonmark img, #commonmark script')).toHaveCount(0)
   expect(await page.evaluate(() => window.commonmarkInjected)).toBeUndefined()
 })
@@ -71,6 +82,9 @@ test('dashboard renders measured totals, versions, evidence and filters', async 
   await expect(page.locator('#detail-title')).toHaveText('inline-structure')
   await expect(page.locator('#detail-panes')).toContainText('Authored Carve expectation')
   await expect(page.locator('#detail-panes')).toContainText('Mapped Carve AST')
+  await expect(page.locator('#detail-panes')).toContainText('Report class: unverified-only')
+  await expect(page.locator('#detail-panes')).toContainText('Honesty: ok')
+  await expect(page.locator('#detail-panes')).toContainText('Diagnostic codes: fidelity-unverified')
   const url = page.url(); await page.keyboard.press('Escape'); await expect(page.locator('#detail')).toBeHidden()
   await page.goto(url); await expect(page.locator('#detail-title')).toHaveText('inline-structure')
   await page.click('#reset'); await page.selectOption('#kind-filter', 'loss')
@@ -87,6 +101,7 @@ test('dashboard renders measured totals, versions, evidence and filters', async 
 test('failure evidence and source text are shown without executing HTML', async ({ page }) => {
   const changed = structuredClone(report), row = changed.rows.find(r => r.kind === 'supported')
   row.status = 'failed'; row.error = 'Deliberate browser-test failure'; row.evidence.source = '<img src=x onerror="window.fixtureExecuted=true">'
+  row.importer = {reportClass:'names-loss',honesty:'false-loss',codes:['<img src=x onerror=window.fixtureExecuted=true>']}
   changed.passed--; changed.failed++
   await page.route('**/report.json', route => route.fulfill({ json:changed }))
   await page.goto('/')
@@ -95,6 +110,7 @@ test('failure evidence and source text are shown without executing HTML', async 
   await page.locator('#matrix tbody button').first().click()
   await expect(page.locator('#detail-summary')).toHaveText(row.error)
   await expect(page.locator('#detail-panes pre').first()).toContainText('<img src=x')
+  await expect(page.locator('#detail-panes')).toContainText(row.importer.codes[0])
   await expect(page.locator('#detail img')).toHaveCount(0)
   expect(await page.evaluate(() => window.fixtureExecuted)).toBeUndefined()
 })

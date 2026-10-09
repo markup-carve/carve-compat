@@ -14,9 +14,21 @@ spl_autoload_register(static function (string $class) use ($root): void {
 try {
     $sources = json_decode(stream_get_contents(STDIN), true, flags: JSON_THROW_ON_ERROR);
     $results = [];
-    foreach ($sources as $md) {
+    if (!is_array($sources) || !array_is_list($sources)) {
+        throw new InvalidArgumentException('Expected a JSON array of importer sources');
+    }
+    foreach ($sources as $entry) {
         try {
-            $result = (new \MarkupCarve\Carve\Converter\MarkdownToCarve())->convertWithFidelityReport($md);
+            $format = is_string($entry) ? 'markdown' : ($entry['format'] ?? null);
+            $source = is_string($entry) ? $entry : ($entry['source'] ?? null);
+            if (!is_string($source)) throw new InvalidArgumentException('Expected a string importer source');
+            $converter = match ($format) {
+                'markdown' => new \MarkupCarve\Carve\Converter\MarkdownToCarve(),
+                'djot' => new \MarkupCarve\Carve\Converter\DjotToCarve(),
+                'html' => new \MarkupCarve\Carve\Converter\HtmlToCarve(),
+                default => throw new InvalidArgumentException('Unknown importer format'),
+            };
+            $result = $converter->convertWithFidelityReport($source);
             $results[] = ['value' => $result->value, 'report' => $result->report()];
         } catch (Throwable $error) {
             $results[] = ['error' => $error->getMessage()];

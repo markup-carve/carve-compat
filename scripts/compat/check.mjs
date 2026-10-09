@@ -4,11 +4,12 @@ import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import Ajv2020 from 'ajv/dist/2020.js'
-import { fromAstJson, toAstJson, parse, renderCarve, renderHtml, resolve, markdownToCarve, djotToCarve, htmlToCarve, renderCarveWithConversionReport } from '@markup-carve/carve'
+import { fromAstJson, toAstJson, parse, renderCarve, renderHtml, resolve, renderCarveWithConversionReport } from '@markup-carve/carve'
 import { context, semantics, htmlSemantics, plain, parseHtml, fromHast, authoredAttributes } from './trees.mjs'
 import { engineNames, engineMetadata, cachedEngine, engineProjection } from './engines.mjs'
 import { toPandoc } from './pandoc.mjs'
 import { toolNames, readForeign, exportForeign } from './tools.mjs'
+import { reportClass, honesty, importerFormats, runImporter, runImportBatch, validateAssessment, assessmentPath } from './importer-report.mjs'
 
 const schema = JSON.parse(readFileSync(new URL('../../resources/ast-schema.json', import.meta.url)))
 const validate = new Ajv2020({ strict: false }).compile(schema)
@@ -68,7 +69,35 @@ export function checkIndependent(result) {
   assert.deepEqual(result.independentDiagnostics.filter(d=>['degraded','dropped'].includes(d.fidelity)),[],'Independent DocBook comparison lost structure')
 }
 
-export async function checkCase(tool, fixture) {
+export function importerDecision(engine, tool, fixture, format, importer, assessment) {
+  const outcome = importer.honesty
+  const codes = importer.codes.join(', ') || 'none'
+  if (['silent-loss', 'false-loss'].includes(outcome)) return { status: 'failed', error: `${engine}/${tool}/${fixture}: importer ${outcome} (codes: ${codes})` }
+  if (outcome === 'unassessed' && assessment.assessed[engine].includes(format)) return { status: 'failed', error: `${engine}/${tool}/${fixture}: unassessed importer (codes: ${codes})` }
+  return { status: 'passed' }
+}
+
+function checkImporter(engine, tool, fixture, rendered, authored, progress, assessment, runner) {
+  try {
+    const format = sourceFormats[tool], result = runner(engine, format, fixture[format])
+    assert.ok(!Object.hasOwn(result, 'error'), `${engine}/${tool}/${fixture.id}: importer failed: ${result.error}`)
+    const diagnostics = result.report.diagnostics, cls = reportClass(diagnostics)
+    let comparisonError
+    try {
+      const importedContext = context('carve-importer')
+      const importedHtml = fromHast(parseHtml(renderHtml(resolve(parse(result.value)))), importedContext, { generated: true, ...authored })
+      assert.deepEqual(semantics(importedHtml), semantics(rendered), `${tool}/${fixture.id}: built-in importer rendering`)
+      assert.deepEqual(importedContext.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: importer HTML comparison lost structure`)
+    } catch (error) { comparisonError = error }
+    progress.importer = { reportClass: cls, honesty: honesty(!comparisonError, cls), codes: diagnostics.map(d => d.code) }
+    const decision = importerDecision(engine, tool, fixture.id, format, progress.importer, assessment)
+    assert.equal(decision.status, 'passed', decision.error)
+    if (comparisonError) throw comparisonError
+    progress.checks.push('built-in-importer-rendering')
+  } catch (error) { progress.failureOrigin = 'importer'; throw error }
+}
+
+export async function checkCase(tool, fixture, { assessment = validateAssessment(), runner = runImporter } = {}) {
   if(fixture.ast)return checkInterchangeCase(tool,fixture)
   const progress = { checks: [], diagnostics: [], evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve } }
   try {
@@ -101,15 +130,9 @@ export async function checkCase(tool, fixture) {
   assert.deepEqual(carveContext.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: Carve HTML comparison lost structure`)
 
   progress.checks.push('html-structure')
-  const importers = { markdown: markdownToCarve, djot: djotToCarve, html: s => htmlToCarve(s).value }
-  const importer = importers[sourceFormats[tool]]
+  const importer = importerFormats.includes(sourceFormats[tool])
   if (importer) {
-    const imported = importer(fixture[sourceFormats[tool]])
-    const importedContext = context('carve-importer')
-    const importedHtml = fromHast(parseHtml(renderHtml(resolve(parse(imported)))), importedContext, { generated: true, ...authored })
-    assert.deepEqual(semantics(importedHtml), semantics(rendered), `${tool}/${fixture.id}: built-in importer rendering`)
-    progress.checks.push('built-in-importer-rendering')
-    assert.deepEqual(importedContext.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: importer HTML comparison lost structure`)
+    checkImporter('javascript', tool, fixture, rendered, authored, progress, assessment, runner)
   }
 
   const canonical = renderCarve(fromAstJson(result.ast))
@@ -134,7 +157,7 @@ export async function checkCase(tool, fixture) {
   validateAst(reread.ast)
   assert.deepEqual(semantics(reread.ast), expected, `${tool}/${fixture.id}: foreign source round trip`)
   assert.deepEqual(reread.diagnostics.filter(d => ['degraded', 'dropped'].includes(d.fidelity)), [], `${tool}/${fixture.id}: foreign source round trip lost structure`)
-  return { tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...carveContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[]), ...(reread.independentDiagnostics??[])], version: result.version }
+  return { ...(progress.importer ? { importer:progress.importer } : {}), tool, case: fixture.id, status: 'passed', kind: 'supported', evidence: { sourceFormat: sourceFormats[tool], source: fixture[sourceFormats[tool]], carve: fixture.carve, ast: result.ast, foreignHtml: result.html, exportedSource: exported.source, ...(result.independentAst ? {independentAst:result.independentAst,independentSource:result.independentSource} : {}) }, checks: ['ast-schema', 'ast-mapping', 'html-structure', 'carve-source-roundtrip', 'json-roundtrip', 'foreign-source-roundtrip', ...(importer ? ['built-in-importer-rendering'] : []), ...(result.independentAst ? ['independent-docbook'] : [])], diagnostics: [...result.diagnostics, ...renderedContext.diagnostics, ...carveContext.diagnostics, ...exported.diagnostics, ...reread.diagnostics, ...(result.independentDiagnostics??[]), ...(reread.independentDiagnostics??[])], version: result.version }
   } catch (error) { error.compatibilityEvidence = progress; throw error }
 }
 
@@ -246,11 +269,17 @@ export async function checkLossCase(tool, fixture) {
   } catch (error) { error.compatibilityEvidence = progress; throw error }
 }
 
-export function checkEngineCase(engine, tool, fixture, baseline) {
+export function checkEngineCase(engine, tool, fixture, baseline, { assessment = validateAssessment(), runner = runImporter } = {}) {
   const progress = { checks: [], diagnostics: [...baseline.diagnostics], evidence: { ...baseline.evidence } }
   try {
     const expected = baseline.kind === 'supported' && !fixture.ast ? toAstJson(parse(fixture.carve)) : baseline.evidence.ast
     const source = baseline.kind === 'supported' && !fixture.ast ? fixture.carve : renderCarve(fromAstJson(baseline.evidence.ast))
+    const authored = authoredAttributes(baseline.evidence.ast)
+    if (baseline.kind === 'supported' && !fixture.ast && importerFormats.includes(sourceFormats[tool])) {
+      const foreignContext = context(tool)
+      const foreignHtml = fromHast(parseHtml(baseline.evidence.foreignHtml), foreignContext, { generated:tool !== 'hast', renderer:tool, ...authored })
+      checkImporter(engine, tool, fixture, foreignHtml, authored, progress, assessment, runner)
+    }
     const result = cachedEngine(engine, baseline.evidence.ast, source)
     Object.assign(progress.evidence, { engineAst:result.decodedAst, engineCarve:result.canonical })
     for (const ast of baseline.kind==='supported' && !fixture.ast?[result.decodedAst,result.reparsedAst,result.parsedAst]:[result.decodedAst]) validateAst(ast)
@@ -285,7 +314,7 @@ export function checkEngineCase(engine, tool, fixture, baseline) {
       }
       progress.checks.push('source-conversion-changes')
     }
-    const ctx = context(engine), authored = authoredAttributes(baseline.evidence.ast)
+    const ctx = context(engine)
     const actualHtml = fromHast(parseHtml(result.html),ctx,{generated:true,...authored})
     const expectedContext=context('reference')
     const expectedHtml = fromHast(parseHtml(renderHtml(resolve(fromAstJson(baseline.evidence.ast)))),expectedContext,{generated:true,...authored})
@@ -294,12 +323,15 @@ export function checkEngineCase(engine, tool, fixture, baseline) {
     assert.deepEqual(actualHtmlView,expectedHtmlView,`${engine}/${tool}/${fixture.id}: rendered HTML structure`)
     assert.deepEqual([...ctx.diagnostics,...expectedContext.diagnostics].filter(d=>['degraded','dropped'].includes(d.fidelity)),[],`${engine}/${tool}/${fixture.id}: HTML comparison lost structure`)
     progress.checks.push('html-structure')
-    return { ...baseline, engine, ...progress, version:baseline.version }
+    const { importer, failureOrigin, error, errorDetails, ...reference } = baseline
+    return { ...reference, status:'passed', engine, ...progress, version:baseline.version }
   } catch(error) { error.compatibilityEvidence = progress; throw error }
 }
 
 export async function runCompatibility(selected = toolNames, selectedEngines = ['javascript']) {
   const startedAt = new Date(), started = performance.now()
+  const assessmentSource = readFileSync(assessmentPath)
+  const assessment = validateAssessment(JSON.parse(assessmentSource))
   validateCorpus()
   validateLossCorpus()
   assert.equal(new Set([...corpus.cases, ...lossCorpus.cases].map(c => c.id)).size, corpus.cases.length + lossCorpus.cases.length, 'Case identifiers must be unique across supported and loss corpora')
@@ -312,7 +344,7 @@ export async function runCompatibility(selected = toolNames, selectedEngines = [
   const rows = []
   for (const tool of selected) {
     for (const fixture of corpus.cases.filter(c => (c.tools ?? toolNames).includes(tool))) {
-      try { rows.push({ ...await checkCase(tool, fixture), engine:'javascript' }) }
+      try { rows.push({ ...await checkCase(tool, fixture, { assessment }), engine:'javascript' }) }
       catch (error) { rows.push({ tool, engine:'javascript', case: fixture.id, status: 'failed', kind: fixture.direction ? 'loss' : 'supported', error: error.message, errorDetails: { operator: error.operator, actual: error.actual, expected: error.expected }, ...error.compatibilityEvidence, evidence: { sourceFormat: fixture.direction === 'export' ? 'carve' : sourceFormats[tool], source: fixture.source ?? fixture[sourceFormats[tool]] ?? fixture.carve, carve: fixture.carve, ...error.compatibilityEvidence?.evidence } }) }
     }
     for (const fixture of lossCorpus.cases.filter(c => c.tools.includes(tool))) {
@@ -323,16 +355,37 @@ export async function runCompatibility(selected = toolNames, selectedEngines = [
   const referenceRows = [...rows]
   const engines = Object.fromEntries(selectedEngines.map(engine => { try { const {root,binary,...metadata} = engineMetadata(engine);return [engine,metadata] } catch(error) { return [engine,{name:engine,error:error.message}] } }))
   for (const engine of selectedEngines.filter(e=>e!=='javascript')) {
+    const imports = new Map()
+    const key = (format, source) => JSON.stringify([format, source])
+    if (engine === 'php') {
+      const sources = new Map()
+      for (const fixture of corpus.cases.filter(f => !f.ast)) {
+        for (const tool of fixture.tools ?? toolNames) {
+          const format = sourceFormats[tool], source = fixture[format]
+          if (selected.includes(tool) && importerFormats.includes(format)) sources.set(key(format,source), { format, source })
+        }
+      }
+      const entries = [...sources.values()]
+      let batch
+      try { batch = runImportBatch(engine, entries) } catch (error) { batch = entries.map(() => ({ error:error.message })) }
+      entries.forEach((entry,i) => imports.set(key(entry.format,entry.source),batch[i]))
+    }
+    const runner = (selectedEngine, format, source) => {
+      const cacheKey = key(format,source)
+      if (!imports.has(cacheKey)) imports.set(cacheKey,runImporter(selectedEngine,format,source))
+      return imports.get(cacheKey)
+    }
     for (const baseline of referenceRows) {
       const fixture = [...corpus.cases,...lossCorpus.cases].find(f=>f.id===baseline.case)
-      if (baseline.status !== 'passed') { rows.push({...baseline,engine,failureOrigin:'reference-adapter',error:`Cross-engine check blocked by reference adapter: ${baseline.error}`,checks:[]});continue }
-      try { rows.push(checkEngineCase(engine,baseline.tool,fixture,baseline)) }
-      catch(error) { rows.push({...baseline,engine,status:'failed',error:error.message,errorDetails:{actual:error.actual,expected:error.expected,operator:error.operator},...error.compatibilityEvidence}) }
+      const { importer, failureOrigin, ...reference } = baseline
+      if (baseline.status !== 'passed' && baseline.failureOrigin !== 'importer') { rows.push({...reference,engine,failureOrigin:'reference-adapter',error:`Cross-engine check blocked by reference adapter: ${baseline.error}`,checks:[]});continue }
+      try { rows.push(checkEngineCase(engine,baseline.tool,fixture,baseline,{ assessment, runner })) }
+      catch(error) { rows.push({...reference,engine,status:'failed',error:error.message,errorDetails:{actual:error.actual,expected:error.expected,operator:error.operator},...error.compatibilityEvidence}) }
     }
   }
   const pkg = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url)))
   const engine = JSON.parse(readFileSync(new URL('../../node_modules/@markup-carve/carve/package.json', import.meta.url)))
   let revision
   try { revision = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() } catch { revision = 'unavailable' }
-  return { schemaVersion: 1, selectedEngines, notMeasuredEngines:engineNames.filter(e=>!selectedEngines.includes(e)), engines, startedAt: startedAt.toISOString(), generatedAt: new Date().toISOString(), durationMs: Math.round(performance.now() - started), suiteRevision: revision, engine: { name: engine.name, version: engine.version, dependency: pkg.devDependencies['@markup-carve/carve'] }, schema: { ...JSON.parse(readFileSync(new URL('../../resources/provenance.json', import.meta.url))), sha256: createHash('sha256').update(readFileSync(new URL('../../resources/ast-schema.json', import.meta.url))).digest('hex') }, engineConfigSha256:createHash('sha256').update(readFileSync(new URL('../../resources/engines.json',import.meta.url))).digest('hex'), fixtureHashes: Object.fromEntries(['cases.json', 'losses.json'].map(file => [file, createHash('sha256').update(readFileSync(new URL(`../../tests/external-compat/${file}`, import.meta.url))).digest('hex')])), selected, notMeasured: toolNames.filter(t => !selected.includes(t)), passed: rows.filter(r => r.status === 'passed').length, failed: rows.filter(r => r.status === 'failed').length, rows }
+  return { schemaVersion: 1, selectedEngines, notMeasuredEngines:engineNames.filter(e=>!selectedEngines.includes(e)), engines, startedAt: startedAt.toISOString(), generatedAt: new Date().toISOString(), durationMs: Math.round(performance.now() - started), suiteRevision: revision, engine: { name: engine.name, version: engine.version, dependency: pkg.devDependencies['@markup-carve/carve'] }, schema: { ...JSON.parse(readFileSync(new URL('../../resources/provenance.json', import.meta.url))), sha256: createHash('sha256').update(readFileSync(new URL('../../resources/ast-schema.json', import.meta.url))).digest('hex') }, importerAssessmentSha256:createHash('sha256').update(assessmentSource).digest('hex'), engineConfigSha256:createHash('sha256').update(readFileSync(new URL('../../resources/engines.json',import.meta.url))).digest('hex'), fixtureHashes: Object.fromEntries(['cases.json', 'losses.json'].map(file => [file, createHash('sha256').update(readFileSync(new URL(`../../tests/external-compat/${file}`, import.meta.url))).digest('hex')])), selected, notMeasured: toolNames.filter(t => !selected.includes(t)), passed: rows.filter(r => r.status === 'passed').length, failed: rows.filter(r => r.status === 'failed').length, rows }
 }

@@ -1,6 +1,7 @@
 import { readFileSync, mkdirSync, cpSync, writeFileSync, existsSync, rmSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
+import { honesty, honestyOutcomes } from './compat/importer-report.mjs'
 let reportPath = 'reports/latest.json', commonmarkPath = 'reports/commonmark.json', positional = false
 for (const arg of process.argv.slice(2)) {
   if (arg.startsWith('--commonmark=') && arg.slice('--commonmark='.length)) commonmarkPath = arg.slice('--commonmark='.length)
@@ -18,6 +19,7 @@ const hash = path => createHash('sha256').update(readFileSync(path)).digest('hex
 assert.equal(report.schema.sha256, hash('resources/ast-schema.json'), 'Schema changed after this report was measured')
 for (const file of ['cases.json', 'losses.json']) assert.equal(report.fixtureHashes?.[file], hash(`tests/external-compat/${file}`), `${file} changed after this report was measured`)
 if(report.engineConfigSha256)assert.equal(report.engineConfigSha256,hash('resources/engines.json'),'Engine pins changed after this report was measured')
+if (Object.hasOwn(report, 'importerAssessmentSha256')) assert.equal(report.importerAssessmentSha256, hash('resources/importer-assessment.json'), 'Importer assessment changed after this report was measured')
 let commonmark
 if (existsSync(commonmarkPath)) {
   commonmark = JSON.parse(readFileSync(commonmarkPath))
@@ -39,6 +41,7 @@ if (existsSync(commonmarkPath)) {
     for (const key of ['markdown','expectedHtml','carve','carveHtml']) assert.equal(typeof row[key], 'string', `CommonMark row missing ${key}`)
     assert.ok(Array.isArray(row.diagnostics) && row.diagnostics.every(d => typeof d?.code === 'string'), 'Invalid CommonMark diagnostics')
     assert.ok(['names-loss','unverified-only','clean'].includes(row.reportClass), 'Invalid CommonMark report class')
+    assert.equal(row.honesty, ['match','mismatch'].includes(row.status) ? honesty(row.status === 'match', row.reportClass) : null, 'Invalid CommonMark honesty outcome')
   }
   for (const engine of commonmark.selectedEngines) {
     const rows = commonmark.rows.filter(r => r.engine === engine), totals = commonmark.totals[engine]
@@ -48,7 +51,10 @@ if (existsSync(commonmarkPath)) {
     for (const [status,key] of statuses) assert.equal(totals[key], rows.filter(r => r.status === status).length, `CommonMark ${engine}: inconsistent ${key} count`)
     assert.ok(rows.filter(r => r.status === 'mismatch').every(r => ['names-loss','unverified-only','clean'].includes(r.reportClass)), 'Invalid CommonMark mismatch report class')
     for (const cls of ['names-loss','unverified-only','clean']) assert.equal(totals.mismatchByReport?.[cls], rows.filter(r => r.status === 'mismatch' && r.reportClass === cls).length, `CommonMark ${engine}: inconsistent ${cls} count`)
+    for (const outcome of honestyOutcomes) assert.equal(totals.honesty?.[outcome], rows.filter(r => r.honesty === outcome).length, `CommonMark ${engine}: inconsistent ${outcome} honesty count`)
+    assert.equal(Object.values(totals.honesty).reduce((sum,n) => sum+n, 0), totals.match + totals.mismatch, `CommonMark ${engine}: inconsistent honesty total`)
   }
+  assert.ok(Array.isArray(commonmark.reportDisagreements), 'Missing CommonMark report disagreements')
   assert.ok(Array.isArray(commonmark.sections), 'Missing CommonMark section results')
   assert.deepEqual(commonmark.sections.map(s => s.section), [...new Set(spec.map(e => e.section))], 'Invalid CommonMark section order')
   for (const s of commonmark.sections) {

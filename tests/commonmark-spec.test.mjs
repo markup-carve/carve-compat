@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { validateSpec, compareHtml, reportClass, runCommonmarkSpec, renderedWhitespace } from '../scripts/compat/commonmark-spec.mjs'
 
 test('the vendored CommonMark spec is complete and unchanged', () => {
@@ -46,6 +46,9 @@ test('JavaScript measures all CommonMark examples and accounts for every result'
   assert.ok(report.rows.every(r => ['match','mismatch','not-comparable','failed'].includes(r.status)))
   assert.equal(totals.match + totals.mismatch + totals.notComparable + totals.failed, 652)
   assert.equal(Object.values(totals.mismatchByReport).reduce((a,b) => a+b, 0), totals.mismatch)
+  assert.equal(Object.values(totals.honesty).reduce((a,b) => a+b, 0), totals.match + totals.mismatch)
+  assert.ok(report.rows.every(r => ['match','mismatch'].includes(r.status) ? typeof r.honesty === 'string' : r.honesty === null))
+  assert.deepEqual(report.reportDisagreements, [])
   assert.equal(report.sections.reduce((sum,s) => sum+s.examples, 0), 652)
   for (const [status,key] of [['match','match'],['mismatch','mismatch'],['not-comparable','notComparable'],['failed','failed']]) {
     assert.equal(totals[key], report.rows.filter(r => r.status === status).length)
@@ -54,4 +57,23 @@ test('JavaScript measures all CommonMark examples and accounts for every result'
   }
   assert.ok(totals.match > 500)
   assert.deepEqual(report.notMeasuredEngines, ['php','rust'])
+})
+
+test('three-engine reports include the example 40 diagnostic disagreement', t => {
+  if (!existsSync('.cache/engines/php') || !existsSync('.cache/engines/rust/bin/carve')) {
+    t.skip('Native engines absent; JavaScript-only report shape checked separately')
+    return
+  }
+  const report = runCommonmarkSpec(['javascript','php','rust'])
+  for (const [engine, totals] of Object.entries(report.totals)) {
+    assert.equal(Object.values(totals.honesty).reduce((a,b) => a+b, 0), totals.match + totals.mismatch)
+    for (const [outcome, count] of Object.entries(totals.honesty)) assert.equal(count, report.rows.filter(r => r.engine === engine && r.honesty === outcome).length)
+  }
+  const row = report.reportDisagreements.find(r => r.example === 40)
+  assert.ok(row)
+  assert.equal(row.section, 'Entity and numeric character references')
+  assert.deepEqual(row.classes, { javascript:'names-loss', php:'unverified-only', rust:'unverified-only' })
+  assert.ok(row.codes.javascript.includes('structure-unspellable'))
+  assert.deepEqual(row.codes.php, ['fidelity-unverified'])
+  assert.deepEqual(row.codes.rust, ['fidelity-unverified'])
 })

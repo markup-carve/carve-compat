@@ -10,15 +10,32 @@ pinned revisions for each run.
 The suite lives independently of the Carve specification repository. It measures
 nine external parser targets through pinned JavaScript, PHP and Rust Carve
 engines: mdast, hast, commonmark.js, cmark, djot.js, Docutils, Asciidoctor.js,
-MD4C and Pandoc. Foreign adapters and public importers run through JavaScript;
-PHP and Rust check the mapped AST, JSON interchange, Carve source and HTML.
+MD4C and Pandoc. Foreign adapters run through JavaScript. All three engines
+check the public importers, mapped AST, JSON interchange, Carve source and HTML.
 See [current findings](docs/findings.md) for reproduced engine differences.
 
 ## What the report means
 
 Supported fixtures check Carve's AST schema, semantic structure, rendered HTML,
 Carve source, JSON interchange and foreign source round trips. Markdown, HTML
-and Djot also exercise the public Carve source importers.
+and Djot also exercise each engine's public source importer on supported fixtures
+without authored AST expectations. The importer record compares its fidelity
+report with rendered structure:
+
+- `reported`: structure was lost and the report names a loss.
+- `unassessed`: structure was lost and only `fidelity-unverified` was reported.
+- `silent-loss`: structure was lost with a clean report.
+- `false-loss`: structure was kept but the report names a loss.
+- `ok`: structure was kept without a named loss.
+
+Supported fixtures fail on `silent-loss` or `false-loss`. `unassessed` passes the
+honesty check unless the engine and format are listed in
+[`resources/importer-assessment.json`](resources/importer-assessment.json).
+Existing rendering assertions still apply. The assessment lists start empty.
+Add a format to an engine's list once it ships construct-level diagnostics for
+that format, per [carve#2792](https://github.com/markup-carve/carve/issues/2792).
+From then on, `unassessed` fails as an unassessed importer. Reports include the
+assessment file's SHA-256 hash.
 
 Loss fixtures require a diagnostic code, fidelity and exact AST path, a valid
 fallback tree and retained readable content. A passing loss case records a
@@ -82,7 +99,15 @@ Results are `match`, `mismatch`, `not-comparable` when the HTML mapper cannot
 represent the expected structure, or `failed` when importing fails. Importer
 reports have three classes: `names-loss` names a degraded or dropped feature;
 `unverified-only` has `fidelity-unverified` without a named loss; `clean` has
-neither. A mismatch with a clean report is a silent loss.
+neither. Comparable rows also use the five honesty outcomes described above;
+`not-comparable` and `failed` rows have no honesty outcome. Totals count each
+outcome, and `reportDisagreements` lists examples with different report classes
+across the selected engines.
+
+This lane measures all outcomes without gating on honesty. A `false-loss` can
+be a real loss that the whitespace-collapsing comparator cannot see. Example 40
+drops a leading tab that HTML rendering collapses anyway. JavaScript names
+`structure-unspellable`; PHP and Rust report only `fidelity-unverified`.
 
 ```sh
 npm run compat:commonmark -- --report=reports/commonmark.json
