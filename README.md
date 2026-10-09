@@ -1,5 +1,8 @@
 # Carve compatibility
 
+> [!IMPORTANT]
+> This repository moved to [markup-carve/carve-conformance](https://github.com/markup-carve/carve-conformance) (`compat/`), and its website to <https://markup-carve.github.io/carve-conformance/compat/>. It is kept read-only for its commit history.
+
 Cross-format AST adapters, tests and measured reports for Carve. The website
 shows coverage, source examples, mapped trees, exported source, diagnostics and
 pinned revisions for each run.
