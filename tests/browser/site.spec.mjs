@@ -294,3 +294,62 @@ test('native AST evidence shows engine source changes without a lossless round-t
   const changes = page.locator('details').filter({ has: page.getByText('Engine source before/after changes', { exact: true }) })
   await expect(changes).not.toContainText('/children/0/rows/0/cells/1/header')
 })
+
+const djotLink = 'https://github.com/jgm/djot.js/blob/596e7fcf487f35c739de6a9c33e9a944c1927e56/test/links_and_images.test#L3'
+const djot = {
+  ...commonmark,kind:'djot-tests',suite:{name:'djot.js',examples:2,excluded:{options:6,filters:0}},baselines:undefined,
+  reportDisagreements:commonmark.reportDisagreements.map(r=>({...r,example:'links_and_images.test:3',section:'links_and_images',link:djotLink})),
+  sections:commonmark.sections.map(s=>({...s,section:'links_and_images',baselines:undefined})),
+  rows:commonmark.rows.map(r=>({...r,example:`links_and_images.test:${r.example===485?3:10}`,section:'links_and_images',link:r.example===485?djotLink:djotLink.replace('#L3','#L10'),source:r.markdown,markdown:undefined})),
+}
+
+test('Djot measurement reuses totals, per-file results, examples and importer filtering', async ({page}) => {
+  await page.route('**/djot.json',route=>route.fulfill({json:djot}))
+  await page.goto('/')
+  await expect(page.locator('#djot-title')).toHaveText('Djot test examples')
+  await expect(page.getByRole('link',{name:'Download Djot report'})).toHaveAttribute('href','djot.json')
+  await expect(page.getByRole('link',{name:'Download Djot report'})).toHaveAttribute('download','')
+  await expect(page.locator('#djot-totals tbody tr')).toHaveCount(2)
+  await expect(page.locator('#djot-sections thead th').first()).toHaveText('File')
+  await expect(page.locator('#djot-sections tbody')).toContainText('links_and_images')
+  await expect(page.locator('#djot-sections tbody')).toContainText('0/1')
+  await expect(page.locator('#djot-examples>li')).toHaveCount(3)
+  await page.locator('#djot-examples>li').nth(1).locator('summary').first().click()
+  await expect(page.locator('#djot-examples>li').nth(1)).toContainText('Importer failed')
+  await page.selectOption('#djot-engine-filter','php')
+  await expect(page.locator('#djot-examples>li')).toHaveCount(1)
+  await page.locator('#djot-examples>li>details>summary').click()
+  await expect(page.locator('#djot-examples a')).toHaveAttribute('href',djotLink)
+  await expect(page.locator('#djot-disagreements a')).toHaveAttribute('href',djotLink)
+  await expect(page.locator('#djot-examples pre')).toHaveCount(4)
+  await expect(page.locator('#djot-examples')).toContainText('link-loss')
+  await expect(page.locator('#djot-examples')).toContainText('Djot')
+  await expect(page.locator('#djot-baseline-note')).toHaveCount(0)
+  expect(await page.evaluate(()=>document.querySelector('#commonmark').compareDocumentPosition(document.querySelector('#djot')) & Node.DOCUMENT_POSITION_FOLLOWING)).toBeTruthy()
+})
+
+test('Djot source and rendered HTML remain text, including report codes and unsafe links', async ({page}) => {
+  const payload = '<img src=x onerror="window.djotInjected=true"><script>window.djotInjected=true</script>'
+  const changed = structuredClone(djot)
+  for (const row of changed.rows) for (const key of ['source','expectedHtml','carve','carveHtml']) row[key]=payload
+  changed.rows[0].link='javascript:window.djotInjected=true'
+  changed.rows[0].diagnostics=[{code:payload}]
+  changed.reportDisagreements[0].codes.javascript=[payload]
+  await page.route('**/djot.json',route=>route.fulfill({json:changed}))
+  await page.goto('/')
+  await page.selectOption('#djot-engine-filter','javascript')
+  await page.locator('#djot-examples>li>details>summary').first().click()
+  for (const pre of await page.locator('#djot-examples>li').first().locator('pre').all()) await expect(pre).toHaveText(payload)
+  await expect(page.locator('#djot-examples>li').first().locator('a')).not.toHaveAttribute('href',/javascript:/)
+  await expect(page.locator('#djot-examples')).toContainText(payload)
+  await expect(page.locator('#djot-disagreements')).toContainText(payload)
+  await expect(page.locator('#djot img, #djot script')).toHaveCount(0)
+  expect(await page.evaluate(()=>window.djotInjected)).toBeUndefined()
+})
+
+test('missing Djot evidence is marked as not measured', async ({page}) => {
+  await page.route('**/djot.json',route=>route.fulfill({status:404,body:'Not found'}))
+  await page.goto('/')
+  await expect(page.locator('#djot-note')).toHaveText('Not measured in this report.')
+  await expect(page.locator('#djot-results')).toBeHidden()
+})

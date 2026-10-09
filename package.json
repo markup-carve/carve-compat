@@ -11,6 +11,7 @@
     "test": "node --test tests/*.test.mjs",
     "compat:check": "node scripts/external-compat.mjs",
     "compat:javascript": "node scripts/external-compat.mjs --javascript",
+    "compat:djot": "node scripts/djot-tests.mjs",
     "compat:commonmark": "node scripts/commonmark-spec.mjs",
     "site:build": "node scripts/build-site.mjs",
     "site:preview": "python3 -m http.server 4173 --directory dist",

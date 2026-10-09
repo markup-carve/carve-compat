@@ -105,7 +105,7 @@ function renderMatrix() {
   }
   $('#case-count').textContent = `${grouped.size} fixtures · ${rows.length} measured target/case pairs`; $('#empty-results').hidden = rows.length !== 0
 }
-function commonmarkTable(selector, caption, headers, rows) {
+function suiteTable(selector, caption, headers, rows) {
   const table = $(selector), head = node('tr'), body = node('tbody')
   for (const label of headers) { const th = node('th', label); th.scope = 'col'; head.append(th) }
   for (const values of rows) {
@@ -115,16 +115,19 @@ function commonmarkTable(selector, caption, headers, rows) {
   }
   table.replaceChildren(node('caption', caption), append(node('thead'), head), body)
 }
-function fillCommonmark(data) {
-  if (data.schemaVersion !== 1 || data.kind !== 'commonmark-spec' || !Array.isArray(data.rows) || !Array.isArray(data.sections) || !Array.isArray(data.selectedEngines)) throw new Error('Unsupported CommonMark report')
+function fillHtmlSuite(data, {id,kind,label,sourceKey,sourceLabel,sectionLabel}) {
+  const select = suffix => $(`#${id}-${suffix}`)
+  const exampleLink = row => id === 'commonmark' ? `https://spec.commonmark.org/0.31.2/#example-${row.example}` : row.link
+  const setLink = (link, row) => { const url = exampleLink(row); if (typeof url === 'string' && URL.canParse(url) && new URL(url).protocol === 'https:') link.href = url }
+  if (data.schemaVersion !== 1 || data.kind !== kind || !Array.isArray(data.rows) || !Array.isArray(data.sections) || !Array.isArray(data.selectedEngines)) throw new Error(`Unsupported ${label} report`)
   const engines = data.selectedEngines, name = engine => data.engines[engine]?.name ?? engine
   const outcomes = ['reported','unassessed','silent-loss','false-loss','ok']
   const baselines = Object.entries(data.baselines ?? {}), baselineName = 'pandoc to Djot (baseline)'
-  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Declared','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent',...outcomes], engines.map(engine => {
+  suiteTable(`#${id}-totals`, `Totals by ${sourceLabel} importer`, ['Engine','Match','Mismatch','Declared','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent',...outcomes], engines.map(engine => {
     const t = data.totals[engine]
     return [name(engine),t.match,t.mismatch,t.declared,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean,...outcomes.map(outcome => t.honesty?.[outcome] ?? 'Not measured')]
   }).concat(baselines.map(([,{totals:t}]) => [baselineName,t.match,t.mismatch,'n/a',t.notComparable,t.failed,...Array(3 + outcomes.length).fill('n/a')])))
-  const declarations = $('#commonmark-declarations'); declarations.replaceChildren()
+  const declarations = select('declarations'); declarations.replaceChildren()
   for (const d of data.declarations ?? []) {
     const item = node('li'), link = node('a', 'Reference')
     if (typeof d.reference === 'string' && URL.canParse(d.reference) && new URL(d.reference).protocol === 'https:') link.href = d.reference
@@ -135,28 +138,29 @@ function fillCommonmark(data) {
     declarations.append(item)
   }
   if (!declarations.children.length) declarations.append(node('li', 'No declared rendering differences.'))
-  $('#commonmark-baseline-note').hidden = baselines.length === 0
-  const disagreements = $('#commonmark-disagreements'); disagreements.replaceChildren()
+  const baselineNote = select('baseline-note')
+  if (baselineNote) baselineNote.hidden = baselines.length === 0
+  const disagreements = select('disagreements'); disagreements.replaceChildren()
   for (const row of data.reportDisagreements ?? []) {
     const item = node('li'), link = node('a', `Example ${row.example}`)
-    link.href = `https://spec.commonmark.org/0.31.2/#example-${row.example}`
+    setLink(link, row)
     item.append(link, node('span', ` · ${row.section} · ${engines.map(engine => `${name(engine)}: ${row.classes[engine]} (codes: ${row.codes[engine].join(', ') || 'None'})`).join(' · ')}`))
     disagreements.append(item)
   }
   if (!disagreements.children.length) disagreements.append(node('li', 'No report class disagreements among the selected engines.'))
-  $('#commonmark-silent').textContent = `Silent losses with clean reports: ${engines.map(engine => `${name(engine)} ${data.totals[engine].mismatchByReport.clean}`).join(' · ')}`
-  commonmarkTable('#commonmark-sections', 'Matches / comparable examples by spec section', ['Section',...engines.map(name),...baselines.map(() => baselineName)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch + t.declared}` }),...baselines.map(([baseline]) => { const t = s.baselines[baseline]; return `${t.match}/${t.match + t.mismatch}` })]))
-  const filter = $('#commonmark-engine-filter')
+  select('silent').textContent = `Silent losses with clean reports: ${engines.map(engine => `${name(engine)} ${data.totals[engine].mismatchByReport.clean}`).join(' · ')}`
+  suiteTable(`#${id}-sections`, `Matches / comparable examples by ${sectionLabel}`, [id === 'djot' ? 'File' : 'Section',...engines.map(name),...baselines.map(() => baselineName)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch + t.declared}` }),...baselines.map(([baseline]) => { const t = s.baselines[baseline]; return `${t.match}/${t.match + t.mismatch}` })]))
+  const filter = select('engine-filter')
   for (const engine of engines) { const option = node('option', name(engine)); option.value = engine; filter.append(option) }
   const renderExamples = () => {
-    const list = $('#commonmark-examples'); list.replaceChildren()
+    const list = select('examples'); list.replaceChildren()
     const rows = data.rows.filter(r => ['mismatch','failed'].includes(r.status) && (!filter.value || r.engine === filter.value))
-    $('#commonmark-count').textContent = `${rows.length} mismatching or failed examples`
+    select('count').textContent = `${rows.length} mismatching or failed examples`
     for (const row of rows) {
-      const item = node('li'), details = node('details'), summary = node('summary', `${name(row.engine)} · Example ${row.example} · ${row.section} · ${row.status}`), link = node('a', `CommonMark example ${row.example}`)
-      link.href = `https://spec.commonmark.org/0.31.2/#example-${row.example}`
+      const item = node('li'), details = node('details'), summary = node('summary', `${name(row.engine)} · Example ${row.example} · ${row.section} · ${row.status}`), link = node('a', `${label} example ${row.example}`)
+      setLink(link, row)
       const panes = node('div', undefined, 'detail-panes')
-      panes.append(pane('Markdown', row.markdown, true), pane('Expected HTML', row.expectedHtml, true), pane('Carve output', row.carve, true), pane('Rendered HTML', row.carveHtml, true))
+      panes.append(pane(sourceLabel, row[sourceKey], true), pane('Expected HTML', row.expectedHtml, true), pane('Carve output', row.carve, true), pane('Rendered HTML', row.carveHtml, true))
       details.append(summary, link)
       if (row.error) details.append(node('p', row.error))
       details.append(node('p', `Report class: ${row.reportClass}. Diagnostic codes: ${(row.diagnostics ?? []).map(d => d.code).join(', ') || 'None'}`), panes)
@@ -164,17 +168,19 @@ function fillCommonmark(data) {
     }
   }
   filter.addEventListener('change', renderExamples); renderExamples()
-  $('#commonmark-note').hidden = true; $('#commonmark-results').hidden = false
+  select('note').hidden = true; select('results').hidden = false
 }
-async function loadCommonmark() {
+async function loadHtmlSuite(config) {
+  const note = $(`#${config.id}-note`)
   try {
-    const response = await fetch('commonmark.json', {cache:'no-store'})
-    if (response.status === 404) { $('#commonmark-note').textContent = 'Not measured in this report.'; return }
+    const response = await fetch(`${config.id}.json`, {cache:'no-store'})
+    if (response.status === 404) { note.textContent = 'Not measured in this report.'; return }
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    fillCommonmark(await response.json())
-  } catch (error) { $('#commonmark-note').textContent = `CommonMark report could not be loaded: ${error.message}` }
+    fillHtmlSuite(await response.json(), config)
+  } catch (error) { note.textContent = `${config.label} report could not be loaded: ${error.message}` }
 }
-void loadCommonmark()
+void loadHtmlSuite({id:'commonmark',kind:'commonmark-spec',label:'CommonMark',sourceKey:'markdown',sourceLabel:'Markdown',sectionLabel:'spec section'})
+void loadHtmlSuite({id:'djot',kind:'djot-tests',label:'Djot',sourceKey:'source',sourceLabel:'Djot',sectionLabel:'file'})
 try {
   const [data, manifest] = await Promise.all([fetchJson('report.json'), fetchJson('manifest.json')])
   if (data.schemaVersion !== 1 || !Array.isArray(data.rows) || !data.generatedAt) throw new Error('Unsupported or incomplete report')

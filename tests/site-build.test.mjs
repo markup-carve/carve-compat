@@ -132,3 +132,44 @@ test('the site includes an optional CommonMark report and rejects stale or incon
     assert.equal(build().status, 0); assert.equal(existsSync(output), false, 'Absent report must remove a stale site artifact')
   } finally { rmSync(dir, { recursive:true, force:true }) }
 })
+
+test('the site validates optional Djot evidence and removes absent report artifacts', async () => {
+  const {runDjotTests} = await import('../scripts/compat/djot-tests.mjs')
+  const dir = mkdtempSync(join(tmpdir(),'carve-compat-djot-site-'))
+  const hash = path => createHash('sha256').update(readFileSync(path)).digest('hex')
+  try {
+    for (const path of ['site','resources','tests/external-compat','tests/djot-tests']) cpSync(path,join(dir,path),{recursive:true})
+    mkdirSync(join(dir,'reports'))
+    const external = {schemaVersion:1,generatedAt:'2026-01-01T00:00:00Z',engine:{},schema:{sha256:hash('resources/ast-schema.json')},fixtureHashes:Object.fromEntries(['cases.json','losses.json'].map(file=>[file,hash(`tests/external-compat/${file}`)])),selected:[],notMeasured:[],rows:[],passed:0,failed:0}
+    writeFileSync(join(dir,'reports/latest.json'),JSON.stringify(external))
+    const build = (...args) => spawnSync(process.execPath,[fileURLToPath(new URL('../scripts/build-site.mjs',import.meta.url)),...args],{cwd:dir,encoding:'utf8'})
+    const output = join(dir,'dist/djot.json'), custom = join(dir,'optional.json')
+    let result = build(); assert.equal(result.status,0,result.stderr); assert.equal(existsSync(output),false)
+    const djot = runDjotTests(['javascript'])
+    writeFileSync(custom,JSON.stringify(djot))
+    result = build('--djot=optional.json'); assert.equal(result.status,0,result.stderr)
+    assert.match(result.stdout,/Included Djot/)
+    assert.deepEqual(JSON.parse(readFileSync(output)),djot)
+    for (const mutate of [
+      r => {r.schemaVersion=2}, r => {r.kind='other'}, r => {r.suite.sha256='stale'},
+      r => {r.suite.commit='stale'}, r => {r.suite.examples--}, r => {r.suite.excluded.options++},
+      r => {r.engineConfigSha256='stale'}, r => {r.declaredSha256='stale'},
+      r => {r.rows.pop()}, r => {r.rows[1]=r.rows[0]}, r => {r.rows[0].example='bad.test:1'},
+      r => {r.rows[0].source='changed'}, r => {r.rows[0].expectedHtml='changed'},
+      r => {r.rows[0].link='https://example.com'}, r => {r.rows[0].honesty='false-loss'},
+      r => {r.rows[0].reportClass='clean'}, r => {r.rows[0].status='other'},
+      r => {r.totals.javascript.match++}, r => {r.totals.javascript.mismatchByReport.clean++},
+      r => {r.totals.javascript.honesty.ok++}, r => {r.sections[0].results.javascript.match++},
+      r => {r.sections.pop()}, r => {r.declarations=[{}]}, r => {r.engines={}},
+      r => {r.reportDisagreements=[{}]}, r => {r.baselines={}},
+    ]) {
+      const broken = structuredClone(djot); mutate(broken); writeFileSync(custom,JSON.stringify(broken))
+      const result = build('--djot=optional.json')
+      assert.equal(result.status,1,JSON.stringify(broken.suite))
+    }
+    writeFileSync(custom,JSON.stringify(djot))
+    writeFileSync(join(dir,'tests/djot-tests/para.test'),'changed')
+    result = build('--djot=optional.json'); assert.equal(result.status,1); assert.match(result.stderr,/checksum/)
+    result = build(); assert.equal(result.status,0,result.stderr); assert.equal(existsSync(output),false)
+  } finally { rmSync(dir,{recursive:true,force:true}) }
+})

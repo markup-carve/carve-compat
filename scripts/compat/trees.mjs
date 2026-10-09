@@ -256,7 +256,8 @@ export function fromHast(root, ctx = context('hast'), options = {}) {
       }else body.push({type:'paragraph',children:inlineChildren})
       if(checkbox && body[0]?.children?.[0]?.type==='text')body[0].children[0].value=body[0].children[0].value.replace(/^\n+/,'').replace(/^ /,'')
       result = { type: 'list_item', children:body,...(checkbox?{checked:!!checkbox.properties.checked}:{}) }
-    } else if (options.generated && ['div', 'section', 'main'].includes(tag)) {
+    } else if (options.keepDivs && tag === 'div') result = { type: 'div', children: blocks(n.children, path) }
+    else if (options.generated && ['div', 'section', 'main'].includes(tag)) {
       ctx.note(path, 'generated-html-wrapper', 'normalized', `Removed foreign renderer ${tag} wrapper.`)
       return blocks(n.children, path)
     } else return ctx.unsupported(n, path, block)
