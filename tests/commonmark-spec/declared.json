@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "differences": [
+    {
+      "id": "lone-image-block",
+      "normalization": "unwrap-lone-image-paragraph",
+      "reason": "Carve renders a paragraph whose only content is one image as a bare <img>, without <p>.",
+      "reference": "https://github.com/markup-carve/carve/blob/9f7c3f7a44952d2bb3d9ac461ed9c04b7caaf563/docs/comparison.md#L60",
+      "examples": [520, 572, 573, 574, 575, 576, 577, 578, 580, 581, 582, 583, 584, 585, 586, 588, 589, 591]
+    }
+  ]
+}

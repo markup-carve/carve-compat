@@ -15,7 +15,10 @@ const report = runCommonmarkSpec(selectedEngines, { baselines })
 if (reportPath) { mkdirSync(dirname(reportPath), { recursive:true }); writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n') }
 for (const engine of selectedEngines) {
   const t = report.totals[engine]
-  console.log(`${engine}: ${t.match} match, ${t.mismatch} mismatch, ${t.notComparable} not comparable, ${t.failed} failed; ${t.mismatchByReport.clean} silent losses (clean reports)`)
+  console.log(`${engine}: ${t.match} match, ${t.mismatch} mismatch, ${t.declared} declared, ${t.notComparable} not comparable, ${t.failed} failed; ${t.mismatchByReport.clean} silent losses (clean reports)`)
+}
+for (const d of report.declarations) for (const engine of selectedEngines) for (const kind of ['stale','insufficient']) {
+  if (d[kind][engine].length) console.log(`Warning: ${d.id} ${kind} for ${engine}: examples ${d[kind][engine].join(', ')}`)
 }
 for (const [baseline,{totals:t}] of Object.entries(report.baselines)) console.log(`${baseline} (baseline): ${t.match} match, ${t.mismatch} mismatch, ${t.notComparable} not comparable, ${t.failed} failed`)
-for (const s of report.sections) console.log(`${s.section} (${s.examples} examples): ${[...selectedEngines.map(engine => [engine,s.results[engine]]),...Object.entries(s.baselines).map(([baseline,t]) => [`${baseline} (baseline)`,t])].map(([name,t]) => `${name} ${t.match}/${t.match + t.mismatch} match/comparable, ${t.notComparable} not comparable, ${t.failed} failed`).join('; ')}`)
+for (const s of report.sections) console.log(`${s.section} (${s.examples} examples): ${[...selectedEngines.map(engine => [engine,s.results[engine]]),...Object.entries(s.baselines).map(([baseline,t]) => [`${baseline} (baseline)`,t])].map(([name,t]) => `${name} ${t.match}/${t.match + t.mismatch + (t.declared ?? 0)} match/comparable, ${t.notComparable} not comparable, ${t.failed} failed`).join('; ')}`)
