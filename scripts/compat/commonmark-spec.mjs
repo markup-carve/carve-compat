@@ -81,7 +81,17 @@ export function unwrapLoneImageParagraph(tree) {
   return out.type === 'paragraph' && out.children?.length === 1 && out.children[0].type === 'image' ? out.children[0] : out
 }
 
-const normalizations = Object.freeze({ 'unwrap-lone-image-paragraph':unwrapLoneImageParagraph })
+export function dropMathRole(tree) {
+  if (Array.isArray(tree)) return tree.map(dropMathRole)
+  if (!tree || typeof tree !== 'object') return tree
+  const out = Object.fromEntries(Object.entries(tree).map(([key,value]) => [key,dropMathRole(value)]))
+  if (out.type !== 'span' || !out.attrs?.classes?.includes('math') || out.attrs.keyValues?.role !== 'math') return out
+  const { role, ...keyValues } = out.attrs.keyValues, attrs = { ...out.attrs, keyValues }
+  if (!Object.keys(keyValues).length) delete attrs.keyValues
+  return { ...out, attrs }
+}
+
+const normalizations = Object.freeze({ 'unwrap-lone-image-paragraph':unwrapLoneImageParagraph, 'drop-math-role':dropMathRole })
 
 export function validateDeclarations(source = readFileSync(declaredPath), examples = validateSpec()) {
   const file = JSON.parse(source.toString())
@@ -107,8 +117,8 @@ export function validateDeclarations(source = readFileSync(declaredPath), exampl
 
 export function applyDeclaration(comparison, difference) {
   if (!difference || comparison.status !== 'mismatch') return comparison
-  const expected = renderedWhitespace(normalizations[difference.normalization](comparison.expected))
-  const matches = isDeepStrictEqual(expected, comparison.actual)
+  const normalize = tree => renderedWhitespace(normalizations[difference.normalization](tree))
+  const matches = isDeepStrictEqual(normalize(comparison.expected), normalize(comparison.actual))
   return { ...comparison, status:matches ? 'declared' : 'mismatch', declaration:matches ? { id:difference.id } : { id:difference.id, insufficient:true } }
 }
 

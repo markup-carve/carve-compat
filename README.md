@@ -96,7 +96,7 @@ terms, and ignores Carve's generated heading IDs and section wrappers. Code whit
 remains significant.
 
 Documented Carve rendering differences are listed in `tests/commonmark-spec/declared.json`.
-Each declaration is rechecked by applying its named normalization to the expected
+Each declaration is rechecked by applying its named normalization to both the expected and the actual
 semantic tree; only a matching comparison receives `declared` status. Reports flag
 stale declarations when the original comparison already matches and insufficient
 declarations when the normalized comparison still mismatches.
@@ -147,6 +147,9 @@ expected HTML using the CommonMark lane's comparator. Both sides use generated
 mode for Djot section wrappers and heading IDs. This also ignores authored
 heading IDs, so the lane does not measure them. Divs are kept with their
 attributes on both sides, so a lost or extra fenced div counts as a mismatch.
+[`tests/djot-tests/declared.json`](tests/djot-tests/declared.json) declares two
+documented rendering differences, Carve's `role="math"` on math spans and a lone
+image without `<p>`, with the same re-check as the CommonMark declarations.
 
 ```sh
 npm run compat:djot -- --report=reports/djot.json
