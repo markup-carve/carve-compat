@@ -68,6 +68,33 @@ native selections must include JavaScript to provide the mapped baseline.
 `--tools=mdast,djot` measures a narrower selection and records every unmeasured
 target. Missing readers fail the full sweep instead of becoming skips.
 
+## CommonMark spec examples
+
+This measurement lane imports all 652 CommonMark 0.31.2 spec examples with each
+selected Carve engine. Every engine's Carve output is rendered by the JavaScript
+reference renderer and compared structurally with the spec's expected HTML.
+The comparator removes renderer indentation before tags, collapses HTML whitespace
+outside code, trims inline edges in paragraphs, headings, table cells, and definition
+terms, and ignores Carve's generated heading IDs and section wrappers. Code whitespace
+remains significant.
+
+Results are `match`, `mismatch`, `not-comparable` when the HTML mapper cannot
+represent the expected structure, or `failed` when importing fails. Importer
+reports have three classes: `names-loss` names a degraded or dropped feature;
+`unverified-only` has `fidelity-unverified` without a named loss; `clean` has
+neither. A mismatch with a clean report is a silent loss.
+
+```sh
+npm run compat:commonmark -- --report=reports/commonmark.json
+```
+
+The default selects JavaScript, PHP, and Rust. Use `--engines=javascript` for the
+reference importer alone. Mismatches never fail this lane's CI step. Infrastructure
+errors, including invalid vendored data, engine pin mismatches, and crashed drivers,
+fail the run. The report includes every example and totals by engine and spec section.
+The site includes the report when present; `--commonmark=path` selects another file.
+See [vendored data provenance and license](tests/commonmark-spec/README.md).
+
 ## Build and preview the website
 
 ```sh

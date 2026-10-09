@@ -5,3 +5,5 @@
 
 .interchange { color: #855a18; background: #fff2d6; border-color: #dcc49d; }
 footer .related{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;gap:6px 16px;padding:0;border:0;overflow:visible;white-space:normal;}
+
+#commonmark caption{text-align:left;padding:12px 15px;font-weight:650;color:var(--ink)}#commonmark .silent-losses{font-weight:650;color:var(--red)}#commonmark-examples{list-style:none;padding:0;display:grid;gap:12px}#commonmark-examples>li{min-width:0;background:#fff;border:1px solid var(--line);border-radius:8px}#commonmark-examples>li>details{padding:8px 15px 15px}#commonmark-examples p,#commonmark-results>p{font-size:.82rem}#commonmark-examples .detail-panes{margin-top:12px}

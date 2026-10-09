@@ -52,6 +52,8 @@ jobs:
           CARVE_COMPAT_PYTHON: python
           CARVE_PANDOC: .cache/pandoc/bin/pandoc
         run: npm run compat:check -- --report=reports/latest.json
+      - name: Measure CommonMark spec examples (measurement, no gate)
+        run: npm run compat:commonmark -- --report=reports/commonmark.json
       - name: Build report website
         id: site
         run: |
@@ -67,6 +69,7 @@ jobs:
           name: compatibility-evidence
           path: |
             reports/latest.json
+            reports/commonmark.json
             test-results/
           if-no-files-found: warn
       - name: Package website

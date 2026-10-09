@@ -104,6 +104,54 @@ function renderMatrix() {
   }
   $('#case-count').textContent = `${grouped.size} fixtures · ${rows.length} measured target/case pairs`; $('#empty-results').hidden = rows.length !== 0
 }
+function commonmarkTable(selector, caption, headers, rows) {
+  const table = $(selector), head = node('tr'), body = node('tbody')
+  for (const label of headers) { const th = node('th', label); th.scope = 'col'; head.append(th) }
+  for (const values of rows) {
+    const tr = node('tr'), th = node('th', values[0]); th.scope = 'row'; tr.append(th)
+    for (const value of values.slice(1)) tr.append(node('td', value))
+    body.append(tr)
+  }
+  table.replaceChildren(node('caption', caption), append(node('thead'), head), body)
+}
+function fillCommonmark(data) {
+  if (data.schemaVersion !== 1 || data.kind !== 'commonmark-spec' || !Array.isArray(data.rows) || !Array.isArray(data.sections) || !Array.isArray(data.selectedEngines)) throw new Error('Unsupported CommonMark report')
+  const engines = data.selectedEngines, name = engine => data.engines[engine]?.name ?? engine
+  commonmarkTable('#commonmark-totals', 'Totals by Markdown importer', ['Engine','Match','Mismatch','Not comparable','Failed','Names the loss','Only fidelity-unverified','Clean report = silent'], engines.map(engine => {
+    const t = data.totals[engine]
+    return [name(engine),t.match,t.mismatch,t.notComparable,t.failed,t.mismatchByReport['names-loss'],t.mismatchByReport['unverified-only'],t.mismatchByReport.clean]
+  }))
+  $('#commonmark-silent').textContent = `Silent losses with clean reports: ${engines.map(engine => `${name(engine)} ${data.totals[engine].mismatchByReport.clean}`).join(' · ')}`
+  commonmarkTable('#commonmark-sections', 'Matches / comparable examples by spec section', ['Section',...engines.map(name)], data.sections.map(s => [s.section,...engines.map(engine => { const t = s.results[engine]; return `${t.match}/${t.match + t.mismatch}` })]))
+  const filter = $('#commonmark-engine-filter')
+  for (const engine of engines) { const option = node('option', name(engine)); option.value = engine; filter.append(option) }
+  const renderExamples = () => {
+    const list = $('#commonmark-examples'); list.replaceChildren()
+    const rows = data.rows.filter(r => ['mismatch','failed'].includes(r.status) && (!filter.value || r.engine === filter.value))
+    $('#commonmark-count').textContent = `${rows.length} mismatching or failed examples`
+    for (const row of rows) {
+      const item = node('li'), details = node('details'), summary = node('summary', `${name(row.engine)} · Example ${row.example} · ${row.section} · ${row.status}`), link = node('a', `CommonMark example ${row.example}`)
+      link.href = `https://spec.commonmark.org/0.31.2/#example-${row.example}`
+      const panes = node('div', undefined, 'detail-panes')
+      panes.append(pane('Markdown', row.markdown, true), pane('Expected HTML', row.expectedHtml, true), pane('Carve output', row.carve, true), pane('Rendered HTML', row.carveHtml, true))
+      details.append(summary, link)
+      if (row.error) details.append(node('p', row.error))
+      details.append(node('p', `Report class: ${row.reportClass}. Diagnostic codes: ${(row.diagnostics ?? []).map(d => d.code).join(', ') || 'None'}`), panes)
+      item.append(details); list.append(item)
+    }
+  }
+  filter.addEventListener('change', renderExamples); renderExamples()
+  $('#commonmark-note').hidden = true; $('#commonmark-results').hidden = false
+}
+async function loadCommonmark() {
+  try {
+    const response = await fetch('commonmark.json', {cache:'no-store'})
+    if (response.status === 404) { $('#commonmark-note').textContent = 'Not measured in this report.'; return }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    fillCommonmark(await response.json())
+  } catch (error) { $('#commonmark-note').textContent = `CommonMark report could not be loaded: ${error.message}` }
+}
+void loadCommonmark()
 try {
   const [data, manifest] = await Promise.all([fetchJson('report.json'), fetchJson('manifest.json')])
   if (data.schemaVersion !== 1 || !Array.isArray(data.rows) || !data.generatedAt) throw new Error('Unsupported or incomplete report')

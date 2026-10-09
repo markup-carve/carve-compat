@@ -5,6 +5,56 @@ const report = { ...measured, selected: ['mdast'], notMeasured: ['hast', 'common
   { tool: 'mdast', case: 'inline-structure', kind: 'supported', status: 'passed', version: 'browser-fixture', checks: ['ast-schema'], diagnostics: [], evidence: { sourceFormat: 'markdown', source: '**word**', carve: '*word*', ast: { type: 'document', children: [] }, exportedSource: '**word**' } },
   { tool: 'mdast', case: 'unsupported-field', kind: 'loss', status: 'passed', version: 'browser-fixture', checks: ['loss-diagnostic'], diagnostics: [{ path: '/attrs', code: 'unsupported-field', fidelity: 'dropped', message: 'Browser fixture diagnostic.' }], evidence: { sourceFormat: 'carve', source: 'word', ast: { type: 'document', children: [] }, expected: { path: '/attrs', code: 'unsupported-field', fidelity: 'dropped' }, retained: 'word' } },
 ] }
+const commonmark = {
+  schemaVersion:1, kind:'commonmark-spec', spec:{version:'0.31.2',examples:652}, selectedEngines:['javascript','php'], engines:{javascript:{name:'Carve JavaScript'},php:{name:'Carve PHP'}},
+  totals:{javascript:{match:0,mismatch:1,notComparable:0,failed:1,mismatchByReport:{'names-loss':0,'unverified-only':0,clean:1}},php:{match:0,mismatch:1,notComparable:0,failed:0,mismatchByReport:{'names-loss':1,'unverified-only':0,clean:0}}},
+  sections:[{section:'Links',examples:2,results:{javascript:{match:0,mismatch:1,notComparable:0,failed:1},php:{match:0,mismatch:1,notComparable:0,failed:0}}}],
+  rows:[
+    {engine:'javascript',example:485,section:'Links',status:'mismatch',markdown:'[foo]()',expectedHtml:'<p><a href="">foo</a></p>',carve:'foo',carveHtml:'<p>foo</p>',diagnostics:[],reportClass:'clean'},
+    {engine:'javascript',example:486,section:'Links',status:'failed',markdown:'broken input',expectedHtml:'<p>broken input</p>',carve:'',carveHtml:'',diagnostics:[],reportClass:'clean',error:'Importer failed'},
+    {engine:'php',example:485,section:'Links',status:'mismatch',markdown:'[foo]()',expectedHtml:'<p><a href="">foo</a></p>',carve:'foo',carveHtml:'<p>foo</p>',diagnostics:[{code:'link-loss',fidelity:'dropped'}],reportClass:'names-loss'},
+  ],
+}
+test('CommonMark measurement shows totals, section counts, failures and engine filtering', async ({ page }) => {
+  await page.route('**/commonmark.json', route => route.fulfill({json:commonmark}))
+  await page.goto('/')
+  await expect(page.locator('#commonmark-title')).toHaveText('CommonMark spec examples')
+  await expect(page.locator('#commonmark-totals tbody tr')).toHaveCount(2)
+  await expect(page.locator('#commonmark-totals thead')).toContainText('Clean report = silent')
+  await expect(page.locator('#commonmark-silent')).toContainText('Carve JavaScript 1')
+  await expect(page.locator('#commonmark-sections tbody')).toContainText('0/1')
+  await expect(page.locator('#commonmark-examples>li')).toHaveCount(3)
+  await page.locator('#commonmark-examples>li').nth(1).locator('summary').first().click()
+  await expect(page.locator('#commonmark-examples>li').nth(1)).toContainText('Importer failed')
+  await page.selectOption('#commonmark-engine-filter', 'php')
+  await expect(page.locator('#commonmark-examples>li')).toHaveCount(1)
+  await page.locator('#commonmark-examples>li>details>summary').click()
+  await expect(page.locator('#commonmark-examples a')).toHaveAttribute('href', 'https://spec.commonmark.org/0.31.2/#example-485')
+  await expect(page.locator('#commonmark-examples')).toContainText('link-loss')
+  await expect(page.locator('#commonmark-examples pre')).toHaveCount(4)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+})
+
+test('CommonMark Markdown and HTML evidence stays text', async ({ page }) => {
+  const payload = '<img src=x onerror="window.commonmarkInjected=true"><script>window.commonmarkInjected=true</script>'
+  const changed = structuredClone(commonmark)
+  changed.rows[0].markdown = payload; changed.rows[0].expectedHtml = payload
+  changed.rows[0].carve = payload; changed.rows[0].carveHtml = payload
+  await page.route('**/commonmark.json', route => route.fulfill({json:changed}))
+  await page.goto('/'); await page.selectOption('#commonmark-engine-filter', 'javascript')
+  await page.locator('#commonmark-examples>li>details>summary').first().click()
+  for (const pre of await page.locator('#commonmark-examples>li').first().locator('pre').all()) await expect(pre).toHaveText(payload)
+  await expect(page.locator('#commonmark img, #commonmark script')).toHaveCount(0)
+  expect(await page.evaluate(() => window.commonmarkInjected)).toBeUndefined()
+})
+
+test('missing CommonMark evidence is marked as not measured', async ({ page }) => {
+  await page.route('**/commonmark.json', route => route.fulfill({status:404,body:'Not found'}))
+  await page.goto('/')
+  await expect(page.locator('#commonmark-note')).toHaveText('Not measured in this report.')
+  await expect(page.locator('#commonmark-results')).toBeHidden()
+  await expect(page.locator('#load-error')).toBeHidden()
+})
 test('dashboard renders measured totals, versions, evidence and filters', async ({ page }) => {
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.route('**/report.json', route => route.fulfill({ json: report }))
