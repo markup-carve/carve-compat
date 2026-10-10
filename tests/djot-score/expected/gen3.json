@@ -1,0 +1,3102 @@
+[
+ {
+  "id": "gen3:0",
+  "carve": "[x](a%28b{}c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:1",
+  "carve": "para [x](a%28b{}c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:2",
+  "carve": "[x](a%28b{%20}c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:3",
+  "carve": "para [x](a%28b{%20}c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:4",
+  "carve": "[x](a%28b{''}c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:5",
+  "carve": "para [x](a%28b{''}c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:6",
+  "carve": "[x](a%28b{%22c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:7",
+  "carve": "para [x](a%28b{%22c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:8",
+  "carve": "[x](a%28b%22}c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:9",
+  "carve": "para [x](a%28b%22}c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:10",
+  "carve": "[x](a%28b%60%20x%20%60c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:11",
+  "carve": "para [x](a%28b%60%20x%20%60c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:12",
+  "carve": "[x](a%28b[x][missing]c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:13",
+  "carve": "para [x](a%28b[x][missing]c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:14",
+  "carve": "[x](a%28b[r][]c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:15",
+  "carve": "para [x](a%28b[r][]c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:16",
+  "carve": "[x](a%28b--c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:17",
+  "carve": "para [x](a%28b--c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:18",
+  "carve": "[x](a%28b*a*{}*b*c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:19",
+  "carve": "para [x](a%28b*a*{}*b*c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:20",
+  "carve": "[x](a%28b'tisc%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:21",
+  "carve": "para [x](a%28b'tisc%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:22",
+  "carve": "[x](a%28b#%20hc%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:23",
+  "carve": "para [x](a%28b#%20hc%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:24",
+  "carve": "[x](a%28b\\\\c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:25",
+  "carve": "para [x](a%28b\\\\c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:26",
+  "carve": "[x](a%28b{.c}c%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:27",
+  "carve": "para [x](a%28b{.c}c%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:28",
+  "carve": "[x](a{}b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:29",
+  "carve": "para [x](a{}b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:30",
+  "carve": "[x](a{%20}b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:31",
+  "carve": "para [x](a{%20}b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:32",
+  "carve": "[x](a{''}b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:33",
+  "carve": "para [x](a{''}b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:34",
+  "carve": "[x](a{%22b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:35",
+  "carve": "para [x](a{%22b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:36",
+  "carve": "[x](a%22}b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:37",
+  "carve": "para [x](a%22}b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:38",
+  "carve": "[x](a%60%20x%20%60b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:39",
+  "carve": "para [x](a%60%20x%20%60b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:40",
+  "carve": "[x](a[x][missing]b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:41",
+  "carve": "para [x](a[x][missing]b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:42",
+  "carve": "[x](a[r][]b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:43",
+  "carve": "para [x](a[r][]b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:44",
+  "carve": "[x](a--b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:45",
+  "carve": "para [x](a--b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:46",
+  "carve": "[x](a*a*{}*b*b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:47",
+  "carve": "para [x](a*a*{}*b*b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:48",
+  "carve": "[x](a'tisb)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:49",
+  "carve": "para [x](a'tisb) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:50",
+  "carve": "[x](a#%20hb)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:51",
+  "carve": "para [x](a#%20hb) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:52",
+  "carve": "[x](a\\\\b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:53",
+  "carve": "para [x](a\\\\b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:54",
+  "carve": "[x](a{.c}b)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:55",
+  "carve": "para [x](a{.c}b) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:56",
+  "carve": "![x](a%28{}%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:57",
+  "carve": "para ![x](a%28{}%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:58",
+  "carve": "![x](a%28{%20}%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:59",
+  "carve": "para ![x](a%28{%20}%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:60",
+  "carve": "![x](a%28{''}%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:61",
+  "carve": "para ![x](a%28{''}%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:62",
+  "carve": "![x](a%28{%22%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:63",
+  "carve": "para ![x](a%28{%22%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:64",
+  "carve": "![x](a%28%22}%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:65",
+  "carve": "para ![x](a%28%22}%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:66",
+  "carve": "![x](a%28%60%20x%20%60%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:67",
+  "carve": "para ![x](a%28%60%20x%20%60%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:68",
+  "carve": "![x](a%28[x][missing]%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:69",
+  "carve": "para ![x](a%28[x][missing]%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:70",
+  "carve": "![x](a%28[r][]%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:71",
+  "carve": "para ![x](a%28[r][]%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:72",
+  "carve": "![x](a%28--%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:73",
+  "carve": "para ![x](a%28--%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:74",
+  "carve": "![x](a%28*a*{}*b*%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:75",
+  "carve": "para ![x](a%28*a*{}*b*%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:76",
+  "carve": "![x](a%28'tis%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:77",
+  "carve": "para ![x](a%28'tis%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:78",
+  "carve": "![x](a%28#%20h%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:79",
+  "carve": "para ![x](a%28#%20h%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:80",
+  "carve": "![x](a(\\))\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:81",
+  "carve": "para ![x](a(\\)) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:82",
+  "carve": "![x](a%28{.c}%29)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:83",
+  "carve": "para ![x](a%28{.c}%29) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:84",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\{\\}](https://e.com/{})\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:85",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\{\\}](https://e.com/{}) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:86",
+  "carve": "<https://e.com/{%%}>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:87",
+  "carve": "para <https://e.com/{%%}> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:88",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\{\\'\\'\\}](https://e.com/{''})\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:89",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\{\\'\\'\\}](https://e.com/{''}) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:90",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\{\\\"](https://e.com/{\")\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:91",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\{\\\"](https://e.com/{\") tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:92",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\\"\\}](https://e.com/\"})\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:93",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\\"\\}](https://e.com/\"}) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:94",
+  "carve": "<https://e.com/`  x  `>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:95",
+  "carve": "para <https://e.com/`  x  `> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:96",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\[x\\]\\[missing\\]](https://e.com/%5Bx%5D%5Bmissing%5D)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:97",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\[x\\]\\[missing\\]](https://e.com/%5Bx%5D%5Bmissing%5D) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:98",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\[r\\]\\[\\]](https://e.com/%5Br%5D%5B%5D)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:99",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\[r\\]\\[\\]](https://e.com/%5Br%5D%5B%5D) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:100",
+  "carve": "<https://e.com/-->\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:101",
+  "carve": "para <https://e.com/--> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:102",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\*a\\*\\{\\}\\*b\\*](https://e.com/*a*{}*b*)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:103",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\*a\\*\\{\\}\\*b\\*](https://e.com/*a*{}*b*) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:104",
+  "carve": "<https://e.com/'tis>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:105",
+  "carve": "para <https://e.com/'tis> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:106",
+  "carve": "<https://e.com/# h>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:107",
+  "carve": "para <https://e.com/# h> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:108",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\\\](https://e.com/\\\\)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:109",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\\\](https://e.com/\\\\) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:110",
+  "carve": "[https\\:\\/\\/e\\.com\\/\\{\\.c\\}](https://e.com/{.c})\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:111",
+  "carve": "para [https\\:\\/\\/e\\.com\\/\\{\\.c\\}](https://e.com/{.c}) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:112",
+  "carve": "[mailto\\:a\\{\\}\\@b\\.c](mailto:a{}@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:113",
+  "carve": "para [mailto\\:a\\{\\}\\@b\\.c](mailto:a{}@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:114",
+  "carve": "<mailto:a{%%}\\@b.c>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:115",
+  "carve": "para <mailto:a{%%}\\@b.c> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:116",
+  "carve": "[mailto\\:a\\{\\'\\'\\}\\@b\\.c](mailto:a{''}@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:117",
+  "carve": "para [mailto\\:a\\{\\'\\'\\}\\@b\\.c](mailto:a{''}@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:118",
+  "carve": "[mailto\\:a\\{\\\"\\@b\\.c](mailto:a{\"@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:119",
+  "carve": "para [mailto\\:a\\{\\\"\\@b\\.c](mailto:a{\"@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:120",
+  "carve": "[mailto\\:a\\\"\\}\\@b\\.c](mailto:a\"}@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:121",
+  "carve": "para [mailto\\:a\\\"\\}\\@b\\.c](mailto:a\"}@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:122",
+  "carve": "<mailto:a`  x  `\\@b.c>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:123",
+  "carve": "para <mailto:a`  x  `\\@b.c> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:124",
+  "carve": "[mailto\\:a\\[x\\]\\[missing\\]\\@b\\.c](mailto:a%5Bx%5D%5Bmissing%5D@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:125",
+  "carve": "para [mailto\\:a\\[x\\]\\[missing\\]\\@b\\.c](mailto:a%5Bx%5D%5Bmissing%5D@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:126",
+  "carve": "[mailto\\:a\\[r\\]\\[\\]\\@b\\.c](mailto:a%5Br%5D%5B%5D@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:127",
+  "carve": "para [mailto\\:a\\[r\\]\\[\\]\\@b\\.c](mailto:a%5Br%5D%5B%5D@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:128",
+  "carve": "[mailto\\:a\\-\\-\\@b\\.c](mailto:a--@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:129",
+  "carve": "para [mailto\\:a\\-\\-\\@b\\.c](mailto:a--@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:130",
+  "carve": "[mailto\\:a\\*a\\*\\{\\}\\*b\\*\\@b\\.c](mailto:a*a*{}*b*@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:131",
+  "carve": "para [mailto\\:a\\*a\\*\\{\\}\\*b\\*\\@b\\.c](mailto:a*a*{}*b*@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:132",
+  "carve": "<mailto:a'tis@b.c>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:133",
+  "carve": "para <mailto:a'tis@b.c> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:134",
+  "carve": "<mailto:a# h@b.c>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:135",
+  "carve": "para <mailto:a# h@b.c> tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:136",
+  "carve": "[mailto\\:a\\\\\\@b\\.c](mailto:a\\\\@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:137",
+  "carve": "para [mailto\\:a\\\\\\@b\\.c](mailto:a\\\\@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:138",
+  "carve": "[mailto\\:a\\{\\.c\\}\\@b\\.c](mailto:a{.c}@b.c)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:139",
+  "carve": "para [mailto\\:a\\{\\.c\\}\\@b\\.c](mailto:a{.c}@b.c) tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:140",
+  "carve": "`{}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:141",
+  "carve": "para `{}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:142",
+  "carve": "`{ }`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:143",
+  "carve": "para `{ }` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:144",
+  "carve": "`{''}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:145",
+  "carve": "para `{''}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:146",
+  "carve": "`{\"`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:147",
+  "carve": "para `{\"` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:148",
+  "carve": "`\"}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:149",
+  "carve": "para `\"}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:150",
+  "carve": "``  x  ``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:151",
+  "carve": "para ``  x  `` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:152",
+  "carve": "`[x][missing]`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:153",
+  "carve": "para `[x][missing]` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:154",
+  "carve": "`[r][]`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:155",
+  "carve": "para `[r][]` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:156",
+  "carve": "`--`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:157",
+  "carve": "para `--` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:158",
+  "carve": "`*a*{}*b*`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:159",
+  "carve": "para `*a*{}*b*` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:160",
+  "carve": "`'tis`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:161",
+  "carve": "para `'tis` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:162",
+  "carve": "`# h`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:163",
+  "carve": "para `# h` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:164",
+  "carve": "`\\`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:165",
+  "carve": "para `\\` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:166",
+  "carve": "`{.c}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:167",
+  "carve": "para `{.c}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:168",
+  "carve": "``{}``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:169",
+  "carve": "para ``{}`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:170",
+  "carve": "``{ }``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:171",
+  "carve": "para ``{ }`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:172",
+  "carve": "``{''}``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:173",
+  "carve": "para ``{''}`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:174",
+  "carve": "``{\"``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:175",
+  "carve": "para ``{\"`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:176",
+  "carve": "``\"}``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:177",
+  "carve": "para ``\"}`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:178",
+  "carve": "`  x  `\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:179",
+  "carve": "para ```  x  ``` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:180",
+  "carve": "``[x][missing]``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:181",
+  "carve": "para ``[x][missing]`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:182",
+  "carve": "``[r][]``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:183",
+  "carve": "para ``[r][]`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:184",
+  "carve": "``--``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:185",
+  "carve": "para ``--`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:186",
+  "carve": "``*a*{}*b*``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:187",
+  "carve": "para ``*a*{}*b*`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:188",
+  "carve": "``'tis``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:189",
+  "carve": "para ``'tis`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:190",
+  "carve": "``# h``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:191",
+  "carve": "para ``# h`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:192",
+  "carve": "``\\``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:193",
+  "carve": "para ``\\`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:194",
+  "carve": "``{.c}``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:195",
+  "carve": "para ``{.c}`` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:196",
+  "carve": "`{}`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:197",
+  "carve": "para `{}`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:198",
+  "carve": "`{ }`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:199",
+  "carve": "para `{ }`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:200",
+  "carve": "`{''}`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:201",
+  "carve": "para `{''}`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:202",
+  "carve": "`{\"`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:203",
+  "carve": "para `{\"`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:204",
+  "carve": "`\"}`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:205",
+  "carve": "para `\"}`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:206",
+  "carve": "`` x ``{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:207",
+  "carve": "para `` x ``{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:208",
+  "carve": "`[x][missing]`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:209",
+  "carve": "para `[x][missing]`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:210",
+  "carve": "`[r][]`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:211",
+  "carve": "para `[r][]`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:212",
+  "carve": "`--`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:213",
+  "carve": "para `--`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:214",
+  "carve": "`*a*{}*b*`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:215",
+  "carve": "para `*a*{}*b*`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:216",
+  "carve": "`'tis`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:217",
+  "carve": "para `'tis`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:218",
+  "carve": "`# h`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:219",
+  "carve": "para `# h`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:220",
+  "carve": "`\\`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:221",
+  "carve": "para `\\`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:222",
+  "carve": "`{.c}`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:223",
+  "carve": "para `{.c}`{=html} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:224",
+  "carve": "$`{}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:225",
+  "carve": "para $`{}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:226",
+  "carve": "$`{ }`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:227",
+  "carve": "para $`{ }` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:228",
+  "carve": "$`{''}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:229",
+  "carve": "para $`{''}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:230",
+  "carve": "$`{\"`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:231",
+  "carve": "para $`{\"` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:232",
+  "carve": "$`\"}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:233",
+  "carve": "para $`\"}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:234",
+  "carve": "$`` x ``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:235",
+  "carve": "para $`` x `` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:236",
+  "carve": "$`[x][missing]`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:237",
+  "carve": "para $`[x][missing]` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:238",
+  "carve": "$`[r][]`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:239",
+  "carve": "para $`[r][]` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:240",
+  "carve": "$`--`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:241",
+  "carve": "para $`--` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:242",
+  "carve": "$`*a*{}*b*`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:243",
+  "carve": "para $`*a*{}*b*` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:244",
+  "carve": "$`'tis`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:245",
+  "carve": "para $`'tis` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:246",
+  "carve": "$`# h`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:247",
+  "carve": "para $`# h` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:248",
+  "carve": "$`\\`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:249",
+  "carve": "para $`\\` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:250",
+  "carve": "$`{.c}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:251",
+  "carve": "para $`{.c}` tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:252",
+  "carve": "[t]{k=\"\\{\\}\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:253",
+  "carve": "para [t]{k=\"\\{\\}\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:254",
+  "carve": "[t]{k=\"\\{ \\}\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:255",
+  "carve": "para [t]{k=\"\\{ \\}\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:256",
+  "carve": "[t]{k=\"\\{\\'\\'\\}\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:257",
+  "carve": "para [t]{k=\"\\{\\'\\'\\}\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:258",
+  "carve": "[t]\\{k=\"\\{\"”\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:259",
+  "carve": "para [t]\\{k=\"\\{\"” tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:260",
+  "carve": "[t]{k=\"\"}”\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:261",
+  "carve": "para [t]{k=\"\"}” tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:262",
+  "carve": "[t]{k=\"\\` x \\`\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:263",
+  "carve": "para [t]{k=\"\\` x \\`\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:264",
+  "carve": "[t]{k=\"\\[x\\]\\[missing\\]\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:265",
+  "carve": "para [t]{k=\"\\[x\\]\\[missing\\]\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:266",
+  "carve": "[t]{k=\"\\[r\\]\\[\\]\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:267",
+  "carve": "para [t]{k=\"\\[r\\]\\[\\]\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:268",
+  "carve": "[t]{k=\"\\-\\-\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:269",
+  "carve": "para [t]{k=\"\\-\\-\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:270",
+  "carve": "[t]{k=\"\\*a\\*\\{\\}\\*b\\*\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:271",
+  "carve": "para [t]{k=\"\\*a\\*\\{\\}\\*b\\*\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:272",
+  "carve": "[t]{k=\"\\'tis\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:273",
+  "carve": "para [t]{k=\"\\'tis\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:274",
+  "carve": "[t]{k=\"\\# h\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:275",
+  "carve": "para [t]{k=\"\\# h\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:276",
+  "carve": "[t]\\{k=\"\\\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:277",
+  "carve": "para [t]\\{k=\"\\\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:278",
+  "carve": "[t]{k=\"\\{\\.c\\}\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:279",
+  "carve": "para [t]{k=\"\\{\\.c\\}\"} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:280",
+  "carve": "{%%} %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:281",
+  "carve": "para {%%} %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:282",
+  "carve": "{%%} %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:283",
+  "carve": "para {%%} %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:284",
+  "carve": "{%%} %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:285",
+  "carve": "para {%%} %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:286",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:287",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:288",
+  "carve": "{%%} %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:289",
+  "carve": "para {%%} %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:290",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:291",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:292",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:293",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:294",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:295",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:296",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:297",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:298",
+  "carve": "{%%}*b* %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:299",
+  "carve": "para {%%}*b* %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:300",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:301",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:302",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:303",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:304",
+  "carve": "%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:305",
+  "carve": "para {%%} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:306",
+  "carve": "{%%} %}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:307",
+  "carve": "para {%%} %} tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:336",
+  "carve": "```\n{}\n{ }\n{''}\n{\"\n\"}\n` x `\n[x][missing]\n[r][]\n--\n*a*{}*b*\n'tis\n# h\n\\\n{.c}\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen3:337",
+  "carve": "``` =html\n{}\n{ }\n{''}\n{\"\n\"}\n` x `\n[x][missing]\n[r][]\n--\n*a*{}*b*\n'tis\n# h\n\\\n{.c}\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ }
+]

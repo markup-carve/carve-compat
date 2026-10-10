@@ -1,0 +1,6672 @@
+[
+ {
+  "id": "gen5:0",
+  "carve": "[x]{}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:1",
+  "carve": "[x]{}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:2",
+  "carve": "pre [x]{} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:3",
+  "carve": "[x]{}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:4",
+  "carve": "[x]{}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:5",
+  "carve": "pre [x]{} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:6",
+  "carve": "[x]{}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:7",
+  "carve": "[x]{}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:8",
+  "carve": "pre [x]{} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:9",
+  "carve": "[x]{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:10",
+  "carve": "[x]{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:11",
+  "carve": "pre [x]{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:12",
+  "carve": "[x]{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:13",
+  "carve": "[x]{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:14",
+  "carve": "pre [x]{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:15",
+  "carve": "[x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:16",
+  "carve": "[x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:17",
+  "carve": "pre [x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:18",
+  "carve": "[x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:19",
+  "carve": "[x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:20",
+  "carve": "pre [x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:21",
+  "carve": "[x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:22",
+  "carve": "[x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:23",
+  "carve": "pre [x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:24",
+  "carve": "[x](u){.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:25",
+  "carve": "[x](u){.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:26",
+  "carve": "pre [x](u){.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:27",
+  "carve": "[x](u){#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:28",
+  "carve": "[x](u){#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:29",
+  "carve": "pre [x](u){#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:30",
+  "carve": "![x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:31",
+  "carve": "![x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:32",
+  "carve": "pre ![x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:33",
+  "carve": "![x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:34",
+  "carve": "![x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:35",
+  "carve": "pre ![x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:36",
+  "carve": "![x](u){%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:37",
+  "carve": "![x](u){%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:38",
+  "carve": "pre ![x](u){%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:39",
+  "carve": "![x](u){.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:40",
+  "carve": "![x](u){.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:41",
+  "carve": "pre ![x](u){.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:42",
+  "carve": "![x](u){#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:43",
+  "carve": "![x](u){#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:44",
+  "carve": "pre ![x](u){#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:45",
+  "carve": "*s*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:46",
+  "carve": "*s*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:47",
+  "carve": "pre *s*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:48",
+  "carve": "*s*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:49",
+  "carve": "*s*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:50",
+  "carve": "pre *s*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:51",
+  "carve": "*s*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:52",
+  "carve": "*s*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:53",
+  "carve": "pre *s*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:54",
+  "carve": "*s*{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:55",
+  "carve": "*s*{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:56",
+  "carve": "pre *s*{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:57",
+  "carve": "*s*{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:58",
+  "carve": "*s*{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:59",
+  "carve": "pre *s*{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:60",
+  "carve": "/e/{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:61",
+  "carve": "/e/{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:62",
+  "carve": "pre /e/{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:63",
+  "carve": "/e/{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:64",
+  "carve": "/e/{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:65",
+  "carve": "pre /e/{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:66",
+  "carve": "/e/{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:67",
+  "carve": "/e/{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:68",
+  "carve": "pre /e/{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:69",
+  "carve": "/e/{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:70",
+  "carve": "/e/{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:71",
+  "carve": "pre /e/{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:72",
+  "carve": "/e/{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:73",
+  "carve": "/e/{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:74",
+  "carve": "pre /e/{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:75",
+  "carve": "`c`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:76",
+  "carve": "`c`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:77",
+  "carve": "pre `c`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:78",
+  "carve": "`c`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:79",
+  "carve": "`c`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:80",
+  "carve": "pre `c`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:81",
+  "carve": "`c`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:82",
+  "carve": "`c`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:83",
+  "carve": "pre `c`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:84",
+  "carve": "`c`{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:85",
+  "carve": "`c`{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:86",
+  "carve": "pre `c`{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:87",
+  "carve": "`c`{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:88",
+  "carve": "`c`{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:89",
+  "carve": "pre `c`{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:90",
+  "carve": "{=m=}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:91",
+  "carve": "{=m=}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:92",
+  "carve": "pre {=m=}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:93",
+  "carve": "{=m=}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:94",
+  "carve": "{=m=}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:95",
+  "carve": "pre {=m=}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:96",
+  "carve": "{=m=}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:97",
+  "carve": "{=m=}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:98",
+  "carve": "pre {=m=}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:99",
+  "carve": "{=m=}{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:100",
+  "carve": "{=m=}{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:101",
+  "carve": "pre {=m=}{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:102",
+  "carve": "{=m=}{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:103",
+  "carve": "{=m=}{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:104",
+  "carve": "pre {=m=}{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:105",
+  "carve": "{+i+}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:106",
+  "carve": "{+i+}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:107",
+  "carve": "pre {+i+}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:108",
+  "carve": "{+i+}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:109",
+  "carve": "{+i+}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:110",
+  "carve": "pre {+i+}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:111",
+  "carve": "{+i+}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:112",
+  "carve": "{+i+}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:113",
+  "carve": "pre {+i+}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:114",
+  "carve": "{+i+}{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:115",
+  "carve": "{+i+}{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:116",
+  "carve": "pre {+i+}{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:117",
+  "carve": "{+i+}{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:118",
+  "carve": "{+i+}{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:119",
+  "carve": "pre {+i+}{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:120",
+  "carve": "{-d-}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:121",
+  "carve": "{-d-}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:122",
+  "carve": "pre {-d-}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:123",
+  "carve": "{-d-}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:124",
+  "carve": "{-d-}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:125",
+  "carve": "pre {-d-}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:126",
+  "carve": "{-d-}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:127",
+  "carve": "{-d-}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:128",
+  "carve": "pre {-d-}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:129",
+  "carve": "{-d-}{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:130",
+  "carve": "{-d-}{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:131",
+  "carve": "pre {-d-}{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:132",
+  "carve": "{-d-}{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:133",
+  "carve": "{-d-}{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:134",
+  "carve": "pre {-d-}{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:135",
+  "carve": "{^u^}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:136",
+  "carve": "{^u^}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:137",
+  "carve": "pre {^u^}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:138",
+  "carve": "{^u^}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:139",
+  "carve": "{^u^}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:140",
+  "carve": "pre {^u^}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:141",
+  "carve": "{^u^}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:142",
+  "carve": "{^u^}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:143",
+  "carve": "pre {^u^}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:144",
+  "carve": "{^u^}{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:145",
+  "carve": "{^u^}{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:146",
+  "carve": "pre {^u^}{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:147",
+  "carve": "{^u^}{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:148",
+  "carve": "{^u^}{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:149",
+  "carve": "pre {^u^}{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:150",
+  "carve": "{,d,}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:151",
+  "carve": "{,d,}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:152",
+  "carve": "pre {,d,}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:153",
+  "carve": "{,d,}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:154",
+  "carve": "{,d,}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:155",
+  "carve": "pre {,d,}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:156",
+  "carve": "{,d,}{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:157",
+  "carve": "{,d,}{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:158",
+  "carve": "pre {,d,}{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:159",
+  "carve": "{,d,}{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:160",
+  "carve": "{,d,}{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:161",
+  "carve": "pre {,d,}{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:162",
+  "carve": "{,d,}{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:163",
+  "carve": "{,d,}{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:164",
+  "carve": "pre {,d,}{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:165",
+  "carve": "$`m`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:166",
+  "carve": "$`m`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:167",
+  "carve": "pre $`m`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:168",
+  "carve": "$`m`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:169",
+  "carve": "$`m`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:170",
+  "carve": "pre $`m`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:171",
+  "carve": "$`m`{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:172",
+  "carve": "$`m`{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:173",
+  "carve": "pre $`m`{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:174",
+  "carve": "$`m`{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:175",
+  "carve": "$`m`{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:176",
+  "carve": "pre $`m`{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:177",
+  "carve": "$`m`{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:178",
+  "carve": "$`m`{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:179",
+  "carve": "pre $`m`{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:180",
+  "carve": "<http://a.b>{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:181",
+  "carve": "<http://a.b>{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:182",
+  "carve": "pre <http://a.b>{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:183",
+  "carve": "<http://a.b>{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:184",
+  "carve": "<http://a.b>{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:185",
+  "carve": "pre <http://a.b>{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:186",
+  "carve": "<http://a.b>{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:187",
+  "carve": "<http://a.b>{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:188",
+  "carve": "pre <http://a.b>{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:189",
+  "carve": "<http://a.b>{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:190",
+  "carve": "<http://a.b>{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:191",
+  "carve": "pre <http://a.b>{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:192",
+  "carve": "<http://a.b>{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:193",
+  "carve": "<http://a.b>{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:194",
+  "carve": "pre <http://a.b>{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:195",
+  "carve": "word{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:196",
+  "carve": "word{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:197",
+  "carve": "pre word{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:198",
+  "carve": "word{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:199",
+  "carve": "word{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:200",
+  "carve": "pre word{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:201",
+  "carve": "word{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:202",
+  "carve": "word{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:203",
+  "carve": "pre word{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:204",
+  "carve": "[word]{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:205",
+  "carve": "[word]{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:206",
+  "carve": "pre [word]{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:207",
+  "carve": "[word]{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:208",
+  "carve": "[word]{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:209",
+  "carve": "pre [word]{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:210",
+  "carve": "\"q\"{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:211",
+  "carve": "\"q\"{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:212",
+  "carve": "pre \"q\"{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:213",
+  "carve": "\"q\"{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:214",
+  "carve": "\"q\"{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:215",
+  "carve": "pre \"q\"{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:216",
+  "carve": "\"q\"{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:217",
+  "carve": "\"q\"{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:218",
+  "carve": "pre \"q\"{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:219",
+  "carve": "\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:220",
+  "carve": "\"q\"tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:221",
+  "carve": "pre \"q\" post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:222",
+  "carve": "\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:223",
+  "carve": "\"q\"tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:224",
+  "carve": "pre \"q\" post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:225",
+  "carve": "'q'{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:226",
+  "carve": "'q'{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:227",
+  "carve": "pre 'q'{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:228",
+  "carve": "'q'{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:229",
+  "carve": "'q'{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:230",
+  "carve": "pre 'q'{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:231",
+  "carve": "'q'{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:232",
+  "carve": "'q'{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:233",
+  "carve": "pre 'q'{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:234",
+  "carve": "'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:235",
+  "carve": "'q'tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:236",
+  "carve": "pre 'q' post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:237",
+  "carve": "'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:238",
+  "carve": "'q'tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:239",
+  "carve": "pre 'q' post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:240",
+  "carve": "\\*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:241",
+  "carve": "\\*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:242",
+  "carve": "pre \\*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:243",
+  "carve": "\\*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:244",
+  "carve": "\\*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:245",
+  "carve": "pre \\*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:246",
+  "carve": "\\*{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:247",
+  "carve": "\\*{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:248",
+  "carve": "pre \\*{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:249",
+  "carve": "[\\*]{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:250",
+  "carve": "[\\*]{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:251",
+  "carve": "pre [\\*]{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:252",
+  "carve": "[\\*]{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:253",
+  "carve": "[\\*]{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:254",
+  "carve": "pre [\\*]{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:255",
+  "carve": "\\{{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:256",
+  "carve": "\\{{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:257",
+  "carve": "pre \\{{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:258",
+  "carve": "\\{{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:259",
+  "carve": "\\{{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:260",
+  "carve": "pre \\{{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:261",
+  "carve": "\\{{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:262",
+  "carve": "\\{{%%}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:263",
+  "carve": "pre \\{{%%} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:264",
+  "carve": "[\\{]{.c}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:265",
+  "carve": "[\\{]{.c}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:266",
+  "carve": "pre [\\{]{.c} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:267",
+  "carve": "[\\{]{#i}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:268",
+  "carve": "[\\{]{#i}tail\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:269",
+  "carve": "pre [\\{]{#i} post\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:270",
+  "carve": "[x]{}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:271",
+  "carve": "[x]{}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:272",
+  "carve": "[x]{}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:273",
+  "carve": "[x]{}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:274",
+  "carve": "[x]{}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:275",
+  "carve": "[x]{}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:276",
+  "carve": "[x]{}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:277",
+  "carve": "[x]{}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:278",
+  "carve": "[x]{}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:279",
+  "carve": "[x]{}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:280",
+  "carve": "[x]{}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:281",
+  "carve": "[x]{}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:282",
+  "carve": "[x]{}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:283",
+  "carve": "[x]{}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:284",
+  "carve": "[x]{}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:285",
+  "carve": "[x]{}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:286",
+  "carve": "[x]{}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:287",
+  "carve": "[x]{}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:288",
+  "carve": "[x](u){%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:289",
+  "carve": "[x](u){%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:290",
+  "carve": "[x](u){%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:291",
+  "carve": "[x](u){%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:292",
+  "carve": "[x](u){%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:293",
+  "carve": "[x](u){%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:294",
+  "carve": "[x](u){%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:295",
+  "carve": "[x](u){%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:296",
+  "carve": "[x](u){%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:297",
+  "carve": "[x](u){%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:298",
+  "carve": "[x](u){%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:299",
+  "carve": "[x](u){%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:300",
+  "carve": "[x](u){%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:301",
+  "carve": "[x](u){%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:302",
+  "carve": "[x](u){%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:303",
+  "carve": "[x](u){%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:304",
+  "carve": "[x](u){%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:305",
+  "carve": "[x](u){%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:306",
+  "carve": "![x](u){%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:307",
+  "carve": "![x](u){%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:308",
+  "carve": "![x](u){%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:309",
+  "carve": "![x](u){%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:310",
+  "carve": "![x](u){%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:311",
+  "carve": "![x](u){%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:312",
+  "carve": "![x](u){%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:313",
+  "carve": "![x](u){%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:314",
+  "carve": "![x](u){%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:315",
+  "carve": "![x](u){%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:316",
+  "carve": "![x](u){%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:317",
+  "carve": "![x](u){%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:318",
+  "carve": "![x](u){%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:319",
+  "carve": "![x](u){%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:320",
+  "carve": "![x](u){%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:321",
+  "carve": "![x](u){%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:322",
+  "carve": "![x](u){%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:323",
+  "carve": "![x](u){%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:324",
+  "carve": "*s*{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:325",
+  "carve": "*s*{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:326",
+  "carve": "*s*{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:327",
+  "carve": "*s*{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:328",
+  "carve": "*s*{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:329",
+  "carve": "*s*{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:330",
+  "carve": "*s*{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:331",
+  "carve": "*s*{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:332",
+  "carve": "*s*{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:333",
+  "carve": "*s*{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:334",
+  "carve": "*s*{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:335",
+  "carve": "*s*{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:336",
+  "carve": "*s*{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:337",
+  "carve": "*s*{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:338",
+  "carve": "*s*{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:339",
+  "carve": "*s*{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:340",
+  "carve": "*s*{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:341",
+  "carve": "*s*{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:342",
+  "carve": "/e/{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:343",
+  "carve": "/e/{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:344",
+  "carve": "/e/{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:345",
+  "carve": "/e/{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:346",
+  "carve": "/e/{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:347",
+  "carve": "/e/{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:348",
+  "carve": "/e/{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:349",
+  "carve": "/e/{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:350",
+  "carve": "/e/{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:351",
+  "carve": "/e/{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:352",
+  "carve": "/e/{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:353",
+  "carve": "/e/{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:354",
+  "carve": "/e/{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:355",
+  "carve": "/e/{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:356",
+  "carve": "/e/{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:357",
+  "carve": "/e/{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:358",
+  "carve": "/e/{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:359",
+  "carve": "/e/{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:360",
+  "carve": "`c`{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:361",
+  "carve": "`c`{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:362",
+  "carve": "`c`{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:363",
+  "carve": "`c`{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:364",
+  "carve": "`c`{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:365",
+  "carve": "`c`{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:366",
+  "carve": "`c`{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:367",
+  "carve": "`c`{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:368",
+  "carve": "`c`{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:369",
+  "carve": "`c`{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:370",
+  "carve": "`c`{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:371",
+  "carve": "`c`{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:372",
+  "carve": "`c`{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:373",
+  "carve": "`c`{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:374",
+  "carve": "`c`{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:375",
+  "carve": "`c`{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:376",
+  "carve": "`c`{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:377",
+  "carve": "`c`{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:378",
+  "carve": "{=m=}{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:379",
+  "carve": "{=m=}{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:380",
+  "carve": "{=m=}{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:381",
+  "carve": "{=m=}{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:382",
+  "carve": "{=m=}{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:383",
+  "carve": "{=m=}{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:384",
+  "carve": "{=m=}{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:385",
+  "carve": "{=m=}{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:386",
+  "carve": "{=m=}{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:387",
+  "carve": "{=m=}{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:388",
+  "carve": "{=m=}{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:389",
+  "carve": "{=m=}{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:390",
+  "carve": "{=m=}{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:391",
+  "carve": "{=m=}{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:392",
+  "carve": "{=m=}{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:393",
+  "carve": "{=m=}{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:394",
+  "carve": "{=m=}{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:395",
+  "carve": "{=m=}{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:396",
+  "carve": "{+i+}{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:397",
+  "carve": "{+i+}{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:398",
+  "carve": "{+i+}{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:399",
+  "carve": "{+i+}{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:400",
+  "carve": "{+i+}{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:401",
+  "carve": "{+i+}{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:402",
+  "carve": "{+i+}{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:403",
+  "carve": "{+i+}{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:404",
+  "carve": "{+i+}{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:405",
+  "carve": "{+i+}{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:406",
+  "carve": "{+i+}{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:407",
+  "carve": "{+i+}{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:408",
+  "carve": "{+i+}{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:409",
+  "carve": "{+i+}{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:410",
+  "carve": "{+i+}{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:411",
+  "carve": "{+i+}{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:412",
+  "carve": "{+i+}{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:413",
+  "carve": "{+i+}{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:414",
+  "carve": "{-d-}{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:415",
+  "carve": "{-d-}{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:416",
+  "carve": "{-d-}{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:417",
+  "carve": "{-d-}{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:418",
+  "carve": "{-d-}{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:419",
+  "carve": "{-d-}{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:420",
+  "carve": "{-d-}{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:421",
+  "carve": "{-d-}{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:422",
+  "carve": "{-d-}{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:423",
+  "carve": "{-d-}{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:424",
+  "carve": "{-d-}{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:425",
+  "carve": "{-d-}{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:426",
+  "carve": "{-d-}{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:427",
+  "carve": "{-d-}{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:428",
+  "carve": "{-d-}{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:429",
+  "carve": "{-d-}{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:430",
+  "carve": "{-d-}{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:431",
+  "carve": "{-d-}{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:432",
+  "carve": "{^u^}{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:433",
+  "carve": "{^u^}{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:434",
+  "carve": "{^u^}{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:435",
+  "carve": "{^u^}{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:436",
+  "carve": "{^u^}{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:437",
+  "carve": "{^u^}{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:438",
+  "carve": "{^u^}{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:439",
+  "carve": "{^u^}{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:440",
+  "carve": "{^u^}{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:441",
+  "carve": "{^u^}{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:442",
+  "carve": "{^u^}{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:443",
+  "carve": "{^u^}{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:444",
+  "carve": "{^u^}{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:445",
+  "carve": "{^u^}{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:446",
+  "carve": "{^u^}{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:447",
+  "carve": "{^u^}{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:448",
+  "carve": "{^u^}{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:449",
+  "carve": "{^u^}{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:450",
+  "carve": "{,d,}{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:451",
+  "carve": "{,d,}{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:452",
+  "carve": "{,d,}{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:453",
+  "carve": "{,d,}{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:454",
+  "carve": "{,d,}{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:455",
+  "carve": "{,d,}{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:456",
+  "carve": "{,d,}{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:457",
+  "carve": "{,d,}{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:458",
+  "carve": "{,d,}{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:459",
+  "carve": "{,d,}{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:460",
+  "carve": "{,d,}{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:461",
+  "carve": "{,d,}{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:462",
+  "carve": "{,d,}{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:463",
+  "carve": "{,d,}{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:464",
+  "carve": "{,d,}{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:465",
+  "carve": "{,d,}{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:466",
+  "carve": "{,d,}{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:467",
+  "carve": "{,d,}{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:468",
+  "carve": "$`m`{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:469",
+  "carve": "$`m`{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:470",
+  "carve": "$`m`{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:471",
+  "carve": "$`m`{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:472",
+  "carve": "$`m`{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:473",
+  "carve": "$`m`{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:474",
+  "carve": "$`m`{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:475",
+  "carve": "$`m`{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:476",
+  "carve": "$`m`{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:477",
+  "carve": "$`m`{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:478",
+  "carve": "$`m`{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:479",
+  "carve": "$`m`{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:480",
+  "carve": "$`m`{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:481",
+  "carve": "$`m`{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:482",
+  "carve": "$`m`{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:483",
+  "carve": "$`m`{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:484",
+  "carve": "$`m`{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:485",
+  "carve": "$`m`{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:486",
+  "carve": "<http://a.b>{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:487",
+  "carve": "<http://a.b>{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:488",
+  "carve": "<http://a.b>{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:489",
+  "carve": "<http://a.b>{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:490",
+  "carve": "<http://a.b>{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:491",
+  "carve": "<http://a.b>{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:492",
+  "carve": "<http://a.b>{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:493",
+  "carve": "<http://a.b>{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:494",
+  "carve": "<http://a.b>{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:495",
+  "carve": "<http://a.b>{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:496",
+  "carve": "<http://a.b>{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:497",
+  "carve": "<http://a.b>{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:498",
+  "carve": "<http://a.b>{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:499",
+  "carve": "<http://a.b>{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:500",
+  "carve": "<http://a.b>{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:501",
+  "carve": "<http://a.b>{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:502",
+  "carve": "<http://a.b>{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:503",
+  "carve": "<http://a.b>{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:504",
+  "carve": "word{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:505",
+  "carve": "word{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:506",
+  "carve": "word{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:507",
+  "carve": "word{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:508",
+  "carve": "word{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:509",
+  "carve": "word{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:510",
+  "carve": "word{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:511",
+  "carve": "word{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:512",
+  "carve": "word{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:513",
+  "carve": "word{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:514",
+  "carve": "word{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:515",
+  "carve": "word{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:516",
+  "carve": "word{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:517",
+  "carve": "word{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:518",
+  "carve": "word{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:519",
+  "carve": "word{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:520",
+  "carve": "word{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:521",
+  "carve": "word{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:522",
+  "carve": "\"q\"{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:523",
+  "carve": "\"q\"{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:524",
+  "carve": "\"q\"{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:525",
+  "carve": "\"q\"{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:526",
+  "carve": "\"q\"{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:527",
+  "carve": "\"q\"{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:528",
+  "carve": "\"q\"{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:529",
+  "carve": "\"q\"{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:530",
+  "carve": "\"q\"{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:531",
+  "carve": "\"q\"{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:532",
+  "carve": "\"q\"{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:533",
+  "carve": "\"q\"{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:534",
+  "carve": "\"q\"{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:535",
+  "carve": "\"q\"{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:536",
+  "carve": "\"q\"{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:537",
+  "carve": "\"q\"{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:538",
+  "carve": "\"q\"{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:539",
+  "carve": "\"q\"{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:540",
+  "carve": "'q'{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:541",
+  "carve": "'q'{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:542",
+  "carve": "'q'{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:543",
+  "carve": "'q'{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:544",
+  "carve": "'q'{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:545",
+  "carve": "'q'{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:546",
+  "carve": "'q'{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:547",
+  "carve": "'q'{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:548",
+  "carve": "'q'{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:549",
+  "carve": "'q'{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:550",
+  "carve": "'q'{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:551",
+  "carve": "'q'{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:552",
+  "carve": "'q'{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:553",
+  "carve": "'q'{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:554",
+  "carve": "'q'{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:555",
+  "carve": "'q'{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:556",
+  "carve": "'q'{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:557",
+  "carve": "'q'{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:558",
+  "carve": "\\*{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:559",
+  "carve": "\\*{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:560",
+  "carve": "\\*{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:561",
+  "carve": "\\*{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:562",
+  "carve": "\\*{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:563",
+  "carve": "\\*{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:564",
+  "carve": "\\*{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:565",
+  "carve": "\\*{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:566",
+  "carve": "\\*{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:567",
+  "carve": "\\*{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:568",
+  "carve": "\\*{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:569",
+  "carve": "\\*{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:570",
+  "carve": "\\*{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:571",
+  "carve": "\\*{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:572",
+  "carve": "\\*{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:573",
+  "carve": "\\*{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:574",
+  "carve": "\\*{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:575",
+  "carve": "\\*{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:576",
+  "carve": "\\{{%%}[x]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:577",
+  "carve": "\\{{%%}[x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:578",
+  "carve": "\\{{%%}![x](u)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:579",
+  "carve": "\\{{%%}*s*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:580",
+  "carve": "\\{{%%}/e/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:581",
+  "carve": "\\{{%%}`c`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:582",
+  "carve": "\\{{%%}{=m=}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:583",
+  "carve": "\\{{%%}{+i+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:584",
+  "carve": "\\{{%%}{-d-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:585",
+  "carve": "\\{{%%}{^u^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:586",
+  "carve": "\\{{%%}{,d,}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:587",
+  "carve": "\\{{%%}$`m`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:588",
+  "carve": "\\{{%%}<http://a.b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:589",
+  "carve": "\\{{%%}word\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:590",
+  "carve": "\\{{%%}\"q\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:591",
+  "carve": "\\{{%%}'q'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:592",
+  "carve": "\\{{%%}\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:593",
+  "carve": "\\{{%%}\\{\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:594",
+  "carve": "a\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:595",
+  "carve": "*a*\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:596",
+  "carve": "a\n",
+  "diagnostics": [
+   [
+    "literal-text-verified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:597",
+  "carve": "a\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:598",
+  "carve": "*a*\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:599",
+  "carve": "a \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:600",
+  "carve": "a\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:601",
+  "carve": "*a*\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:602",
+  "carve": "a  \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:603",
+  "carve": "a\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:604",
+  "carve": "*a*\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:605",
+  "carve": "a\t\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:606",
+  "carve": "a\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:607",
+  "carve": "*a*\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:608",
+  "carve": "a \t \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:609",
+  "carve": "a\\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:610",
+  "carve": "*a*\\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:611",
+  "carve": "a\\ \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:612",
+  "carve": "a\\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:613",
+  "carve": "*a*\\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:614",
+  "carve": "a\\  \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:615",
+  "carve": "a \\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:616",
+  "carve": "*a* \\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:617",
+  "carve": "a\\\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:618",
+  "carve": "a\\\\\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:619",
+  "carve": "*a*\\\\\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:620",
+  "carve": "a\\\\\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:621",
+  "carve": "a\\\\\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:622",
+  "carve": "*a*\\\\\\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:623",
+  "carve": "a\\\\ \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:624",
+  "carve": "a\\ \\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:625",
+  "carve": "*a*\\ \\ \\\nb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:626",
+  "carve": "a\\ \\\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:627",
+  "carve": "a ‘b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:628",
+  "carve": "a  ‘b  c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:629",
+  "carve": "a (‘b) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:630",
+  "carve": "a `{'b` c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:631",
+  "carve": "a [‘b](u) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:632",
+  "carve": "a \\{'b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:633",
+  "carve": "a ’b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:634",
+  "carve": "a  ’b  c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:635",
+  "carve": "a (’b) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:636",
+  "carve": "a `'}b` c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:637",
+  "carve": "a [’b](u) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:638",
+  "carve": "a \\'}b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:639",
+  "carve": "a “b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:640",
+  "carve": "a  “b  c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:641",
+  "carve": "a (“b) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:642",
+  "carve": "a `{\"b` c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:643",
+  "carve": "a [“b](u) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:644",
+  "carve": "a \\{\"b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:645",
+  "carve": "a ”b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:646",
+  "carve": "a  ”b  c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:647",
+  "carve": "a (”b) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:648",
+  "carve": "a `\"}b` c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:649",
+  "carve": "a [”b](u) c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:650",
+  "carve": "a \\\"}b c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:651",
+  "carve": "{1\\-\\-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:652",
+  "carve": "x {1\\-\\-} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:653",
+  "carve": "{-a-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:654",
+  "carve": "x {-a-} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:655",
+  "carve": "{--}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:656",
+  "carve": "x {--} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:657",
+  "carve": "a--b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:658",
+  "carve": "x a--b y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:659",
+  "carve": "\\{\\-\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:660",
+  "carve": "x \\{\\- y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:661",
+  "carve": "-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:662",
+  "carve": "x -} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:663",
+  "carve": "{---}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:664",
+  "carve": "x {---} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:665",
+  "carve": "{+--+}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen5:666",
+  "carve": "x {+--+} y\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ }
+]

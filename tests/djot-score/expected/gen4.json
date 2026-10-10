@@ -1,0 +1,3978 @@
+[
+ {
+  "id": "gen4:0",
+  "carve": "> a\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:1",
+  "carve": "> a\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:2",
+  "carve": "> a\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:3",
+  "carve": "> a\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:4",
+  "carve": "> a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:5",
+  "carve": "> a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:6",
+  "carve": "> a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:7",
+  "carve": "> a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:8",
+  "carve": "> a\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:9",
+  "carve": "> a\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:10",
+  "carve": "> a\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:11",
+  "carve": "> a\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:12",
+  "carve": "> a\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:13",
+  "carve": "> a\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:14",
+  "carve": "> a\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:15",
+  "carve": "> a\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:16",
+  "carve": "> a\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:17",
+  "carve": "> a\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:18",
+  "carve": "> a\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:19",
+  "carve": "> a\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:20",
+  "carve": "> a\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:21",
+  "carve": "> a\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:22",
+  "carve": "> a\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:23",
+  "carve": "> a\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:24",
+  "carve": "> a\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:25",
+  "carve": "> a\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:3"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:26",
+  "carve": "> a\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:27",
+  "carve": "> a\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:28",
+  "carve": "> > a\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:29",
+  "carve": "> > a\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:30",
+  "carve": "> > a\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:31",
+  "carve": "> > a\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:32",
+  "carve": "> > a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:33",
+  "carve": "> > a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:34",
+  "carve": "> > a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:35",
+  "carve": "> > a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:36",
+  "carve": "> > a\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:37",
+  "carve": "> > a\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:38",
+  "carve": "> > a\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:39",
+  "carve": "> > a\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:40",
+  "carve": "> > a\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:41",
+  "carve": "> > a\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:42",
+  "carve": "> > a\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:43",
+  "carve": "> > a\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:44",
+  "carve": "> > a\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:45",
+  "carve": "> > a\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:46",
+  "carve": "> > a\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:47",
+  "carve": "> > a\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:48",
+  "carve": "> > a\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:49",
+  "carve": "> > a\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:50",
+  "carve": "> > a\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:51",
+  "carve": "> > a\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:52",
+  "carve": "> > a\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:53",
+  "carve": "> > a\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:3"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:54",
+  "carve": "> > a\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:55",
+  "carve": "> > a\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:56",
+  "carve": "> a\n> b\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:57",
+  "carve": "> a\n> b\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:58",
+  "carve": "> a\n> b\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:59",
+  "carve": "> a\n> b\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:60",
+  "carve": "> a\n> b\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:61",
+  "carve": "> a\n> b\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:62",
+  "carve": "> a\n> b\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:63",
+  "carve": "> a\n> b\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:64",
+  "carve": "> a\n> b\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:65",
+  "carve": "> a\n> b\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:66",
+  "carve": "> a\n> b\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:67",
+  "carve": "> a\n> b\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:68",
+  "carve": "> a\n> b\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:69",
+  "carve": "> a\n> b\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:70",
+  "carve": "> a\n> b\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:71",
+  "carve": "> a\n> b\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:72",
+  "carve": "> a\n> b\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:73",
+  "carve": "> a\n> b\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:74",
+  "carve": "> a\n> b\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:75",
+  "carve": "> a\n> b\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:76",
+  "carve": "> a\n> b\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:77",
+  "carve": "> a\n> b\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:78",
+  "carve": "> a\n> b\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:79",
+  "carve": "> a\n> b\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:80",
+  "carve": "> a\n> b\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:81",
+  "carve": "> a\n> b\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:82",
+  "carve": "> a\n> b\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:83",
+  "carve": "> a\n> b\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:84",
+  "carve": "# a body h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:85",
+  "carve": "# a body\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:86",
+  "carve": "# a body\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:87",
+  "carve": "# a body\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:88",
+  "carve": "# a body\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:89",
+  "carve": "# a body\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:90",
+  "carve": "# a body\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:91",
+  "carve": "# a body\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:92",
+  "carve": "# a body\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:93",
+  "carve": "# a body\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:94",
+  "carve": "# a body\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:95",
+  "carve": "# a body\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:96",
+  "carve": "# a body\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:97",
+  "carve": "# a body\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:98",
+  "carve": "# a body\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:99",
+  "carve": "# a body\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:100",
+  "carve": "# a body ` k `\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:101",
+  "carve": "# a body\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:102",
+  "carve": "# a body\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:103",
+  "carve": "# a body\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:104",
+  "carve": "# a body [r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:105",
+  "carve": "# a body\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:106",
+  "carve": "# a body\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:107",
+  "carve": "# a body\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:108",
+  "carve": "# a body\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:109",
+  "carve": "# a body\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:110",
+  "carve": "# a body plain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:111",
+  "carve": "# a body\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:112",
+  "carve": "## a body\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:113",
+  "carve": "## a body\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:114",
+  "carve": "## a body h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:115",
+  "carve": "## a body\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:116",
+  "carve": "## a body\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:117",
+  "carve": "## a body\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:118",
+  "carve": "## a body\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:119",
+  "carve": "## a body\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:120",
+  "carve": "## a body\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:121",
+  "carve": "## a body\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:122",
+  "carve": "## a body\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:123",
+  "carve": "## a body\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:124",
+  "carve": "## a body\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:125",
+  "carve": "## a body\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:126",
+  "carve": "## a body\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:127",
+  "carve": "## a body\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:128",
+  "carve": "## a body ` k `\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:129",
+  "carve": "## a body\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:130",
+  "carve": "## a body\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:131",
+  "carve": "## a body\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:132",
+  "carve": "## a body [r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:133",
+  "carve": "## a body\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:134",
+  "carve": "## a body\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:135",
+  "carve": "## a body\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:136",
+  "carve": "## a body\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:137",
+  "carve": "## a body\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:138",
+  "carve": "## a body plain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:139",
+  "carve": "## a body\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:140",
+  "carve": "- a\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:141",
+  "carve": "- a\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:142",
+  "carve": "- a\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:143",
+  "carve": "- a\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:144",
+  "carve": "- a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:145",
+  "carve": "- a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:146",
+  "carve": "- a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:147",
+  "carve": "- a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:148",
+  "carve": "- a\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:149",
+  "carve": "- a\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:150",
+  "carve": "- a\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:151",
+  "carve": "- a\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:152",
+  "carve": "- a\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:153",
+  "carve": "- a\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:154",
+  "carve": "- a\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:155",
+  "carve": "- a\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:156",
+  "carve": "- a\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:157",
+  "carve": "- a\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:158",
+  "carve": "- a\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:159",
+  "carve": "- a\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:160",
+  "carve": "- a\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:161",
+  "carve": "- a\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:162",
+  "carve": "- a\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:163",
+  "carve": "- a\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:164",
+  "carve": "- a\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:165",
+  "carve": "- a\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:3"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:166",
+  "carve": "- a\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:167",
+  "carve": "- a\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:168",
+  "carve": "- a\n  b\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:169",
+  "carve": "- a\n  b\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:170",
+  "carve": "- a\n  b\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:171",
+  "carve": "- a\n  b\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:172",
+  "carve": "- a\n  b\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:173",
+  "carve": "- a\n  b\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:174",
+  "carve": "- a\n  b\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:175",
+  "carve": "- a\n  b\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:176",
+  "carve": "- a\n  b\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:177",
+  "carve": "- a\n  b\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:178",
+  "carve": "- a\n  b\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:179",
+  "carve": "- a\n  b\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:180",
+  "carve": "- a\n  b\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:181",
+  "carve": "- a\n  b\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:182",
+  "carve": "- a\n  b\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:183",
+  "carve": "- a\n  b\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:184",
+  "carve": "- a\n  b\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:185",
+  "carve": "- a\n  b\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:186",
+  "carve": "- a\n  b\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:187",
+  "carve": "- a\n  b\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:188",
+  "carve": "- a\n  b\n[r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:189",
+  "carve": "- a\n  b\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:190",
+  "carve": "- a\n  b\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:191",
+  "carve": "- a\n  b\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:192",
+  "carve": "- a\n  b\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:193",
+  "carve": "- a\n  b\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:194",
+  "carve": "- a\n  b\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:195",
+  "carve": "- a\n  b\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:196",
+  "carve": "1. a\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:197",
+  "carve": "1. a\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:198",
+  "carve": "1. a\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:199",
+  "carve": "1. a\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:200",
+  "carve": "1. a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:201",
+  "carve": "1. a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:202",
+  "carve": "1. a\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:203",
+  "carve": "1. a\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:204",
+  "carve": "1. a\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:205",
+  "carve": "1. a\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:206",
+  "carve": "1. a\n\n* li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:207",
+  "carve": "1. a\n\n* li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:208",
+  "carve": "1. a\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:209",
+  "carve": "1. a\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:210",
+  "carve": "1. a\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:211",
+  "carve": "1. a\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:212",
+  "carve": "1. a\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:213",
+  "carve": "1. a\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:214",
+  "carve": "1. a\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:215",
+  "carve": "1. a\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:216",
+  "carve": "1. a\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:217",
+  "carve": "1. a\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:218",
+  "carve": "1. a\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:219",
+  "carve": "1. a\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:220",
+  "carve": "1. a\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:221",
+  "carve": "1. a\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:3"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:222",
+  "carve": "1. a\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:223",
+  "carve": "1. a\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:224",
+  "carve": "{loose}\n:: term\n\n:  def\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:225",
+  "carve": "{loose}\n:: term\n\n:  def\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:226",
+  "carve": "{loose}\n:: term\n\n:  def\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:227",
+  "carve": "{loose}\n:: term\n\n:  def\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:228",
+  "carve": "{loose}\n:: term\n\n:  def\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:229",
+  "carve": "{loose}\n:: term\n\n:  def\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:230",
+  "carve": "{loose}\n:: term\n\n:  def\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:231",
+  "carve": "{loose}\n:: term\n\n:  def\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:232",
+  "carve": "{loose}\n:: term\n\n:  def\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:233",
+  "carve": "{loose}\n:: term\n\n:  def\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:234",
+  "carve": "{loose}\n:: term\n\n:  def\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:235",
+  "carve": "{loose}\n:: term\n\n:  def\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:236",
+  "carve": "{loose}\n:: term\n\n:  def\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:237",
+  "carve": "{loose}\n:: term\n\n:  def\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:238",
+  "carve": "{loose}\n:: term\n\n:  def\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:239",
+  "carve": "{loose}\n:: term\n\n:  def\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:240",
+  "carve": "{loose}\n:: term\n\n:  def\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:241",
+  "carve": "{loose}\n:: term\n\n:  def\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:242",
+  "carve": "{loose}\n:: term\n\n:  def\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:243",
+  "carve": "{loose}\n:: term\n\n:  def\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:244",
+  "carve": "{loose}\n:: term\n\n:  def\n[r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:245",
+  "carve": "{loose}\n:: term\n\n:  def\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:246",
+  "carve": "{loose}\n:: term\n\n:  def\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:247",
+  "carve": "{loose}\n:: term\n\n:  def\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:248",
+  "carve": "{loose}\n:: term\n\n:  def\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:249",
+  "carve": "{loose}\n:: term\n\n:  def\n\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:5"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:250",
+  "carve": "{loose}\n:: term\n\n:  def\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:251",
+  "carve": "{loose}\n:: term\n\n:  def\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:252",
+  "carve": "| t |\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:253",
+  "carve": "| t |\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:254",
+  "carve": "| t |\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:255",
+  "carve": "| t |\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:256",
+  "carve": "| t |\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:257",
+  "carve": "| t |\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:258",
+  "carve": "| t |\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:259",
+  "carve": "| t |\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:260",
+  "carve": "| t |\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:261",
+  "carve": "| t |\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:262",
+  "carve": "| t |\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:263",
+  "carve": "| t |\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:264",
+  "carve": "| t |\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:265",
+  "carve": "| t |\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:266",
+  "carve": "| t |\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:267",
+  "carve": "| t |\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:268",
+  "carve": "| t |\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:269",
+  "carve": "| t |\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:270",
+  "carve": "| t |\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:271",
+  "carve": "| t |\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:272",
+  "carve": "| t |\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:273",
+  "carve": "| t |\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:274",
+  "carve": "| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:275",
+  "carve": "| t |\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:276",
+  "carve": "| t |\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:277",
+  "carve": "| t |\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:3"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:278",
+  "carve": "| t |\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:279",
+  "carve": "| t |\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:280",
+  "carve": "para\ntext\n\\# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:281",
+  "carve": "para\ntext\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:282",
+  "carve": "para\ntext\n\\## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:283",
+  "carve": "para\ntext\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:284",
+  "carve": "para\ntext\n\\*\\*\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:285",
+  "carve": "para\ntext\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:286",
+  "carve": "para\ntext\n\\- - -\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:287",
+  "carve": "para\ntext\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:288",
+  "carve": "para\ntext\n\\> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:289",
+  "carve": "para\ntext\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:290",
+  "carve": "para\ntext\n\\- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:291",
+  "carve": "para\ntext\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:292",
+  "carve": "para\ntext\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:293",
+  "carve": "para\ntext\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:294",
+  "carve": "para\ntext\n\\::: x\nin\n\\:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:295",
+  "carve": "para\ntext\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:296",
+  "carve": "para\ntext\n`\nk\n`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:297",
+  "carve": "para\ntext\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:298",
+  "carve": "para\ntext\n\\| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:299",
+  "carve": "para\ntext\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:300",
+  "carve": "para\ntext\n[r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:301",
+  "carve": "para\ntext\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:302",
+  "carve": "para\ntext\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:303",
+  "carve": "para\ntext\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:304",
+  "carve": "para\ntext\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:305",
+  "carve": "para\ntext\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:306",
+  "carve": "para\ntext\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:307",
+  "carve": "para\ntext\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:308",
+  "carve": "::: d\nin\n:::\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:309",
+  "carve": "::: d\nin\n:::\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:310",
+  "carve": "::: d\nin\n:::\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:311",
+  "carve": "::: d\nin\n:::\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:312",
+  "carve": "::: d\nin\n:::\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:313",
+  "carve": "::: d\nin\n:::\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:314",
+  "carve": "::: d\nin\n:::\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:315",
+  "carve": "::: d\nin\n:::\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:316",
+  "carve": "::: d\nin\n:::\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:317",
+  "carve": "::: d\nin\n:::\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:318",
+  "carve": "::: d\nin\n:::\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:319",
+  "carve": "::: d\nin\n:::\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:320",
+  "carve": "::: d\nin\n:::\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:321",
+  "carve": "::: d\nin\n:::\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:322",
+  "carve": "::: d\nin\n:::\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:323",
+  "carve": "::: d\nin\n:::\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:324",
+  "carve": "::: d\nin\n:::\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:325",
+  "carve": "::: d\nin\n:::\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:326",
+  "carve": "::: d\nin\n:::\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:327",
+  "carve": "::: d\nin\n:::\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:328",
+  "carve": "::: d\nin\n:::\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:329",
+  "carve": "::: d\nin\n:::\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:330",
+  "carve": "::: d\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:331",
+  "carve": "::: d\nin\n:::\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:332",
+  "carve": "::: d\nin\n:::\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:333",
+  "carve": "::: d\nin\n:::\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:5"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:334",
+  "carve": "::: d\nin\n:::\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:335",
+  "carve": "::: d\nin\n:::\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:336",
+  "carve": "```\nc\n```\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:337",
+  "carve": "```\nc\n```\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:338",
+  "carve": "```\nc\n```\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:339",
+  "carve": "```\nc\n```\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:340",
+  "carve": "```\nc\n```\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:341",
+  "carve": "```\nc\n```\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:342",
+  "carve": "```\nc\n```\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:343",
+  "carve": "```\nc\n```\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:344",
+  "carve": "```\nc\n```\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:345",
+  "carve": "```\nc\n```\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:346",
+  "carve": "```\nc\n```\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:347",
+  "carve": "```\nc\n```\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:348",
+  "carve": "```\nc\n```\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:349",
+  "carve": "```\nc\n```\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:350",
+  "carve": "```\nc\n```\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:351",
+  "carve": "```\nc\n```\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:352",
+  "carve": "```\nc\n```\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:353",
+  "carve": "```\nc\n```\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:354",
+  "carve": "```\nc\n```\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:355",
+  "carve": "```\nc\n```\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:356",
+  "carve": "```\nc\n```\n[r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:357",
+  "carve": "```\nc\n```\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:358",
+  "carve": "```\nc\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:359",
+  "carve": "```\nc\n```\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:360",
+  "carve": "```\nc\n```\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:361",
+  "carve": "```\nc\n```\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:5"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:362",
+  "carve": "```\nc\n```\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:363",
+  "carve": "```\nc\n```\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:364",
+  "carve": "{.c}\npara\n\\# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:365",
+  "carve": "{.c}\npara\n\n# h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:366",
+  "carve": "{.c}\npara\n\\## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:367",
+  "carve": "{.c}\npara\n\n## h\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:368",
+  "carve": "{.c}\npara\n\\*\\*\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:369",
+  "carve": "{.c}\npara\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:370",
+  "carve": "{.c}\npara\n\\- - -\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:371",
+  "carve": "{.c}\npara\n\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:372",
+  "carve": "{.c}\npara\n\\> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:373",
+  "carve": "{.c}\npara\n\n> q\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:374",
+  "carve": "{.c}\npara\n\\- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:375",
+  "carve": "{.c}\npara\n\n- li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:376",
+  "carve": "{.c}\npara\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:377",
+  "carve": "{.c}\npara\n\n1. li\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:378",
+  "carve": "{.c}\npara\n\\::: x\nin\n\\:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:379",
+  "carve": "{.c}\npara\n\n::: x\nin\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:380",
+  "carve": "{.c}\npara\n`\nk\n`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:381",
+  "carve": "{.c}\npara\n\n```\nk\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:382",
+  "carve": "{.c}\npara\n\\| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:383",
+  "carve": "{.c}\npara\n\n| t |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:384",
+  "carve": "{.c}\npara\n[r]\\: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:385",
+  "carve": "{.c}\npara\n\n[r]: /u\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:386",
+  "carve": "{.c}\npara\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:387",
+  "carve": "{.c}\npara\n\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:388",
+  "carve": "{.c}\npara\n: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:389",
+  "carve": "{.c}\npara\n\n{loose}\n:: term\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:4"
+   ]
+  ]
+ },
+ {
+  "id": "gen4:390",
+  "carve": "{.c}\npara\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "gen4:391",
+  "carve": "{.c}\npara\n\nplain\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ }
+]

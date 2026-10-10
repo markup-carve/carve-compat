@@ -1,0 +1,2734 @@
+[
+ {
+  "id": "attributes.test:4",
+  "carve": "foo [привет]{.ru}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:10",
+  "carve": "(some [text)]{.attr}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:16",
+  "carve": "[some text]{.attr}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:25",
+  "carve": "a {*[b]{#id key=\"\\*\"}*}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:31",
+  "carve": "a [\\*b]{#id key=\"\\*\"}o\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:39",
+  "carve": "[hi]{key=\"\\{\\#hi\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:47",
+  "carve": "[hi]{key=\"\\\\\\\\\\*\"}\n\n{key=\"\\\\\\\\\\*\"}\nfoo\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:60",
+  "carve": "hi\\{key=\"[abc]{#hi}\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:66",
+  "carve": "[hi]{key=\"\\\"\\#hi\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:72",
+  "carve": "[hi]{key=\"hi\\\"\\#hi\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:80",
+  "carve": "[hi]{#id .class key=\"value\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:89",
+  "carve": "!` `at beginning\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:95",
+  "carve": "After  space\n{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:105",
+  "carve": "{#id .class}\nA paragraph\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:114",
+  "carve": "\nA paragraph\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:124",
+  "carve": "{#id .class style=\"color\\:red\"}\nA paragraph\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:135",
+  "carve": "\\{\\#id .cla{*ss*}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:145",
+  "carve": "{#id}\n{key=\"val\"}\n{.foo .bar}\n{key=\"val2\"}\n{.baz}\n{#id2}\nOkay\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:159",
+  "carve": "{#id}\n> Block quote\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:168",
+  "carve": "{#id}\n# Heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:177",
+  "carve": "{.blue}\n***\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:184",
+  "carve": "{highlight=\"3\"}\n``` ruby\nx = 3\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:194",
+  "carve": "{.special}\n1. one\n2. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:209",
+  "carve": "> {.foo}\n> > {.bar}\n> > nested\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:227",
+  "carve": "[foo]{#ident .class}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:233",
+  "carve": "[foo]{#ident}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:242",
+  "carve": "%%\nParagraph.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:253",
+  "carve": "Foo bar {%%} baz.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:262",
+  "carve": "hi{%%}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:270",
+  "carve": "%%\nhi\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:279",
+  "carve": "text\\{a=x\n\nhello\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:288",
+  "carve": "\\{a=x\nhello\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:296",
+  "carve": "text\\{a=x\n\\# non-heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:304",
+  "carve": "\\{a=x\n\\# non-heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "attributes.test:312",
+  "carve": "\\{a=\" inline text\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:1",
+  "carve": "> Basic\n> block /quote/.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:11",
+  "carve": "> Lazy\nblock /quote/.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:21",
+  "carve": "> block\n>\n> quote\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:32",
+  "carve": "> block\n\n> quote\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:45",
+  "carve": "> > > nested\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:57",
+  "carve": "> > > nested\nlazy\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:71",
+  "carve": "> > > nested\n> lazy\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:85",
+  "carve": "> nested\n>\n> > more\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:98",
+  "carve": ">not blockquote\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:104",
+  "carve": ">> not blockquote\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:110",
+  "carve": ">\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:117",
+  "carve": "> # Heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:125",
+  "carve": "> hi\n>there\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:135",
+  "carve": "aaa\n\\> bbb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "block_quote.test:143",
+  "carve": "aaa\n\n> bbb\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:1",
+  "carve": "~~~\ncode\n  block\n~~~\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:12",
+  "carve": "``` python\nx = y + 3\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:21",
+  "carve": "``` python\nif true:\n  x = 3\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:32",
+  "carve": "`  not a code block  `\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:38",
+  "carve": "` not a code block`",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:44",
+  "carve": "```\nhi\n```\n```\ntwo\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "code_blocks.test:60",
+  "carve": "```\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "definition_lists.test:6",
+  "carve": "{loose}\n:: apple\n\n:  red fruit\n:: banana\n\n:  yellow fruit\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "definition_lists.test:28",
+  "carve": "{loose}\n:: apple\n\n:  red fruit\n\n:: banana\n\n:  yellow fruit\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "definition_lists.test:49",
+  "carve": "{loose}\n:: apple\nfruit\n\n:  Paragraph one\n\n   Paragraph two\n\n   - sub\n   - list\n\n:: orange\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:11"
+   ]
+  ]
+ },
+ {
+  "id": "definition_lists.test:83",
+  "carve": "{loose}\n:: %%\n:  ```\n   ok\n   ```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:1",
+  "carve": "*foo bar*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:7",
+  "carve": "a\\* foo bar\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:13",
+  "carve": "\\*foo bar \\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:21",
+  "carve": "* a *\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:29",
+  "carve": "foo{*bar*}baz\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:35",
+  "carve": "/foo bar/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:41",
+  "carve": "\\_ foo bar\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:47",
+  "carve": "\\_foo bar \\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:55",
+  "carve": "/ a /\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:63",
+  "carve": "foo{/bar/}baz\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:69",
+  "carve": "aa{/\"bb\"/}cc\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:75",
+  "carve": "\\*foo\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:81",
+  "carve": "\\_foo\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:89",
+  "carve": "\\_foo bar\n\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:99",
+  "carve": "\\_\ta\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:107",
+  "carve": "{/(/}foo{/)/}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:116",
+  "carve": "/(foo)/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:126",
+  "carve": "{/ x\\_ /} \\_x\\_}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:133",
+  "carve": "/(*foo*)/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:141",
+  "carve": "/foo \\*bar/ baz\\*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:149",
+  "carve": "/foo\nbar/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:159",
+  "carve": "*foo [link](url) `*`*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:167",
+  "carve": "\\_\\_\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:175",
+  "carve": "/\\_/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:183",
+  "carve": "\\_\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:189",
+  "carve": "\\_}b\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:195",
+  "carve": "/\\}b/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:201",
+  "carve": "/ab\\_c/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:207",
+  "carve": "*a*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:213",
+  "carve": "{/\\[bar/}\\](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:219",
+  "carve": "\\_[bar\\_](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:228",
+  "carve": "\\*not strong *strong*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:236",
+  "carve": "/emphasis inside emphasis/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:244",
+  "carve": "\\_`a_`b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "emphasis.test:252",
+  "carve": "\\_<http://example.com/a_b>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:3",
+  "carve": "\\`\\*\\_\\[\\#\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:11",
+  "carve": "\\a\\«\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:19",
+  "carve": "ab\\\nc\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:29",
+  "carve": "ab\\\t  \nc\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:39",
+  "carve": "ab\\\nc\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "escapes.test:49",
+  "carve": "a\\ b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:16",
+  "carve": ":::::::::: foo\nHi\n\n> A block quote.\n::::::::::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:31",
+  "carve": "{#bar .foo}\n:::\nHi\n\n> A block quote.\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:49",
+  "carve": "{#bar .foo}\n::::\nHi\n\n::: baz\n> A block quote.\n:::\n::::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:72",
+  "carve": "Paragraph text\n\\::::\nHi\n\\::::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:86",
+  "carve": "::::\nHi\n::::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:98",
+  "carve": "::::::::: foo\nHi\n\\::::\n:::::::::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:112",
+  "carve": "> :::: foo\n> Hi\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "fenced_divs.test:123",
+  "carve": "::: outer\n```\n:::\n```\n:::\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "footnotes.test:1",
+  "carve": "test[^a] and another[^foo_bar].\n\n[^a]: This is a note.\n\n  Second paragraph.\n\n[^foo_bar]: %%%%\n  ```\n  code\n  ```\n\nanother ref to the first note[^a].\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "footnotes.test:33",
+  "carve": "[^carve-djot-note-0]: %%%%\n\ntest[^carve-djot-note-0]\n\n[^unused]: note\n\n  more\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "footnotes.test:51",
+  "carve": "[^carve-djot-note-0]: %%%%\n\n[^carve-djot-note-0]\n[^b]\n\n[^b]: %%%%\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "footnotes.test:74",
+  "carve": "text[^footnote].\n\n[^footnote]: very long footnote[^another-footnote]\n[^another-footnote]: bla bla[^another-footnote]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:1",
+  "carve": "## Heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:9",
+  "carve": "# Heading\n\n# another\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:22",
+  "carve": "# Heading continued\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:32",
+  "carve": "## heading\n\npara\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:44",
+  "carve": "##\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:52",
+  "carve": "## Heading\n### Next level\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:64",
+  "carve": "# Heading lazy\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:74",
+  "carve": "# Heading lazy more lazy\n\ntext\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:91",
+  "carve": "#\\#Notheading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:97",
+  "carve": "## Heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:105",
+  "carve": "## heading ##\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:113",
+  "carve": "# # heading\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:123",
+  "carve": "{#Foo-bar}\nParagraph\n\n# Foo bar\n\n## Foo  bar\n\n{#baz}\n# Foo bar\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:148",
+  "carve": "# Introduction[^1]\n\n[^1]: A note.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:168",
+  "carve": "See [Introduction][].\n\n# Introduction\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:179",
+  "carve": "See [Introduction][].\n\n{#foo}\n# Introduction\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "headings.test:191",
+  "carve": "See [Introduction][Introduction].\n\n# Introduction\n\n[Introduction]: #bar\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "insert_delete_mark.test:1",
+  "carve": "This is {-deleted\n/text/-}. The braces are -required-.\nAnd they must be in the -}right order\\{\\-.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "insert_delete_mark.test:11",
+  "carve": "{+ Inserted text +}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "insert_delete_mark.test:19",
+  "carve": "{--hello--}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "insert_delete_mark.test:25",
+  "carve": "This is {=marked *text*=}.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:1",
+  "carve": "[basic /link/][a_b_]\n\n[a_b_]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:9",
+  "carve": "![basic image][a_b_]\n\n[a_b_]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:17",
+  "carve": "[link][link]\n\n[link]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:25",
+  "carve": "[link][link]\n\n[link]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:36",
+  "carve": "[link][link]\n\n[link]: urlandurl\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:46",
+  "carve": "[link](urlandurl)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:55",
+  "carve": "[link](http://example.com?n=123456)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:62",
+  "carve": "[link][]\n\n[link]:\n[link2]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:71",
+  "carve": "[link][link]\n[link][link2]\n\n[link2]: url2\n[link]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:84",
+  "carve": "[link][a and b]\n\n[a and b]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:95",
+  "carve": "[link][a and\nb]\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:104",
+  "carve": "[link][a and\nb]\n\n[a and\nb]: url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:118",
+  "carve": "[Link][]\n\n[link]: /url\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:129",
+  "carve": "[ref](/url){title=\"foo\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:140",
+  "carve": "[ref](/url){title=\"bar\"}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:149",
+  "carve": "[link /and/ link](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:157",
+  "carve": "![basic image](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:163",
+  "carve": "[![image](img.jpg)](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:171",
+  "carve": "![alt](img.jpg){.photo}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:177",
+  "carve": "[unclosed](hello *a\nb*\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:187",
+  "carve": "[closed](hello%20*ab*)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:196",
+  "carve": "\\*[closed](hello*)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:203",
+  "carve": "\\*[closed](hello*)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:210",
+  "carve": "/[link](http://example.com?foo_bar=1), more text/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:216",
+  "carve": "/hello [link](a_b) world/\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:223",
+  "carve": "[[foo](bar)](baz)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:230",
+  "carve": "![link](img)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:237",
+  "carve": "[![image](img)](url)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:244",
+  "carve": "<http://example.com/foo>\n<me@example.com>\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:256",
+  "carve": "[x\\_y](x_y)\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:262",
+  "carve": "[x\\_y](x\\_\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "links_and_images.test:268",
+  "carve": "[x\\_y]{.bar_}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:1",
+  "carve": "- one\n- two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:15",
+  "carve": "- one\n  \\- two\n  \\- three\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:29",
+  "carve": "- one\n\n  - two\n\n    - three\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:53",
+  "carve": "- one\n  and\n\n  another paragraph\n\n  - a list\n\n- two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:83",
+  "carve": "- a\n- b\n- c\n\n  more\n\n- d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:109",
+  "carve": "- one\nlazy\n- two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:125",
+  "carve": "- a\n- b\n\n* c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:145",
+  "carve": "- a\n\n- b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:160",
+  "carve": "- a\n  \\- b\n\n  - c\n- d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:183",
+  "carve": "- a\n  \\- b\n\n  - c\n- d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:207",
+  "carve": "- a\n\n  b\n- c\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:224",
+  "carve": "- a\n\n  - b\n  - c\n- d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:249",
+  "carve": "- a\n  - b\n  - c\n- d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:275",
+  "carve": "- a\n\n  * b\ncd\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:294",
+  "carve": "- - - a\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:312",
+  "carve": "1. one\n1. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:326",
+  "carve": "1. one\n\n   1. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:343",
+  "carve": "4. one\n5. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:357",
+  "carve": "1) one\n2) two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:371",
+  "carve": "1. one\n2. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:385",
+  "carve": "a. one\nb. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:399",
+  "carve": "D. one\nE. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:413",
+  "carve": "a. one\nb. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:427",
+  "carve": "i. one\nii. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:441",
+  "carve": "xli) one\nxlii) two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:455",
+  "carve": "IV. one\nV. two\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:469",
+  "carve": "i. a\nii. b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:483",
+  "carve": "i. a\nj. b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:499",
+  "carve": "i. a\ni. b\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:513",
+  "carve": "I. a\nII. b\nE. d\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "lists.test:533",
+  "carve": "The civil war ended in\n1865. And this should not start a list.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:4",
+  "carve": "$`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:10",
+  "carve": "My equation: $`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:16",
+  "carve": "$$`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:22",
+  "carve": "My equation: $$`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:30",
+  "carve": "$`e=\nmc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:40",
+  "carve": "$`e=\\text{the number $\\pi$}`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:48",
+  "carve": "\\$`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "math.test:56",
+  "carve": "\\\\$`e=mc^2`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "para.test:1",
+  "carve": "hi  \nthere  \n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "raw.test:3",
+  "carve": "`<a>`{=html}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "raw.test:11",
+  "carve": "``` =html\n<table>\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "raw.test:21",
+  "carve": "`<b>foo</b>`\\{\\=html \\#id}\n`<code></code>`{=html}",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "raw.test:31",
+  "carve": "{.foo}\n``` =html\n<table>\n```\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "regression.test:3",
+  "carve": "{1\\-\\-}\n\n{1-}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "regression.test:14",
+  "carve": "\\|`|\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "regression.test:21",
+  "carve": "\n|`|x\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "regression.test:30",
+  "carve": "\\$$`a`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "regression.test:36",
+  "carve": "{\n .`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:5",
+  "carve": "\"Hello,\" said the spider.\n\"'Shelob' is my name.\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:13",
+  "carve": "'A', 'B', and 'C' are letters.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:19",
+  "carve": "'Oak,' 'elm,' and 'beech' are names of trees.\nSo is 'pine.'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:27",
+  "carve": "'He said, \"I want to go.\"'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:37",
+  "carve": "Were you alive in the '70s?\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:43",
+  "carve": "Here is some quoted '`code`' and a \"[quoted link](url)\".\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:53",
+  "carve": "'tis the season to be 'jolly'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:61",
+  "carve": "'We'll use Jane's boat and John's truck,' Jenna said.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:70",
+  "carve": "\"A paragraph with no closing quote.\n\n\"Second paragraph by same speaker, in fiction.\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:82",
+  "carve": "[a]'s b'\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:91",
+  "carve": "\\\"This is not smart.\\\"\nThis isn\\'t either.\n5\\'8\\\"\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:103",
+  "carve": "''hi''\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:112",
+  "carve": "‘’hi‘’\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:120",
+  "carve": "Some dashes:  em---em\nen--en\nem --- em\nen -- en\n2--3\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:145",
+  "carve": "one-\ntwo--\nthree---\nfour----\nfive-----\nsix------\nseven-------\neight--------\nnine---------\nthirteen-------------.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:171",
+  "carve": "Escaped hyphens: \\-- \\-\\-\\-.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:179",
+  "carve": "Ellipses...and...and....\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "smart.test:188",
+  "carve": "No ellipses\\.\\.\\.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:1",
+  "carve": "This is a [test of\n*color*]{.blue}.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:9",
+  "carve": "not a [span] .\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:15",
+  "carve": "[nested [span]{.blue}]{#ident}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:21",
+  "carve": "[not a span]\\{\\#a<b}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:27",
+  "carve": "[*not* a span]\\{\\#a<b}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "spans.test:33",
+  "carve": "[not a span]\\{\\#a\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "super_subscript.test:1",
+  "carve": "H{,2,}O\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "super_subscript.test:7",
+  "carve": "mc{^2^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "super_subscript.test:13",
+  "carve": "test{^of superscript {,with subscript,}^}\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "super_subscript.test:19",
+  "carve": "H{,2 ,}O\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:3",
+  "carve": "| a |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:13",
+  "carve": "|a|   *b*|\n|*c| d* |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:29",
+  "carve": "| `a |`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:35",
+  "carve": "| a | b |\n\n^ With a /caption/\nand another line.\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:54",
+  "carve": "|a|b|\n|:-|---:|\n|c|d|\n|cc|dd|\n|-:|\\:-:|\n|e|f|\n|g|h|\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:5"
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:87",
+  "carve": "|--|--|\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:94",
+  "carve": "| a | b |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:106",
+  "carve": "| |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ],
+   [
+    "structure-unspellable",
+    "line:1"
+   ]
+  ]
+ },
+ {
+  "id": "tables.test:116",
+  "carve": "| just two \\| `|` | cells in this table |\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "task_lists.test:1",
+  "carve": "- [ ] an unchecked task list item\n- [x] checked item\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "task_lists.test:17",
+  "carve": "* [ ] an unchecked task list item\n\n  with two paragraphs\n\n* [x] checked item\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "task_lists.test:38",
+  "carve": "- [ ] foo\n\n* [ ] bar\n\n- [ ] baz\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "thematic_breaks.test:1",
+  "carve": "hello\n\n***\n\nthere\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "thematic_breaks.test:13",
+  "carve": "hello\n\n***\n\nthere\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "thematic_breaks.test:25",
+  "carve": "hello\n\n***\n\nthere\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "thematic_breaks.test:37",
+  "carve": "hello\n   *-*-*-*\nthere\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:1",
+  "carve": "Some `code`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:7",
+  "carve": "Some `code\nwith a line break`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:15",
+  "carve": "Special characters: `*hi*`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:21",
+  "carve": "\\*foo`*`\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:27",
+  "carve": "{%%}`````a`a``a```a````a``````a`````\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:33",
+  "carve": "` ``a`` `\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:42",
+  "carve": "`` `foo` ``\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ },
+ {
+  "id": "verbatim.test:50",
+  "carve": "` a\nc\n",
+  "diagnostics": [
+   [
+    "fidelity-unverified",
+    null
+   ]
+  ]
+ }
+]

@@ -1,0 +1,74 @@
+{
+ "measuredOn": "2026-10-10",
+ "engines": {
+  "js": {
+   "repo": "markup-carve/carve-js",
+   "commit": "caea5d57fc365e373f89f422c8ef6822e6f7193c"
+  },
+  "php": {
+   "repo": "markup-carve/carve-php",
+   "commit": "019cf1c98862285472afaefa9bf09c3c82a9bde9"
+  },
+  "rust": {
+   "repo": "markup-carve/carve-rs",
+   "commit": "5cd6bf82b2f17e9831e40c6f148dbb3bfeb7248f"
+  }
+ },
+ "referenceRenderer": "@markup-carve/carve 0.1.10 (carve-compat node_modules)",
+ "sets": {
+  "djot-suite": {
+   "rows": 268,
+   "matches": 239,
+   "notes": "the djot.js test suite through validateDjotTests(); 11 rows resolve through tests/djot-tests/declared.json. Regenerate with build-djot-suite.mjs."
+  },
+  "gen": {
+   "rows": 468,
+   "matches": 405
+  },
+  "gen2": {
+   "rows": 92,
+   "matches": 35
+  },
+  "gen3": {
+   "rows": 310,
+   "matches": 204,
+   "rustMatches": 202,
+   "pending": {
+    "issue": "markup-carve/carve#2854",
+    "matchesWhenFixed": 212,
+    "ids": [
+     "gen3:96",
+     "gen3:97",
+     "gen3:98",
+     "gen3:99",
+     "gen3:124",
+     "gen3:125",
+     "gen3:126",
+     "gen3:127"
+    ]
+   }
+  },
+  "gen4": {
+   "rows": 392,
+   "matches": 347
+  },
+  "gen5": {
+   "rows": 667,
+   "matches": 542
+  }
+ },
+ "totalRows": 2197,
+ "engineDivergences": {
+  "gen3:114": {
+   "issue": "markup-carve/carve-php#3046",
+   "rust": "<mailto:a{%%}@b.c>\n",
+   "note": "carve-js and carve-php escape the at sign, carve-rs does not; expected/gen3.json pins the js/php form"
+  },
+  "gen3:115": {
+   "issue": "markup-carve/carve-php#3046",
+   "rust": "para <mailto:a{%%}@b.c> tail\n",
+   "note": "carve-js and carve-php escape the at sign, carve-rs does not; expected/gen3.json pins the js/php form"
+  }
+ },
+ "threeWayIdenticalRows": 2195
+}
